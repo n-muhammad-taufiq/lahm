@@ -1,0 +1,24 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npm --prefix apps/customer run build && npm --prefix apps/merchant run build && npm --prefix apps/delivery run build",
+    "customer": "npm --prefix apps/customer start",
+    "delivery": "npm --prefix apps/delivery start",
+    "merchant": "npm --prefix apps/merchant start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "private": true,
+  "dependencies": {
+    "@types/axios": "^0.9.36",
+    "axios": "^1.19.0"
+  }
+}

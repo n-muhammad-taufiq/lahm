@@ -1,0 +1,19 @@
+{
+  "name": "project-lahm-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lahm monorepo root scripts",
+  "scripts": {
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "build:backend": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:customer": "npm --prefix frontend/apps/customer run build",
+    "build:merchant": "npm --prefix frontend/apps/merchant run build",
+    "build:delivery": "npm --prefix frontend/apps/delivery run build",
+    "test:backend": "npm --prefix backend test",
+    "start:backend": "npm --prefix backend run start:dev",
+    "start:customer": "npm --prefix frontend/apps/customer start",
+    "start:merchant": "npm --prefix frontend/apps/merchant start",
+    "start:delivery": "npm --prefix frontend/apps/delivery start"
+  }
+}

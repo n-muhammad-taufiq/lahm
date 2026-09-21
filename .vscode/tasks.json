@@ -1,0 +1,98 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start All Lahm Servers",
+      "dependsOn": [
+        "Backend API Server (NestJS)",
+        "Customer App (Expo)",
+        "Delivery App (Expo)",
+        "Merchant App (Expo)"
+      ],
+      "dependsOrder": "parallel",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "Backend API Server (NestJS)",
+      "type": "shell",
+      "command": "npm run start:dev",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "clear": true
+      }
+    },
+    {
+      "label": "Customer App (Expo)",
+      "type": "shell",
+      "command": "npx expo start --port 8081",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend/apps/customer"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "clear": true
+      }
+    },
+    {
+      "label": "Delivery App (Expo)",
+      "type": "shell",
+      "command": "npx expo start --port 8082",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend/apps/delivery"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "clear": true
+      }
+    },
+    {
+      "label": "Merchant App (Expo)",
+      "type": "shell",
+      "command": "npx expo start --port 8083",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend/apps/merchant"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "clear": true
+      }
+    },
+    {
+      "label": "Phone Bridge (Screenshot & Error Uploader)",
+      "type": "shell",
+      "command": "node scripts/phone-bridge.js",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "lahm-tools",
+        "reveal": "always",
+        "panel": "new"
+      }
+    }
+  ]
+}
