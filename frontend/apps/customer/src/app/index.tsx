@@ -1,3 +1,10 @@
+/**
+ * Customer Authentication & Welcome Screen Route
+ * 
+ * Initial landing screen for the customer app. Handles user authentication
+ * including phone number entry, OTP verification, and Firebase phone auth.
+ */
+
 import React, { useRef, useState } from 'react';
 import {
   ActivityIndicator,

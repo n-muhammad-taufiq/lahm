@@ -1,3 +1,10 @@
+/**
+ * Phone Number Input Step Component
+ * 
+ * First step in the phone auth flow where customers select their country code
+ * and enter their phone number to receive an SMS verification code.
+ */
+
 import React from 'react';
 import { Text, View } from 'react-native';
 import { Button, PhonePillInput } from '@lahm/ui';

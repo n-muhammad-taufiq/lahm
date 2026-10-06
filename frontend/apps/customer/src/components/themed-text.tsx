@@ -1,3 +1,10 @@
+/**
+ * Themed Text Component
+ * 
+ * A typography wrapper that applies consistent app font styles, weights,
+ * and theme colors (light/dark mode).
+ */
+
 import { Platform, StyleSheet, Text, type TextProps } from 'react-native';
 
 import { Fonts, ThemeColor } from '@/constants/theme';

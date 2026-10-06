@@ -1,3 +1,10 @@
+/**
+ * Customer Email/Password Login Screen Component
+ * 
+ * Provides an email and password login interface with validation and
+ * switching between login and registration.
+ */
+
 import React, { useState } from 'react';
 import {
   View,

@@ -1,3 +1,10 @@
+/**
+ * Product Card Component
+ * 
+ * Displays a product item card showing name, price, stock status, and actions
+ * to toggle stock availability, edit details, or delete the item.
+ */
+
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import type { ProductItem } from '../types/product.types';

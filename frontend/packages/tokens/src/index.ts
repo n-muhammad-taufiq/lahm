@@ -2,6 +2,7 @@ import tokensData from './tokens.json';
 
 export const tokens = tokensData;
 export const brandColors = tokensData.colors.brand;
+export const locationColors = (tokensData.colors as any).location;
 export const surfaceColors = tokensData.colors.surface;
 export const feedbackColors = tokensData.colors.feedback;
 export const neutralColors = tokensData.colors.zinc;
@@ -23,6 +24,9 @@ export const themeColors = {
     borderSubtle: tokensData.colors.border.subtle,
     primary: tokensData.colors.brand.primary,
     primaryText: tokensData.colors.brand.primaryText,
+    terracotta: tokensData.colors.brand.terracotta,
+    terracottaHover: tokensData.colors.brand.terracottaHover,
+    terracottaLight: tokensData.colors.brand.terracottaLight,
     errorText: tokensData.colors.feedback.error,
     errorBg: tokensData.colors.feedback.errorBg,
     errorBorder: tokensData.colors.feedback.errorBorder,

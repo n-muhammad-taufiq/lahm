@@ -1,3 +1,10 @@
+/**
+ * Authentication Success Step Component
+ * 
+ * Shows a confirmation card with a checkmark after successful login/verification,
+ * displaying the verified phone number and user role.
+ */
+
 import React from 'react';
 import { Text, View } from 'react-native';
 import { Button } from '@lahm/ui';

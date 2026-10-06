@@ -1,3 +1,10 @@
+/**
+ * reCAPTCHA Legal Notice Component
+ * 
+ * Footer disclaimer displaying Google reCAPTCHA terms, privacy policy links,
+ * and security badge icons for compliance.
+ */
+
 import React from 'react';
 import {
   Linking,

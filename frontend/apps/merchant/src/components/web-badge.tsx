@@ -1,3 +1,9 @@
+/**
+ * Web Version Badge Component
+ * 
+ * Displays the current Expo SDK version and branding badge on web platforms.
+ */
+
 import { version } from 'expo/package.json';
 import { Image } from 'expo-image';
 import { useColorScheme, StyleSheet } from 'react-native';

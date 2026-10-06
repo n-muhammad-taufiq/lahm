@@ -1,3 +1,9 @@
+/**
+ * Web Bottom Navigation Tabs Component
+ * 
+ * Renders the web-specific navigation tab bar for delivery partners.
+ */
+
 import {
   Tabs,
   TabList,

@@ -2,6 +2,7 @@ import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/co
 import { EmailLoginDto } from "./dtos/email-login-dto.dto";
 import { FirebaseOtpLoginDto } from "./dtos/firebase-otp-login.dto";
 import { FirebaseOtpRegisterDto } from "./dtos/firebase-otp-register.dto";
+import { RefreshTokenDto } from "./dtos/refresh-token.dto";
 import { UsersService } from "../users/users.service";
 import * as bcrypt from 'bcrypt';
 import { JwtService } from "@nestjs/jwt";
@@ -158,5 +159,25 @@ export class AuthenticationService {
         });
 
         return { accessToken, refreshToken };
+    }
+
+    async refreshToken(dto: RefreshTokenDto): Promise<{ accessToken: string; refreshToken: string }> {
+        const refreshSecret = this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET');
+
+        let payload: { sub: number; role: Role };
+        try {
+            payload = await this.jwtService.verifyAsync(dto.refreshToken, {
+                secret: refreshSecret,
+            });
+        } catch {
+            throw new UnauthorizedException('Invalid or expired refresh token');
+        }
+
+        const user = await this.usersService.findById(payload.sub);
+        if (!user) {
+            throw new UnauthorizedException('User no longer exists');
+        }
+
+        return this.generateTokens(user);
     }
 }

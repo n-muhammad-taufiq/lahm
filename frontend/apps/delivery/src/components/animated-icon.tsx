@@ -1,3 +1,9 @@
+/**
+ * Native Animated Splash Overlay Component
+ * 
+ * Displays an animated splash screen icon during app startup on native platforms (iOS/Android).
+ */
+
 import { Image } from 'expo-image';
 import * as SplashScreen from 'expo-splash-screen';
 import { useState } from 'react';

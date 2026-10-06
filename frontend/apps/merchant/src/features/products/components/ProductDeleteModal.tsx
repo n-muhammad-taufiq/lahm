@@ -1,3 +1,9 @@
+/**
+ * Product Delete Confirmation Modal Component
+ * 
+ * Dialog prompt asking merchants to confirm deleting a product item permanently.
+ */
+
 import React from 'react';
 import { Modal, Text, TouchableOpacity, View } from 'react-native';
 import type { ProductItem } from '../types/product.types';

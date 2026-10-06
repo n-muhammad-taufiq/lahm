@@ -1,3 +1,10 @@
+/**
+ * Delivery Partner Login Screen Component
+ * 
+ * Handles delivery rider authentication via phone OTP or Google Sign-In,
+ * and provides navigation to the multi-step registration wizard.
+ */
+
 import React, { useRef, useState } from 'react';
 import {
   ActivityIndicator,

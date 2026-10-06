@@ -1,3 +1,10 @@
+/**
+ * Collapsible Accordion Component
+ * 
+ * An expandable/collapsible container with a toggle button and smooth
+ * fade-in animation to show and hide child content.
+ */
+
 import { SymbolView } from 'expo-symbols';
 import { PropsWithChildren, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';

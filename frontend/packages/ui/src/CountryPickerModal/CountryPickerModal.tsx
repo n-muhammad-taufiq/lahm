@@ -1,3 +1,9 @@
+/**
+ * Country Picker Modal Component
+ * 
+ * Modal dialog for selecting international country calling codes and flags (e.g. GCC nations).
+ */
+
 import React from 'react';
 import {
   Modal,

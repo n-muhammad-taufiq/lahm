@@ -1,30 +1,190 @@
+/**
+ * Merchant Registration Wizard Component
+ * 
+ * Production-grade onboarding wizard for butcher shops matching user's mockup:
+ * - True full-screen layout
+ * - Inline field-level validation errors directly below fields (border-red-400, bg-[#FFF5F5], ⓘ message)
+ * - Circular back button with chevron
+ * - STEP 1 OF 5 and Quick Fill pill with terracotta outline
+ * - 5 segmented horizontal progress bars
+ * - Serif title (Georgia/serif)
+ * - Rounded-md input fields with soft border-zinc-200
+ * - Country code + phone input in a single split rounded box
+ * - Deep terracotta (#B04A37) CTA button anchored at the bottom
+ */
+
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  KeyboardTypeOptions,
+  Modal,
+  Platform,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { CountryPickerModal, type CountryItem } from '@lahm/ui';
-import type { MerchantRegistrationFormData, UploadedFile } from '@lahm/api';
+import {
+  CountryPickerModal,
+  FormField,
+  LocationStatusField,
+  SelectField,
+  StepProgressHeader,
+  StoreLocationMapPreview,
+  type CountryItem,
+} from '@lahm/ui';
+import type { MerchantRegistrationFormData } from '@lahm/api';
 import * as DocumentPicker from 'expo-document-picker';
 import { authApiService, setAccessToken, setActiveMerchant, extractErrorMessage } from '@/services';
+import { AddressSearchInput } from './AddressSearchInput';
+import { StoreLocationMapModal } from './StoreLocationMapModal';
+import { type AddressSuggestion, getResolvedCurrentLocation } from '../services/locationSearchService';
+
+const BRAND_TERRACOTTA = '#B04A37';
 
 const DEFAULT_COUNTRY: CountryItem = {
-  flag: '🇦🇪',
-  code: '+971',
-  name: 'United Arab Emirates',
+  flag: '🇮🇳',
+  code: '+91',
+  name: 'India',
 };
 
 const ALL_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+const INDIAN_STATES = [
+  'Tamil Nadu',
+  'Karnataka',
+  'Kerala',
+  'Andhra Pradesh',
+  'Telangana',
+  'Maharashtra',
+  'Delhi',
+  'Gujarat',
+  'West Bengal',
+  'Rajasthan',
+  'Uttar Pradesh',
+  'Madhya Pradesh',
+  'Punjab',
+  'Haryana',
+  'Bihar',
+  'Odisha',
+  'Goa',
+  'Assam',
+  'Jammu and Kashmir',
+  'Puducherry',
+];
+
+const STEP_METADATA = [
+  {
+    step: 1,
+    title: 'Personal Details',
+    subtitle: 'Primary contact information of the butchery owner',
+  },
+  {
+    step: 2,
+    title: 'Shop & Location',
+    subtitle: 'Physical storefront address and GPS coordinates',
+  },
+  {
+    step: 3,
+    title: 'Certifications',
+    subtitle: 'Halal slaughter proof, FSSAI registration, and tax ID',
+  },
+  {
+    step: 4,
+    title: 'Bank Settlement',
+    subtitle: 'Account details for weekly automated payout transfers',
+  },
+  {
+    step: 5,
+    title: 'Store Operations',
+    subtitle: 'Daily operating hours and weekly working schedule',
+  },
+];
 
 export interface MerchantRegisterWizardProps {
   initialPhoneNumber?: string;
   initialCountryCode?: string;
   onSwitchToLogin: () => void;
   onSuccess: () => void;
+}
+
+/**
+ * Clean Document Upload Field Component with inline validation error support
+ */
+interface FileUploadProps {
+  label: string;
+  required?: boolean;
+  hint: string;
+  file?: { name: string; size?: number; uri: string } | null;
+  error?: string;
+  onPick: () => void;
+  onRemove: () => void;
+}
+
+function FileUploadField({
+  label,
+  required = false,
+  hint,
+  file,
+  error,
+  onPick,
+  onRemove,
+}: FileUploadProps) {
+  const hasError = Boolean(error);
+
+  return (
+    <View className="gap-1.5">
+      <View className="flex-row items-center justify-between">
+        <Text className="text-[13px] font-medium text-zinc-800">
+          {label} {required ? <Text className="text-brand-terracotta">*</Text> : null}
+        </Text>
+        <Text className="text-xs text-zinc-400">{hint}</Text>
+      </View>
+
+      {file ? (
+        <View className="h-[52px] px-4 rounded-[14px] border border-zinc-200 bg-white flex-row items-center justify-between">
+          <View className="flex-1 mr-2">
+            <Text className="text-sm font-medium text-zinc-900" numberOfLines={1}>
+              {file.name}
+            </Text>
+            <Text className="text-xs text-zinc-500 mt-0.5">
+              {file.size ? `${(file.size / 1024).toFixed(0)} KB • Attached` : 'Attached'}
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={onRemove}
+            className="px-2.5 py-1 rounded-md border border-zinc-200 bg-zinc-50 active:bg-zinc-100">
+            <Text className="text-xs font-medium text-red-600">Remove</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <TouchableOpacity
+          onPress={onPick}
+          activeOpacity={0.8}
+          className={`h-[52px] px-4 rounded-[14px] border flex-row items-center justify-between active:bg-zinc-50 ${
+            hasError
+              ? 'border-dashed border-red-400 bg-[#FFF5F5]'
+              : 'border-dashed border-zinc-300 bg-white'
+          }`}>
+          <Text className={`text-sm ${hasError ? 'text-red-400' : 'text-zinc-400'}`}>
+            Select PDF or image file...
+          </Text>
+          <View className="px-3 py-1.5 rounded-md bg-zinc-100 border border-zinc-200">
+            <Text className="text-xs font-semibold text-zinc-700">Choose File</Text>
+          </View>
+        </TouchableOpacity>
+      )}
+
+      {hasError ? (
+        <View className="flex-row items-center gap-1 mt-0.5 ml-0.5">
+          <Text className="text-xs text-red-500 leading-none">ⓘ</Text>
+          <Text className="text-xs text-red-500 font-normal">{error}</Text>
+        </View>
+      ) : null}
+    </View>
+  );
 }
 
 export function MerchantRegisterWizard({
@@ -35,19 +195,23 @@ export function MerchantRegisterWizard({
 }: MerchantRegisterWizardProps) {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [serverError, setServerError] = useState<string>('');
+  const [isPhoneFocused, setIsPhoneFocused] = useState<boolean>(false);
+  const [showMapModal, setShowMapModal] = useState<boolean>(false);
 
   // Country Picker Modal
   const [showCountryPicker, setShowCountryPicker] = useState<boolean>(false);
   const [selectedCountry, setSelectedCountry] = useState<CountryItem>(
     initialCountryCode
-      ? { flag: '🇦🇪', code: initialCountryCode, name: 'Country' }
+      ? { flag: '🇮🇳', code: initialCountryCode, name: 'India' }
       : DEFAULT_COUNTRY
   );
 
   // Form State
   const [formData, setFormData] = useState<MerchantRegistrationFormData>({
     name: '',
+    shopName: '',
     phoneNumber: initialPhoneNumber || '',
     countryCode: initialCountryCode || DEFAULT_COUNTRY.code,
     email: '',
@@ -55,6 +219,8 @@ export function MerchantRegisterWizard({
     city: '',
     state: '',
     pinCode: '',
+    latitude: null,
+    longitude: null,
     halalFile: null,
     fssaiFile: null,
     gstin: '',
@@ -66,13 +232,124 @@ export function MerchantRegisterWizard({
     workingDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
   });
 
+  const clearFieldError = (field: string) => {
+    if (errors[field]) {
+      setErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
+  };
+
   const updateField = (field: keyof MerchantRegistrationFormData, value: any) => {
-    setError('');
+    setServerError('');
+    clearFieldError(field as string);
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Automatically acquire and resolve accurate device GPS location when user enters Step 2 (Store Location)
+  React.useEffect(() => {
+    if (currentStep === 2 && !formData.latitude && !formData.longitude) {
+      getResolvedCurrentLocation()
+        .then((resolved) => {
+          clearFieldError('location');
+          setFormData((prev) => ({
+            ...prev,
+            latitude: resolved.latitude,
+            longitude: resolved.longitude,
+            shopAddress: prev.shopAddress || resolved.shopAddress,
+            city: prev.city || resolved.city,
+            state: prev.state || resolved.state,
+            pinCode: prev.pinCode || resolved.pinCode,
+          }));
+        })
+        .catch(() => {
+          // If permission is denied or device GPS is unavailable, user can select or enter manually
+        });
+    }
+  }, [currentStep, formData.latitude, formData.longitude]);
+
+  const handleAddressSelected = (suggestion: AddressSuggestion) => {
+    clearFieldError('location');
+    clearFieldError('shopAddress');
+    clearFieldError('city');
+    clearFieldError('state');
+    clearFieldError('pinCode');
+
+    setFormData((prev) => ({
+      ...prev,
+      shopAddress: suggestion.shopAddress || prev.shopAddress,
+      city: suggestion.city || prev.city,
+      state: suggestion.state || prev.state,
+      pinCode: suggestion.pinCode || prev.pinCode,
+      latitude: suggestion.latitude,
+      longitude: suggestion.longitude,
+    }));
+  };
+
+  const handleMapLocationConfirmed = (location: {
+    latitude: number;
+    longitude: number;
+    addressSuggestion?: AddressSuggestion | null;
+  }) => {
+    clearFieldError('location');
+    setFormData((prev) => {
+      const suggestion = location.addressSuggestion;
+      return {
+        ...prev,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        shopAddress: suggestion?.shopAddress || prev.shopAddress,
+        city: suggestion?.city || prev.city,
+        state: suggestion?.state || prev.state,
+        pinCode: suggestion?.pinCode || prev.pinCode,
+      };
+    });
+  };
+
+  const handleQuickFill = () => {
+    setServerError('');
+    setErrors({});
+    setFormData((prev) => ({
+      ...prev,
+      name: 'Muhammad Tariq',
+      shopName: 'Al Madina Artisanal Butchery',
+      phoneNumber: prev.phoneNumber || '9876543210',
+      countryCode: prev.countryCode || '+91',
+      email: 'tariq@almadinameats.com',
+      shopAddress: '12 Market Road (Old MTH), Ambattur',
+      city: 'Chennai',
+      state: 'Tamil Nadu',
+      pinCode: '600053',
+      latitude: 13.1067,
+      longitude: 80.1618,
+      halalFile: {
+        name: 'halal_certificate_sample.pdf',
+        uri: 'sample://halal_cert.pdf',
+        size: 1048576,
+        mimeType: 'application/pdf',
+      },
+      fssaiFile: {
+        name: 'fssai_license_sample.pdf',
+        uri: 'sample://fssai_cert.pdf',
+        size: 2097152,
+        mimeType: 'application/pdf',
+      },
+      gstin: '33AAAAA0000A1Z5',
+      accountHolderName: 'Al Madina Butchery',
+      bankName: 'HDFC Bank',
+      ifscCode: 'HDFC0001234',
+      openingTime: '08:00 AM',
+      closingTime: '09:00 PM',
+      workingDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    }));
+  };
+
+
   const pickDocument = async (field: 'halalFile' | 'fssaiFile') => {
-    setError('');
+    setServerError('');
+    clearFieldError(field);
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: ['application/pdf', 'image/*'],
@@ -89,11 +366,12 @@ export function MerchantRegisterWizard({
         });
       }
     } catch (err: any) {
-      setError('Failed to select file. Please try again.');
+      setServerError('Failed to select file. Please try again.');
     }
   };
 
   const toggleDay = (day: string) => {
+    clearFieldError('workingDays');
     setFormData((prev) => {
       const exists = prev.workingDays.includes(day);
       const newDays = exists
@@ -103,69 +381,61 @@ export function MerchantRegisterWizard({
     });
   };
 
-  // Step Validation
   const validateCurrentStep = (): boolean => {
-    setError('');
+    const newErrors: Record<string, string> = {};
+
     if (currentStep === 1) {
       if (!formData.name.trim()) {
-        setError('Please enter your full name');
-        return false;
+        newErrors.name = 'Please enter your full name';
       }
       const cleanPhone = formData.phoneNumber.replace(/[\s-]/g, '');
       if (!cleanPhone || cleanPhone.length < 7) {
-        setError('Please enter a valid mobile number');
-        return false;
+        newErrors.phoneNumber = 'Please enter your mobile number';
       }
     } else if (currentStep === 2) {
       if (!formData.shopAddress.trim()) {
-        setError('Please enter your shop address');
-        return false;
+        newErrors.shopAddress = 'Please enter your shop address';
       }
       if (!formData.city.trim()) {
-        setError('Please enter your city');
-        return false;
+        newErrors.city = 'Please enter your city';
       }
       if (!formData.state.trim()) {
-        setError('Please enter your state');
-        return false;
+        newErrors.state = 'Please enter your state';
       }
       if (!formData.pinCode.trim()) {
-        setError('Please enter your PIN / Postal code');
-        return false;
+        newErrors.pinCode = 'Please enter your PIN code';
+      }
+      if (!formData.latitude || !formData.longitude) {
+        newErrors.location = 'Please set your store location on the map';
       }
     } else if (currentStep === 3) {
       if (!formData.halalFile) {
-        setError('Please upload your Halal Certificate document (PDF or Image)');
-        return false;
+        newErrors.halalFile = 'Please upload your Halal Certificate (PDF or Image)';
       }
       if (!formData.fssaiFile) {
-        setError('Please upload your FSSAI Certificate document (PDF or Image)');
-        return false;
+        newErrors.fssaiFile = 'Please upload your FSSAI License Document (PDF or Image)';
       }
       if (!formData.gstin.trim()) {
-        setError('Please enter your GSTIN number');
-        return false;
+        newErrors.gstin = 'Please enter your GSTIN number';
       }
     } else if (currentStep === 4) {
       if (!formData.accountHolderName.trim()) {
-        setError('Please enter the bank account holder name');
-        return false;
+        newErrors.accountHolderName = 'Please enter the bank account holder name';
       }
       if (!formData.bankName.trim()) {
-        setError('Please enter the bank name');
-        return false;
+        newErrors.bankName = 'Please enter the bank name';
       }
       if (!formData.ifscCode.trim()) {
-        setError('Please enter the IFSC code');
-        return false;
+        newErrors.ifscCode = 'Please enter the IFSC code';
       }
     } else if (currentStep === 5) {
       if (formData.workingDays.length === 0) {
-        setError('Please select at least one working day');
-        return false;
+        newErrors.workingDays = 'Please select at least one working day';
       }
     }
-    return true;
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleNext = () => {
@@ -178,7 +448,8 @@ export function MerchantRegisterWizard({
   };
 
   const handleBack = () => {
-    setError('');
+    setServerError('');
+    setErrors({});
     if (currentStep > 1) {
       setCurrentStep((prev) => prev - 1);
     } else {
@@ -188,19 +459,22 @@ export function MerchantRegisterWizard({
 
   const handleSubmit = async () => {
     setLoading(true);
-    setError('');
+    setServerError('');
     try {
       const cleanPhone = formData.phoneNumber.replace(/[\s-]/g, '');
       const fullPhone = cleanPhone.startsWith('+') ? cleanPhone : `${formData.countryCode}${cleanPhone}`;
 
       const payload = {
         name: formData.name.trim(),
+        shopName: formData.shopName?.trim() || undefined,
         phoneNumber: fullPhone,
         email: formData.email?.trim() || undefined,
         shopAddress: formData.shopAddress.trim(),
         city: formData.city.trim(),
         state: formData.state.trim(),
         pinCode: formData.pinCode.trim(),
+        latitude: formData.latitude ?? undefined,
+        longitude: formData.longitude ?? undefined,
         halalCertificateUrl: formData.halalFile?.name ? `certificates/halal/${formData.halalFile.name}` : undefined,
         fssaiCertificateUrl: formData.fssaiFile?.name ? `certificates/fssai/${formData.fssaiFile.name}` : undefined,
         gstin: formData.gstin.trim() || undefined,
@@ -221,400 +495,431 @@ export function MerchantRegisterWizard({
       }
       onSuccess();
     } catch (err: any) {
-      setError(extractErrorMessage(err));
+      setServerError(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
   };
 
-  const stepTitles = [
-    'Personal Details',
-    'Shop Details',
-    'Business Verification',
-    'Settlement Information',
-    'Store Operations',
-  ];
+  const currentMeta = STEP_METADATA[currentStep - 1];
 
-  const countryShortName = (selectedCountry.name || 'US').slice(0, 2).toLowerCase();
+  // Country label in phone input (e.g. IN +91 or AE +971 matching mockup)
+  const countryShort =
+    selectedCountry.code === '+91'
+      ? 'IN'
+      : selectedCountry.code === '+971'
+      ? 'AE'
+      : selectedCountry.name?.slice(0, 2).toUpperCase() || 'IN';
 
   return (
-    <View className="w-full bg-white rounded-2xl border border-[#F2D8CD] p-5 shadow-md">
-      
-      {/* 1. Stepper Header & Progress Bar */}
-      <View className="mb-4">
-        <View className="flex-row items-center justify-between mb-1">
-          <Text className="text-[11px] font-bold tracking-[1.5px] text-[#B87B6A] uppercase">
-            STEP {currentStep} OF 5
-          </Text>
-          <Text className="text-xs font-semibold text-[#7D6F66]">
-            {Math.round((currentStep / 5) * 100)}% Completed
-          </Text>
-        </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      className="flex-1 bg-white w-full">
+      <View className="flex-1 bg-white w-full flex-col justify-between">
 
-        <Text className="text-[20px] font-extrabold text-[#1C1611] tracking-tight font-serif mb-2">
-          {stepTitles[currentStep - 1]}
-        </Text>
-
-        {/* Progress Fill Bar */}
-        <View className="h-1.5 w-full bg-[#FDF2EB] rounded-full overflow-hidden">
-          <View
-            className="h-full bg-[#E77A62] rounded-full"
-            style={{ width: `${(currentStep / 5) * 100}%` }}
+        {/* 1. Header Bar: Back Circle | STEP X OF 5 | Quick Fill Pill & Segmented Progress */}
+        <View className="w-full max-w-[480px] self-center">
+          <StepProgressHeader
+            currentStep={currentStep}
+            totalSteps={5}
+            onBack={handleBack}
+            actionText="Quick Fill"
+            onAction={handleQuickFill}
           />
         </View>
-      </View>
 
-      {/* 2. Scrollable Step Form Fields with Height */}
-      <View className="min-h-[260px] justify-center">
+        {/* 3. Scrollable Form Content */}
+        <ScrollView
+          className="flex-1 w-full"
+          contentContainerClassName="px-5 sm:px-6 py-4 max-w-[480px] w-full self-center flex-grow"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}>
 
-        {/* STEP 1: Personal Details */}
-        {currentStep === 1 ? (
-          <View key="step-1">
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-              FULL NAME *
-            </Text>
-            <TextInput
-              value={formData.name}
-              onChangeText={(text) => updateField('name', text)}
-              placeholder="e.g. Tariq Mansoor"
-              placeholderTextColor="#D8B5A7"
-              className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] mb-3.5 shadow-sm"
-            />
-
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-              MOBILE NUMBER *
-            </Text>
-            <View className="flex-row items-center bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3 mb-3.5 shadow-sm">
-              <TouchableOpacity
-                onPress={() => setShowCountryPicker(true)}
-                activeOpacity={0.7}
-                className="flex-row items-center px-1">
-                <Text className="text-sm font-semibold text-[#1C1611]">
-                  {countryShortName} {selectedCountry.code}
-                </Text>
-                <Text className="text-[10px] text-[#B87B6A] ml-1">⌵</Text>
-              </TouchableOpacity>
-              <View className="w-[1px] h-6 bg-[#F2D8CD] mx-2" />
-              <TextInput
-                value={formData.phoneNumber}
-                onChangeText={(text) => updateField('phoneNumber', text)}
-                placeholder="50 123 4567"
-                placeholderTextColor="#D8B5A7"
-                keyboardType="phone-pad"
-                className="flex-1 text-base font-medium text-[#1C1611] py-0"
-              />
-            </View>
-
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-              EMAIL ADDRESS (OPTIONAL)
-            </Text>
-            <TextInput
-              value={formData.email}
-              onChangeText={(text) => updateField('email', text)}
-              placeholder="tariq@halalmeats.com"
-              placeholderTextColor="#D8B5A7"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] mb-1 shadow-sm"
-            />
-          </View>
-        ) : null}
-
-        {/* STEP 2: Shop Details */}
-        {currentStep === 2 ? (
-          <View key="step-2">
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-              SHOP ADDRESS *
-            </Text>
-            <TextInput
-              value={formData.shopAddress}
-              onChangeText={(text) => updateField('shopAddress', text)}
-              placeholder="Shop No. 12, Deira Central Market"
-              placeholderTextColor="#D8B5A7"
-              className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] mb-3.5 shadow-sm"
-            />
-
-            <View className="flex-row gap-2 mb-3.5">
-              <View className="flex-1">
-                <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-                  CITY *
-                </Text>
-                <TextInput
-                  value={formData.city}
-                  onChangeText={(text) => updateField('city', text)}
-                  placeholder="Dubai"
-                  placeholderTextColor="#D8B5A7"
-                  className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] shadow-sm"
-                />
-              </View>
-
-              <View className="flex-1">
-                <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-                  STATE *
-                </Text>
-                <TextInput
-                  value={formData.state}
-                  onChangeText={(text) => updateField('state', text)}
-                  placeholder="Dubai"
-                  placeholderTextColor="#D8B5A7"
-                  className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] shadow-sm"
-                />
-              </View>
-            </View>
-
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-              PIN / POSTAL CODE *
-            </Text>
-            <TextInput
-              value={formData.pinCode}
-              onChangeText={(text) => updateField('pinCode', text)}
-              placeholder="00000"
-              placeholderTextColor="#D8B5A7"
-              keyboardType="number-pad"
-              className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] mb-1 shadow-sm"
-            />
-          </View>
-        ) : null}
-
-        {/* STEP 3: Business Verification */}
-        {currentStep === 3 ? (
-          <View key="step-3">
-            {/* 1. Halal Certificate File */}
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-              HALAL CERTIFICATE (FILE ATTACHMENT) *
-            </Text>
-            {!formData.halalFile ? (
-              <TouchableOpacity
-                onPress={() => pickDocument('halalFile')}
-                activeOpacity={0.7}
-                className="w-full border border-dashed border-[#F2D8CD] bg-[#FDF2EB]/40 rounded-md p-3.5 items-center justify-center mb-3.5">
-                <Text className="text-2xl mb-1">📄</Text>
-                <Text className="text-sm font-semibold text-[#1C1611]">
-                  Select Halal Certificate File
-                </Text>
-                <Text className="text-[11px] text-[#7D6F66] mt-0.5">
-                  PDF, JPG, or PNG document
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <View className="w-full border border-emerald-200 bg-emerald-50/60 rounded-md p-3 flex-row items-center justify-between mb-3.5">
-                <View className="flex-row items-center flex-1 mr-2">
-                  <Text className="text-xl mr-2">✅</Text>
-                  <View className="flex-1">
-                    <Text className="text-xs font-bold text-[#1C1611]" numberOfLines={1}>
-                      {formData.halalFile.name}
-                    </Text>
-                    <Text className="text-[10px] text-emerald-700">
-                      {formData.halalFile.size ? `${(formData.halalFile.size / 1024).toFixed(1)} KB` : 'Attached'} • Document ready
-                    </Text>
-                  </View>
-                </View>
-                <TouchableOpacity
-                  onPress={() => updateField('halalFile', null)}
-                  className="px-2.5 py-1 bg-white border border-red-200 rounded">
-                  <Text className="text-[11px] font-bold text-red-500">Remove</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {/* 2. FSSAI Certificate File */}
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-              FSSAI CERTIFICATE (FILE ATTACHMENT) *
-            </Text>
-            {!formData.fssaiFile ? (
-              <TouchableOpacity
-                onPress={() => pickDocument('fssaiFile')}
-                activeOpacity={0.7}
-                className="w-full border border-dashed border-[#F2D8CD] bg-[#FDF2EB]/40 rounded-md p-3.5 items-center justify-center mb-3.5">
-                <Text className="text-2xl mb-1">📜</Text>
-                <Text className="text-sm font-semibold text-[#1C1611]">
-                  Select FSSAI Certificate File
-                </Text>
-                <Text className="text-[11px] text-[#7D6F66] mt-0.5">
-                  PDF, JPG, or PNG document
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <View className="w-full border border-emerald-200 bg-emerald-50/60 rounded-md p-3 flex-row items-center justify-between mb-3.5">
-                <View className="flex-row items-center flex-1 mr-2">
-                  <Text className="text-xl mr-2">✅</Text>
-                  <View className="flex-1">
-                    <Text className="text-xs font-bold text-[#1C1611]" numberOfLines={1}>
-                      {formData.fssaiFile.name}
-                    </Text>
-                    <Text className="text-[10px] text-emerald-700">
-                      {formData.fssaiFile.size ? `${(formData.fssaiFile.size / 1024).toFixed(1)} KB` : 'Attached'} • Document ready
-                    </Text>
-                  </View>
-                </View>
-                <TouchableOpacity
-                  onPress={() => updateField('fssaiFile', null)}
-                  className="px-2.5 py-1 bg-white border border-red-200 rounded">
-                  <Text className="text-[11px] font-bold text-red-500">Remove</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {/* 3. GSTIN Number (Number Only) */}
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-              GSTIN NUMBER *
-            </Text>
-            <TextInput
-              value={formData.gstin}
-              onChangeText={(text) => updateField('gstin', text.toUpperCase())}
-              placeholder="e.g. 07AAAAA0000A1Z5"
-              placeholderTextColor="#D8B5A7"
-              autoCapitalize="characters"
-              maxLength={15}
-              className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] mb-1 shadow-sm"
-            />
-          </View>
-        ) : null}
-
-        {/* STEP 4: Settlement Information */}
-        {currentStep === 4 ? (
-          <View key="step-4">
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-              ACCOUNT HOLDER NAME *
-            </Text>
-            <TextInput
-              value={formData.accountHolderName}
-              onChangeText={(text) => updateField('accountHolderName', text)}
-              placeholder="e.g. Al-Madina Halal Meats LLC"
-              placeholderTextColor="#D8B5A7"
-              className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] mb-3.5 shadow-sm"
-            />
-
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-              BANK NAME *
-            </Text>
-            <TextInput
-              value={formData.bankName}
-              onChangeText={(text) => updateField('bankName', text)}
-              placeholder="e.g. Emirates NBD / HDFC Bank"
-              placeholderTextColor="#D8B5A7"
-              className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] mb-3.5 shadow-sm"
-            />
-
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-              IFSC / SWIFT / IBAN CODE *
-            </Text>
-            <TextInput
-              value={formData.ifscCode}
-              onChangeText={(text) => updateField('ifscCode', text)}
-              placeholder="e.g. EBILAEADXXX / HDFC0001234"
-              placeholderTextColor="#D8B5A7"
-              autoCapitalize="characters"
-              className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] mb-1 shadow-sm"
-            />
-          </View>
-        ) : null}
-
-        {/* STEP 5: Store Operations */}
-        {currentStep === 5 ? (
-          <View key="step-5">
-            <View className="flex-row gap-2 mb-3.5">
-              <View className="flex-1">
-                <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-                  OPENING TIME *
-                </Text>
-                <TextInput
-                  value={formData.openingTime}
-                  onChangeText={(text) => updateField('openingTime', text)}
-                  placeholder="08:00 AM"
-                  placeholderTextColor="#D8B5A7"
-                  className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] shadow-sm"
-                />
-              </View>
-
-              <View className="flex-1">
-                <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-1.5">
-                  CLOSING TIME *
-                </Text>
-                <TextInput
-                  value={formData.closingTime}
-                  onChangeText={(text) => updateField('closingTime', text)}
-                  placeholder="09:00 PM"
-                  placeholderTextColor="#D8B5A7"
-                  className="bg-white rounded-md border border-[#F2D8CD] h-[48px] px-3.5 text-base font-medium text-[#1C1611] shadow-sm"
-                />
-              </View>
-            </View>
-
-            <Text className="text-[11px] font-bold tracking-[1.2px] text-[#B87B6A] uppercase mb-2">
-              WORKING DAYS *
-            </Text>
-            <View className="flex-row flex-wrap gap-2 mb-2">
-              {ALL_DAYS.map((day) => {
-                const isSelected = formData.workingDays.includes(day);
-                return (
-                  <TouchableOpacity
-                    key={day}
-                    onPress={() => toggleDay(day)}
-                    activeOpacity={0.8}
-                    className={`px-3 py-2 rounded-md border ${
-                      isSelected
-                        ? 'bg-[#E77A62] border-[#E77A62]'
-                        : 'bg-[#FDF2EB] border-[#F2D8CD]'
-                    }`}>
-                    <Text
-                      className={`text-xs font-bold ${
-                        isSelected ? 'text-white' : 'text-[#7D6F66]'
-                      }`}>
-                      {day}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </View>
-        ) : null}
-
-      </View>
-
-      {/* 3. Error Banner */}
-      {error ? (
-        <View className="bg-red-50 border border-red-200 rounded-md px-3 py-2 my-3">
-          <Text className="text-red-600 text-xs font-medium">{error}</Text>
-        </View>
-      ) : null}
-
-      {/* 4. Action Buttons */}
-      <View className="flex-row items-center mt-4">
-        {currentStep > 1 ? (
-          <TouchableOpacity
-            onPress={handleBack}
-            activeOpacity={0.8}
-            className="h-[48px] px-4 rounded-md border border-[#F2D8CD] bg-white items-center justify-center mr-2.5">
-            <Text className="text-sm font-bold text-[#7D6F66]">← Back</Text>
-          </TouchableOpacity>
-        ) : null}
-
-        <TouchableOpacity
-          onPress={handleNext}
-          disabled={loading}
-          activeOpacity={0.85}
-          className="flex-1 h-[48px] rounded-md bg-[#E77A62] items-center justify-center shadow-sm">
-          {loading ? (
-            <ActivityIndicator color="#FFFFFF" size="small" />
-          ) : (
-            <Text className="text-[15px] font-bold text-white">
-              {currentStep < 5 ? 'Next Step →' : 'Complete Partner Registration →'}
-            </Text>
-          )}
-        </TouchableOpacity>
-      </View>
-
-      {/* 5. Switcher back to Login */}
-      <View className="flex-row items-center justify-center pt-4">
-        <Text className="text-[12.5px] text-[#7D6F66]">
-          Already registered?{' '}
-        </Text>
-        <TouchableOpacity onPress={onSwitchToLogin}>
-          <Text className="text-[12.5px] font-bold text-[#E77A62]">
-            Sign in
+          {/* Title & Subtitle matching reference screenshot */}
+          <Text className="text-2xl font-bold text-zinc-900 tracking-tight">
+            {currentMeta.title}
           </Text>
-        </TouchableOpacity>
+          <Text className="text-xs text-zinc-400 font-normal mt-1 mb-6">
+            {currentMeta.subtitle}
+          </Text>
+
+          {/* Form Fields */}
+          <View className="gap-4">
+
+            {/* STEP 1: Personal Details */}
+            {currentStep === 1 ? (
+              <>
+                <FormField
+                  label="Full Name"
+                  required
+                  value={formData.name}
+                  onChangeText={(text) => updateField('name', text)}
+                  placeholder="e.g. Tariq Mansoor"
+                  error={errors.name}
+                />
+
+                {/* Mobile Number with Country Pill Split Box */}
+                <View style={{ gap: 6 }}>
+                  <Text style={{ fontSize: 13, fontWeight: '600', color: '#18181B' }}>
+                    Mobile Number <Text style={{ color: '#B04A37' }}>*</Text>
+                  </Text>
+
+                  <View
+                    style={{
+                      height: 52,
+                      minHeight: 52,
+                      borderRadius: 14,
+                      borderWidth: 1,
+                      borderColor: errors.phoneNumber
+                        ? '#F87171'
+                        : isPhoneFocused
+                        ? '#B04A37'
+                        : '#E4E4E7',
+                      backgroundColor: errors.phoneNumber ? '#FFF5F5' : '#FFFFFF',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      overflow: 'hidden',
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => setShowCountryPicker(true)}
+                      activeOpacity={0.75}
+                      style={{
+                        paddingHorizontal: 14,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        height: '100%',
+                      }}>
+                      <Text style={{ fontSize: 14, fontWeight: '600', color: '#18181B' }}>
+                        {countryShort} {selectedCountry.code}
+                      </Text>
+                      <Text style={{ fontSize: 12, color: '#A1A1AA', marginLeft: 6 }}>▾</Text>
+                    </TouchableOpacity>
+
+                    <View
+                      style={{
+                        width: 1,
+                        height: '100%',
+                        backgroundColor: errors.phoneNumber ? '#FECACA' : '#E4E4E7',
+                      }}
+                    />
+
+                    <TextInput
+                      value={formData.phoneNumber}
+                      onChangeText={(text) => updateField('phoneNumber', text)}
+                      placeholder="50 123 4567"
+                      placeholderTextColor="#A1A1AA"
+                      keyboardType="phone-pad"
+                      onFocus={() => setIsPhoneFocused(true)}
+                      onBlur={() => setIsPhoneFocused(false)}
+                      style={{
+                        flex: 1,
+                        paddingHorizontal: 14,
+                        fontSize: 14,
+                        fontWeight: '400',
+                        color: '#18181B',
+                        height: '100%',
+                        paddingVertical: 0,
+                        ...(Platform.OS === 'web'
+                          ? ({ outline: 'none', border: 'none', backgroundColor: 'transparent' } as any)
+                          : {}),
+                      }}
+                    />
+                  </View>
+
+                  {errors.phoneNumber ? (
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2, marginLeft: 2 }}>
+                      <Text style={{ fontSize: 12, color: '#EF4444' }}>ⓘ</Text>
+                      <Text style={{ fontSize: 12, color: '#EF4444' }}>{errors.phoneNumber}</Text>
+                    </View>
+                  ) : null}
+                </View>
+
+                <FormField
+                  label="Email Address"
+                  optional
+                  value={formData.email || ''}
+                  onChangeText={(text) => updateField('email', text)}
+                  placeholder="tariq@almadinameats.com"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  error={errors.email}
+                />
+              </>
+            ) : null}
+
+            {/* STEP 2: Shop Details & Coordinates (matches user screenshot pixel-for-pixel) */}
+            {currentStep === 2 ? (
+              <>
+                <FormField
+                  label="Shop / Butchery Name"
+                  optional
+                  value={formData.shopName || ''}
+                  onChangeText={(text) => updateField('shopName', text)}
+                  placeholder="Al Madina Artisanal Butchery"
+                />
+
+                {/* Store Location Field Box (Tapping opens map view) */}
+                <LocationStatusField
+                  label="Store Location"
+                  required
+                  addressText={formData.shopAddress}
+                  isValidated={Boolean(formData.latitude && formData.longitude)}
+                  placeholder="12 Market Road (Old MTH), Ambattur"
+                  onPress={() => setShowMapModal(true)}
+                  error={errors.location}
+                />
+
+                {/* Mini-Map Preview Card directly below Store Location (matches screenshot) */}
+                <StoreLocationMapPreview
+                  latitude={formData.latitude}
+                  longitude={formData.longitude}
+                  addressText={formData.shopAddress}
+                  onPress={() => setShowMapModal(true)}
+                />
+
+                {/* Pre-populated & Editable Address Fields */}
+                <FormField
+                  label="Shop Address"
+                  required
+                  value={formData.shopAddress}
+                  onChangeText={(text) => updateField('shopAddress', text)}
+                  placeholder="12 Market Road (Old MTH), Ambattur"
+                  error={errors.shopAddress}
+                />
+
+                <View className="flex-row gap-3">
+                  <View className="flex-1">
+                    <FormField
+                      label="City"
+                      required
+                      value={formData.city}
+                      onChangeText={(text) => updateField('city', text)}
+                      placeholder="Chennai"
+                      error={errors.city}
+                    />
+                  </View>
+
+                  <View className="flex-1">
+                    <SelectField
+                      label="State"
+                      required
+                      value={formData.state}
+                      placeholder="Tamil Nadu"
+                      options={INDIAN_STATES}
+                      onSelect={(state) => updateField('state', state)}
+                      error={errors.state}
+                      modalTitle="Select State"
+                    />
+                  </View>
+                </View>
+
+                <FormField
+                  label="PIN Code"
+                  required
+                  value={formData.pinCode}
+                  onChangeText={(text) => updateField('pinCode', text)}
+                  placeholder="600053"
+                  keyboardType="number-pad"
+                  maxLength={6}
+                  error={errors.pinCode}
+                />
+              </>
+            ) : null}
+
+            {/* STEP 3: Business Verification */}
+            {currentStep === 3 ? (
+              <>
+                <FileUploadField
+                  label="Halal Slaughter Certificate"
+                  required
+                  hint="PDF or Image (max 10MB)"
+                  file={formData.halalFile}
+                  error={errors.halalFile}
+                  onPick={() => pickDocument('halalFile')}
+                  onRemove={() => updateField('halalFile', null)}
+                />
+
+                <FileUploadField
+                  label="FSSAI License Document"
+                  required
+                  hint="PDF or Image (max 10MB)"
+                  file={formData.fssaiFile}
+                  error={errors.fssaiFile}
+                  onPick={() => pickDocument('fssaiFile')}
+                  onRemove={() => updateField('fssaiFile', null)}
+                />
+
+                <FormField
+                  label="GSTIN Number"
+                  required
+                  value={formData.gstin}
+                  onChangeText={(text) => updateField('gstin', text.toUpperCase())}
+                  placeholder="e.g. 33AAAAA0000A1Z5"
+                  autoCapitalize="characters"
+                  maxLength={15}
+                  error={errors.gstin}
+                />
+              </>
+            ) : null}
+
+            {/* STEP 4: Settlement Information */}
+            {currentStep === 4 ? (
+              <>
+                <View className="p-3.5 rounded-md bg-zinc-50 border border-zinc-200">
+                  <Text className="text-xs text-zinc-600 leading-relaxed">
+                    Direct weekly settlement: Payouts are transferred every Monday directly to your registered bank account via NEFT/IMPS.
+                  </Text>
+                </View>
+
+                <FormField
+                  label="Account Holder Name"
+                  required
+                  value={formData.accountHolderName}
+                  onChangeText={(text) => updateField('accountHolderName', text)}
+                  placeholder="e.g. Al Madina Butchery"
+                  error={errors.accountHolderName}
+                />
+
+                <FormField
+                  label="Bank Name"
+                  required
+                  value={formData.bankName}
+                  onChangeText={(text) => updateField('bankName', text)}
+                  placeholder="e.g. HDFC Bank / ICICI Bank"
+                  error={errors.bankName}
+                />
+
+                <FormField
+                  label="IFSC Code"
+                  required
+                  value={formData.ifscCode}
+                  onChangeText={(text) => updateField('ifscCode', text.toUpperCase())}
+                  placeholder="e.g. HDFC0001234"
+                  autoCapitalize="characters"
+                  maxLength={11}
+                  error={errors.ifscCode}
+                />
+              </>
+            ) : null}
+
+            {/* STEP 5: Store Operations */}
+            {currentStep === 5 ? (
+              <>
+                <View className="flex-row gap-3">
+                  <View className="flex-1">
+                    <FormField
+                      label="Opening Time"
+                      required
+                      value={formData.openingTime}
+                      onChangeText={(text) => updateField('openingTime', text)}
+                      placeholder="08:00 AM"
+                      error={errors.openingTime}
+                    />
+                  </View>
+
+                  <View className="flex-1">
+                    <FormField
+                      label="Closing Time"
+                      required
+                      value={formData.closingTime}
+                      onChangeText={(text) => updateField('closingTime', text)}
+                      placeholder="09:00 PM"
+                      error={errors.closingTime}
+                    />
+                  </View>
+                </View>
+
+                <View className="gap-2">
+                  <Text className="text-[13px] font-medium text-zinc-800">
+                    Operating Days <Text className="text-[#B04A37]">*</Text>
+                  </Text>
+
+                  <View className="flex-row flex-wrap gap-2">
+                    {ALL_DAYS.map((day) => {
+                      const isSelected = formData.workingDays.includes(day);
+                      return (
+                        <TouchableOpacity
+                          key={day}
+                          onPress={() => toggleDay(day)}
+                          activeOpacity={0.8}
+                          className={`px-3.5 py-2 rounded-md border transition-all ${
+                            isSelected
+                              ? 'bg-[#B04A37] border-[#B04A37]'
+                              : 'bg-white border-zinc-200'
+                          }`}>
+                          <Text
+                            className={`text-xs font-semibold ${
+                              isSelected ? 'text-white' : 'text-zinc-700'
+                            }`}>
+                            {day}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+
+                  {errors.workingDays ? (
+                    <View className="flex-row items-center gap-1 mt-0.5 ml-0.5">
+                      <Text className="text-xs text-red-500 leading-none">ⓘ</Text>
+                      <Text className="text-xs text-red-500 font-normal">{errors.workingDays}</Text>
+                    </View>
+                  ) : null}
+                </View>
+              </>
+            ) : null}
+
+          </View>
+        </ScrollView>
+
+        {/* 4. Bottom Sticky Action Bar */}
+        <View className="w-full max-w-[480px] self-center px-5 sm:px-6 pt-3 pb-6 bg-white border-t border-zinc-100">
+          {serverError ? (
+            <View className="bg-red-50 border border-red-200 rounded-md p-3 mb-3">
+              <Text className="text-red-700 text-xs font-medium leading-normal">
+                {serverError}
+              </Text>
+            </View>
+          ) : null}
+
+          <TouchableOpacity
+            onPress={handleNext}
+            disabled={loading}
+            activeOpacity={0.85}
+            style={{
+              width: '100%',
+              height: 48,
+              minHeight: 48,
+              borderRadius: 8,
+              backgroundColor: '#B04A37',
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: '#B04A37',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.25,
+              shadowRadius: 8,
+              elevation: 4,
+            }}>
+            {loading ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : (
+              <Text style={{ fontSize: 15, fontWeight: '700', color: '#FFFFFF' }}>
+                {currentStep < 5 ? 'Continue' : 'Complete Registration'}
+              </Text>
+            )}
+          </TouchableOpacity>
+
+          <View className="flex-row items-center justify-center pt-3.5">
+            <Text className="text-xs text-zinc-500">
+              Already registered?{' '}
+            </Text>
+            <TouchableOpacity onPress={onSwitchToLogin} activeOpacity={0.7}>
+              <Text className="text-xs font-semibold text-[#B04A37]">
+                Sign in
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
       </View>
 
       {/* Country Selection Modal */}
@@ -627,6 +932,17 @@ export function MerchantRegisterWizard({
         }}
         selectedCountryCode={selectedCountry.code}
       />
-    </View>
+
+      {/* Store Location Map Modal */}
+      <StoreLocationMapModal
+        visible={showMapModal}
+        initialLatitude={formData.latitude}
+        initialLongitude={formData.longitude}
+        onClose={() => setShowMapModal(false)}
+        onConfirmLocation={handleMapLocationConfirmed}
+      />
+
+
+    </KeyboardAvoidingView>
   );
 }

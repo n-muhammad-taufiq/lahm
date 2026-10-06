@@ -1,3 +1,10 @@
+/**
+ * Product Form Modal Component
+ * 
+ * Add/Edit modal form for butcher shop products, including fields for name,
+ * price, stock count, selling unit (per kg/piece), description, and photo URL.
+ */
+
 import React, { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,

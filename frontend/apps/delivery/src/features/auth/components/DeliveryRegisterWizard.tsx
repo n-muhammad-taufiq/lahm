@@ -1,3 +1,10 @@
+/**
+ * Delivery Partner Registration Wizard Component
+ * 
+ * Multi-step onboarding form for delivery partners to submit personal details,
+ * vehicle information, driving license, and vehicle registration documents.
+ */
+
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
@@ -135,6 +142,43 @@ export function DeliveryRegisterWizard({
     } catch (err: any) {
       setError('Failed to select file. Please try again.');
     }
+  };
+
+  const handleQuickFill = () => {
+    setError('');
+    setFormData((prev) => ({
+      ...prev,
+      name: 'Karthik Raja',
+      phoneNumber: prev.phoneNumber || '9876543210',
+      countryCode: prev.countryCode || DEFAULT_COUNTRY.code,
+      dateOfBirth: '1998-05-15',
+      addressLine: '45, Gandhi Street, Ambattur',
+      city: 'Chennai',
+      state: 'Tamil Nadu',
+      pinCode: '600053',
+      vehicleType: 'Motorcycle',
+      vehicleRegistrationNumber: 'TN02AB1234',
+      drivingLicenseNumber: 'TN0220180005678',
+      drivingLicenseFile: {
+        name: 'driving_license_sample.pdf',
+        uri: 'sample://dl_sample.pdf',
+        size: 524288,
+        mimeType: 'application/pdf',
+      },
+      vehicleRcFile: {
+        name: 'vehicle_rc_sample.pdf',
+        uri: 'sample://rc_sample.pdf',
+        size: 524288,
+        mimeType: 'application/pdf',
+      },
+      accountHolderName: 'Karthik Raja',
+      bankAccountNumber: '123456789012',
+      ifsc: 'SBIN0001234',
+      bankName: 'State Bank of India',
+      preferredDeliveryArea: 'Ambattur & Anna Nagar',
+      workingHours: 'Full-time Morning (8 AM - 4 PM)',
+      maxDeliveryRadiusKm: '10 km',
+    }));
   };
 
   // Step Validation
@@ -289,9 +333,17 @@ export function DeliveryRegisterWizard({
         {/* Step Header & Progress Bar */}
         <View className="mb-4">
           <View className="flex-row items-center justify-between mb-2">
-            <Text className="text-[11px] font-bold tracking-[1.5px] text-[#B87B6A] uppercase">
-              STEP {currentStep} OF 5
-            </Text>
+            <View className="flex-row items-center gap-2">
+              <Text className="text-[11px] font-bold tracking-[1.5px] text-[#B87B6A] uppercase">
+                STEP {currentStep} OF 5
+              </Text>
+              <TouchableOpacity
+                onPress={handleQuickFill}
+                activeOpacity={0.7}
+                className="bg-[#FFF5F2] border border-[#F2D8CD] px-2 py-0.5 rounded-full">
+                <Text className="text-[10px] font-bold text-[#E77A62]">⚡ Quick Fill</Text>
+              </TouchableOpacity>
+            </View>
             <Text className="text-xs font-semibold text-[#8C7A70]">
               {currentStep === 1 && 'Basic Details'}
               {currentStep === 2 && 'Personal Details'}

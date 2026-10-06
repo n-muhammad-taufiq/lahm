@@ -1,3 +1,10 @@
+/**
+ * Button Component
+ * 
+ * Reusable button supporting multiple visual variants (primary, secondary, outline, ghost),
+ * sizes, loading spinners, and optional left/right icons.
+ */
+
 import React from 'react';
 import {
   ActivityIndicator,

@@ -1,3 +1,9 @@
+/**
+ * Web Bottom Navigation Tabs Component
+ * 
+ * Renders the web-specific navigation tab bar for merchants.
+ */
+
 import {
   Tabs,
   TabList,
@@ -23,9 +29,6 @@ export default function AppTabs() {
         <CustomTabList>
           <TabTrigger name="home" href="/" asChild>
             <TabButton>Home</TabButton>
-          </TabTrigger>
-          <TabTrigger name="explore" href="/explore" asChild>
-            <TabButton>Explore</TabButton>
           </TabTrigger>
         </CustomTabList>
       </TabList>

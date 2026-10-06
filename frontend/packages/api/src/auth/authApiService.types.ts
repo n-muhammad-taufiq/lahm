@@ -107,10 +107,13 @@ export interface MerchantRegistrationFormData {
   email?: string;
 
   // Step 2: Shop Details
+  shopName?: string;
   shopAddress: string;
   city: string;
   state: string;
   pinCode: string;
+  latitude?: number | null;
+  longitude?: number | null;
 
   // Step 3: Business Verification
   halalFile?: UploadedFile | null;

@@ -1,3 +1,10 @@
+/**
+ * Brand Header Component
+ * 
+ * Shared typography header that renders the signature "Lahm" script brand logo
+ * and customizable role subtitle (e.g., Customer, Merchant Partner, Delivery Partner).
+ */
+
 import React from 'react';
 import { Text, View } from 'react-native';
 import type { BrandHeaderProps } from './BrandHeader.types';

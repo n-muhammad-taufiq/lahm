@@ -1,3 +1,10 @@
+/**
+ * Merchant Dashboard Screen Route
+ * 
+ * Main merchant dashboard allowing butcher shop owners to manage products,
+ * track inventory status, toggle stock availability, and navigate tabs.
+ */
+
 import React, { useMemo, useState } from 'react';
 import {
   ActivityIndicator,

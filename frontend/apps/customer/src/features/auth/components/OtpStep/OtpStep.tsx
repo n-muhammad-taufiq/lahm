@@ -1,3 +1,10 @@
+/**
+ * OTP Verification Step Component
+ * 
+ * A 6-digit one-time password (OTP) input card with countdown timer,
+ * resend button, and change phone number option.
+ */
+
 import React, { useState } from 'react';
 import {
   Text,

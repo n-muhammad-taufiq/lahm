@@ -1,3 +1,10 @@
+/**
+ * Text Input Component
+ * 
+ * Reusable form text input supporting floating labels, error messages,
+ * helper text, password visibility toggles, and icon adornments.
+ */
+
 import React, { useState } from 'react';
 import {
   Pressable,

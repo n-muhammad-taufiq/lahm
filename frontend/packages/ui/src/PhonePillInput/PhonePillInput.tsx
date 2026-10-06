@@ -1,3 +1,10 @@
+/**
+ * Phone Pill Input Component
+ * 
+ * Specialized phone number input field featuring an interactive country flag/code selector pill
+ * alongside a formatted phone number text entry.
+ */
+
 import React, { useState } from 'react';
 import {
   Text,

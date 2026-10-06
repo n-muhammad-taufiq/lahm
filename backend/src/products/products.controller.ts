@@ -9,10 +9,15 @@ import {
     Post,
     Put,
     Query,
+    UseGuards,
 } from "@nestjs/common";
 import { ProductsService } from "./products.service";
 import { CreateProductDto } from "./dtos/create-product.dto";
 import { UpdateProductDto } from "./dtos/update-product.dto";
+import { JwtAuthGuard } from "../authentication/guards/jwt-auth.guard";
+import { RolesGuard } from "../authentication/guards/roles.guard";
+import { Roles } from "../authentication/decorators/roles.decorator";
+import { Role } from "../users/enums/role.enum";
 
 @Controller('products')
 export class ProductsController {
@@ -37,11 +42,15 @@ export class ProductsController {
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.MERCHANT)
     async create(@Body() createProductDto: CreateProductDto) {
         return this.productsService.create(createProductDto);
     }
 
     @Patch(':id')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.MERCHANT)
     async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateProductDto: UpdateProductDto,
@@ -50,6 +59,8 @@ export class ProductsController {
     }
 
     @Put(':id')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.MERCHANT)
     async updateWithPut(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateProductDto: UpdateProductDto,
@@ -58,6 +69,8 @@ export class ProductsController {
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.MERCHANT)
     async remove(@Param('id', ParseIntPipe) id: number) {
         return this.productsService.remove(id);
     }

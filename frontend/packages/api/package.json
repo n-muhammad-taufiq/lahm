@@ -9,11 +9,14 @@
     "./*": "./src/*"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.66.0",
     "axios": "^1.19.0",
-    "firebase": "^12.18.0"
+    "firebase": "^12.18.0",
+    "zustand": "^5.0.3"
   },
   "peerDependencies": {
-    "react": "*"
+    "react": "*",
+    "expo-secure-store": "*"
   },
   "devDependencies": {
     "@types/react": "~19.2.2"

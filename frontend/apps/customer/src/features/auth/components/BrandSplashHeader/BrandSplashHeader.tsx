@@ -1,3 +1,9 @@
+/**
+ * Brand Splash Header Component
+ * 
+ * Displays the animated Lahm brand header with smooth fade and zoom effects during auth.
+ */
+
 import React, { useEffect, useRef } from 'react';
 import {
   Animated,

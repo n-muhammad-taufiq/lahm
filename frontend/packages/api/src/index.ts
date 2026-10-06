@@ -1,10 +1,20 @@
 // Client & Utilities
 export * from './client';
 export * from './types';
+export * from './tokenStorage';
+export * from './queryClient';
+export {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 // Auth Module
 export * from './auth/authApiService';
 export * from './auth/authApiService.types';
+export * from './auth/authStore';
 export * from './auth/merchantSession';
 export * from './auth/usePhoneAuthFlow';
 

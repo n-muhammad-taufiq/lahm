@@ -1,6 +1,7 @@
 import axios, { type AxiosError } from 'axios';
 import Constants from 'expo-constants';
 import type { ApiError } from './types';
+import { tokenStorage } from './tokenStorage';
 
 function getApiBaseUrl(): string {
   const envUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -51,16 +52,25 @@ export function getAccessToken(): string | null {
 }
 
 /**
- * Clears the stored access token
+ * Clears the stored access token and deletes stored tokens from secure storage
  */
-export function clearAccessToken() {
+export async function clearAccessToken(): Promise<void> {
   currentAccessToken = null;
+  await tokenStorage.clearTokens();
 }
 
 // Automatically attach Bearer token to requests if available
-api.interceptors.request.use((config) => {
-  if (currentAccessToken && config.headers) {
-    config.headers.Authorization = `Bearer ${currentAccessToken}`;
+api.interceptors.request.use(async (config) => {
+  let token = currentAccessToken;
+  if (!token) {
+    token = await tokenStorage.getAccessToken();
+    if (token) {
+      currentAccessToken = token;
+    }
+  }
+
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });

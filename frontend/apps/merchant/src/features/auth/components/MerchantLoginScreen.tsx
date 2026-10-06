@@ -1,3 +1,10 @@
+/**
+ * Merchant Login Screen Component
+ * 
+ * Login screen for butcher shop merchants via phone OTP verification or Google,
+ * with navigation to the merchant registration wizard.
+ */
+
 import React, { useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -87,6 +94,32 @@ export function MerchantLoginScreen() {
     .slice(0, 2)
     .toLowerCase();
 
+  const isRegistering = authMode === 'register' || step === 'register_details';
+
+  // FULL-SCREEN REGISTRATION FLOW (No short card, full viewport)
+  if (isRegistering) {
+    return (
+      <View
+        className="flex-1 bg-white"
+        style={{
+          paddingTop: Math.max(insets?.top || 0, 12),
+          paddingBottom: Math.max(insets?.bottom || 0, 12),
+        }}>
+        <MerchantRegisterWizard
+          initialPhoneNumber={cleanPhone || undefined}
+          initialCountryCode={selectedCountry.code}
+          onSwitchToLogin={() => {
+            if (step === 'register_details') {
+              handleChangeNumber();
+            }
+            setAuthMode('login');
+          }}
+          onSuccess={() => router.replace('/dashboard' as any)}
+        />
+      </View>
+    );
+  }
+
   return (
     <LinearGradient
       colors={['#FCD5C5', '#FDF2EB', '#FFFFFF', '#FFFFFF']}
@@ -116,29 +149,19 @@ export function MerchantLoginScreen() {
             />
           </View>
 
-          {/* 2. AUTHENTICATION / REGISTRATION FLOW */}
-          {authMode === 'register' ? (
-            <View key="view-register-wizard" className="w-full max-w-[420px] self-center pb-6">
-              <MerchantRegisterWizard
-                onSwitchToLogin={() => setAuthMode('login')}
-                onSuccess={() => router.replace('/dashboard' as any)}
-              />
-            </View>
-          ) : (
-            <View key="view-login-flow" className="w-full max-w-[400px] self-center pb-6">
-              {/* VIEW A: Initial Choice Screen (2 Buttons) */}
-              {screenView === 'choice' && step === 'phone' ? (
-                <View key="view-choice" className="w-full">
-                  <View className="mb-4">
-                    <Text className="text-[27px] font-extrabold text-[#1C1611] tracking-tight font-serif">
-                      {authMode === 'login' ? 'Partner Portal.' : 'Join as Partner.'}
-                    </Text>
-                    <Text className="text-sm text-[#7D6F66] mt-1.5">
-                      {authMode === 'login'
-                        ? 'Sign in to manage your butchery orders and inventory.'
-                        : 'Register your meat shop to reach verified customers.'}
-                    </Text>
-                  </View>
+          {/* 2. AUTHENTICATION FLOW */}
+          <View key="view-login-flow" className="w-full max-w-[400px] self-center pb-6">
+            {/* VIEW A: Initial Choice Screen (2 Buttons) */}
+            {screenView === 'choice' && step === 'phone' ? (
+              <View key="view-choice" className="w-full">
+                <View className="mb-4">
+                  <Text className="text-[27px] font-extrabold text-[#1C1611] tracking-tight font-serif">
+                    Partner Portal.
+                  </Text>
+                  <Text className="text-sm text-[#7D6F66] mt-1.5">
+                    Sign in to manage your butchery orders and inventory.
+                  </Text>
+                </View>
 
                   {/* 1. Login with Phone Number Button */}
                   <TouchableOpacity
@@ -355,21 +378,6 @@ export function MerchantLoginScreen() {
                 </View>
               ) : null}
 
-              {/* STEP 3: Complete 5-Step Merchant Registration Wizard */}
-              {step === 'register_details' ? (
-                <View key="view-register-details" className="w-full">
-                  <MerchantRegisterWizard
-                    initialPhoneNumber={cleanPhone}
-                    initialCountryCode={selectedCountry.code}
-                    onSwitchToLogin={() => {
-                      handleChangeNumber();
-                      setAuthMode('login');
-                    }}
-                    onSuccess={() => router.replace('/dashboard' as any)}
-                  />
-                </View>
-              ) : null}
-
               {/* STEP 4: Success State */}
               {step === 'success' ? (
                 <View key="view-success" className="items-center py-4">
@@ -415,7 +423,6 @@ export function MerchantLoginScreen() {
               ) : null}
 
             </View>
-          )}
 
         </ScrollView>
       </KeyboardAvoidingView>

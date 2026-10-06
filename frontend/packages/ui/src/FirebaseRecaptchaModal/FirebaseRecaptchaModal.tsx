@@ -1,3 +1,9 @@
+/**
+ * Firebase reCAPTCHA Modal Component
+ * 
+ * Invisible or visible WebView modal verifying human interactions for Firebase Phone Authentication.
+ */
+
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import {
   Platform,

@@ -1,9 +1,17 @@
+/**
+ * Customer App Root Layout
+ * 
+ * Root navigation wrapper for the customer application. Manages font loading,
+ * the splash screen visibility, and provides the navigation stack.
+ */
+
 import '../global.css';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font';
 import { LogBox } from 'react-native';
+import { useAuthStore, queryClient, QueryClientProvider } from '@lahm/api';
 
 LogBox.ignoreLogs([
   '@firebase/auth',
@@ -16,20 +24,26 @@ export default function RootLayout() {
     Parisienne: require('../../assets/fonts/Parisienne-Regular.ttf'),
   });
   const [isReady, setIsReady] = useState(false);
+  const initializeAuth = useAuthStore((state) => state.initializeAuth);
+  const isAuthLoading = useAuthStore((state) => state.isLoading);
 
   useEffect(() => {
-    if (fontsLoaded || fontError) {
+    initializeAuth();
+  }, [initializeAuth]);
+
+  useEffect(() => {
+    if ((fontsLoaded || fontError) && !isAuthLoading) {
       setIsReady(true);
       SplashScreen.hideAsync().catch(() => {});
     }
-  }, [fontsLoaded, fontError]);
+  }, [fontsLoaded, fontError, isAuthLoading]);
 
-  // Fail-safe: never keep the app on a blank screen for more than 600ms
+  // Fail-safe: prevent app from hanging indefinitely if network stalls
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsReady(true);
       SplashScreen.hideAsync().catch(() => {});
-    }, 600);
+    }, 3000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -37,7 +51,11 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Stack screenOptions={{ headerShown: false }} />
+    </QueryClientProvider>
+  );
 }
 
 

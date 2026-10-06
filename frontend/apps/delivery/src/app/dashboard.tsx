@@ -1,3 +1,9 @@
+/**
+ * Delivery Dashboard Screen Route
+ * 
+ * Main landing screen route for delivery partners once authenticated.
+ */
+
 import React from 'react';
 import { Text, View } from 'react-native';
 

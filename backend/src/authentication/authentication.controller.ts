@@ -3,6 +3,7 @@ import { AuthenticationService } from './authentication.service';
 import { EmailLoginDto } from './dtos/email-login-dto.dto';
 import { FirebaseOtpLoginDto } from './dtos/firebase-otp-login.dto';
 import { FirebaseOtpRegisterDto } from './dtos/firebase-otp-register.dto';
+import { RefreshTokenDto } from './dtos/refresh-token.dto';
 import { User } from '../users/entities/user.entity';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -27,6 +28,12 @@ export class AuthenticationController {
     @Post('firebase-otp-register')
     async firebaseOtpRegister(@Body() firebaseOtpRegisterDto: FirebaseOtpRegisterDto) {
         return await this.authenticationService.firebaseOtpRegister(firebaseOtpRegisterDto);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('refresh')
+    async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+        return await this.authenticationService.refreshToken(refreshTokenDto);
     }
 
     @UseGuards(JwtAuthGuard)

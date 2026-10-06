@@ -1,3 +1,10 @@
+/**
+ * Themed View Component
+ * 
+ * A container view that automatically adapts its background color
+ * based on the current theme (light or dark mode).
+ */
+
 import { View, type ViewProps } from 'react-native';
 
 import { ThemeColor } from '@/constants/theme';

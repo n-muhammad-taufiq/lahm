@@ -7,6 +7,7 @@ import { AuthenticationService } from "./authentication.service";
 import { UsersModule } from "../users/users.module";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { RolesGuard } from "./guards/roles.guard";
 import { FirebaseModule } from "../firebase/firebase.module";
 
 @Module({
@@ -31,12 +32,14 @@ import { FirebaseModule } from "../firebase/firebase.module";
         AuthenticationService,
         JwtStrategy,
         JwtAuthGuard,
+        RolesGuard,
     ],
     exports: [
         AuthenticationService,
         PassportModule,
         JwtModule,
         JwtAuthGuard,
+        RolesGuard,
     ],
 })
 export class AuthenticationModule { }

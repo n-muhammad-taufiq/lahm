@@ -1,3 +1,10 @@
+/**
+ * Product Catalog View Component
+ * 
+ * Complete catalog view for merchants with search filtering, stock status summary chips,
+ * pull-to-refresh, empty states, and product list rendering.
+ */
+
 import React, { useMemo, useState } from 'react';
 import {
   RefreshControl,

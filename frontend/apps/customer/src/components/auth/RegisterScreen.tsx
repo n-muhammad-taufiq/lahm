@@ -1,3 +1,10 @@
+/**
+ * Customer Email/Password Registration Screen Component
+ * 
+ * Form allowing new customers to register using their name, email,
+ * phone number, and password.
+ */
+
 import React, { useState } from 'react';
 import {
   View,

@@ -1,3 +1,9 @@
+/**
+ * Native Bottom Navigation Tabs Component
+ * 
+ * Renders the native bottom tab bar navigation for delivery partners on mobile devices.
+ */
+
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { useColorScheme } from 'react-native';
 

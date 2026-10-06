@@ -1,6 +1,6 @@
-import { ConflictException, Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, In } from 'typeorm';
 import { Merchant } from './entities/merchant.entity';
 import { RegisterMerchantDto } from './dtos/register-merchant-dto.dto';
 import { UpdateMerchantDto } from './dtos/update-merchant-dto.dto';
@@ -36,7 +36,7 @@ export interface NearbyMerchantItem {
 }
 
 @Injectable()
-export class MerchantsService implements OnModuleInit {
+export class MerchantsService {
     constructor(
         @InjectRepository(Merchant)
         private readonly merchantRepository: Repository<Merchant>,
@@ -46,36 +46,6 @@ export class MerchantsService implements OnModuleInit {
         private readonly dataSource: DataSource,
         private readonly authenticationService: AuthenticationService,
     ) {}
-
-    async onModuleInit() {
-        // Automatically ensure existing merchants in Ambattur have coordinates and shop names populated
-        try {
-            const merchants = await this.merchantRepository.find({
-                relations: { user: true },
-            });
-            for (const m of merchants) {
-                let updated = false;
-                if (m.latitude == null || m.longitude == null) {
-                    m.latitude = 13.1143;
-                    m.longitude = 80.1548;
-                    updated = true;
-                }
-                if (!m.shopName) {
-                    m.shopName = m.user?.name || 'Al Madina Artisanal Butchery';
-                    updated = true;
-                }
-                if (!m.bannerUrl) {
-                    m.bannerUrl = 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=800&q=80';
-                    updated = true;
-                }
-                if (updated) {
-                    await this.merchantRepository.save(m);
-                }
-            }
-        } catch (err) {
-            // Silently allow init if table is still migrating
-        }
-    }
 
     async register(registerMerchantDto: RegisterMerchantDto) {
         const {
@@ -208,6 +178,32 @@ export class MerchantsService implements OnModuleInit {
 
         const { entities, raw } = await qb.getRawAndEntities();
 
+        if (entities.length === 0) {
+            return [];
+        }
+
+        const merchantIds = entities.map((m) => m.id);
+
+        // Batch-query products for all nearby merchants in a single database roundtrip
+        const allProducts = await this.productRepository.find({
+            where: { merchantId: In(merchantIds), isAvailable: true },
+            select: { id: true, name: true, merchantId: true },
+            order: { createdAt: 'DESC' },
+        });
+
+        // Group featured products (up to 4) and total counts per merchant in memory
+        const featuredProductsMap = new Map<number, string[]>();
+        const productCountMap = new Map<number, number>();
+
+        for (const p of allProducts) {
+            const currentList = featuredProductsMap.get(p.merchantId) ?? [];
+            if (currentList.length < 4) {
+                currentList.push(p.name);
+                featuredProductsMap.set(p.merchantId, currentList);
+            }
+            productCountMap.set(p.merchantId, (productCountMap.get(p.merchantId) ?? 0) + 1);
+        }
+
         const results: NearbyMerchantItem[] = [];
 
         for (let i = 0; i < entities.length; i++) {
@@ -233,18 +229,6 @@ export class MerchantsService implements OnModuleInit {
                 }
             }
 
-            // Products summary
-            const products = await this.productRepository.find({
-                where: { merchantId: merchant.id, isAvailable: true },
-                select: { id: true, name: true, price: true },
-                take: 4,
-                order: { createdAt: 'DESC' },
-            });
-
-            const totalProductCount = await this.productRepository.count({
-                where: { merchantId: merchant.id, isAvailable: true },
-            });
-
             results.push({
                 id: merchant.id,
                 shopName: merchant.shopName,
@@ -257,15 +241,15 @@ export class MerchantsService implements OnModuleInit {
                 distance,
                 deliveryTimeEstimate,
                 rating: merchant.rating ?? 0,
-                bannerUrl: merchant.bannerUrl || 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=800&q=80',
+                bannerUrl: merchant.bannerUrl,
                 halalCertificateUrl: merchant.halalCertificateUrl,
                 fssaiCertificateUrl: merchant.fssaiCertificateUrl,
                 openingTime: merchant.openingTime || '',
                 closingTime: merchant.closingTime || '',
                 workingDays: merchant.workingDays,
                 isVerified: merchant.isVerified,
-                productCount: totalProductCount,
-                featuredProducts: products.map((p) => p.name),
+                productCount: productCountMap.get(merchant.id) ?? 0,
+                featuredProducts: featuredProductsMap.get(merchant.id) ?? [],
             });
         }
 
@@ -288,8 +272,8 @@ export class MerchantsService implements OnModuleInit {
             pinCode: merchant.pinCode,
             latitude: merchant.latitude,
             longitude: merchant.longitude,
-            rating: merchant.rating ?? 4.8,
-            bannerUrl: merchant.bannerUrl || 'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=800&q=80',
+            rating: merchant.rating ?? 0,
+            bannerUrl: merchant.bannerUrl,
             halalCertificateUrl: merchant.halalCertificateUrl,
             fssaiCertificateUrl: merchant.fssaiCertificateUrl,
             openingTime: merchant.openingTime || '',

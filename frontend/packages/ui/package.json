@@ -11,7 +11,8 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "react-native-webview": "*"
+    "react-native-webview": "*",
+    "react-native-maps": "*"
   },
   "dependencies": {
     "@lahm/tokens": "*"

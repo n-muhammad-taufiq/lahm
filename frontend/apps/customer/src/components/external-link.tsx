@@ -1,3 +1,10 @@
+/**
+ * External Link Component
+ * 
+ * Opens external URLs inside an in-app browser on native devices,
+ * or in a new browser tab on the web.
+ */
+
 import { Href, Link } from 'expo-router';
 import { openBrowserAsync, WebBrowserPresentationStyle } from 'expo-web-browser';
 import { type ComponentProps } from 'react';

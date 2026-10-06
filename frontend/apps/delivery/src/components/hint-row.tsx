@@ -1,3 +1,9 @@
+/**
+ * Hint Row Component
+ * 
+ * Displays a helpful tip or code hint row with styled label and code snippet container.
+ */
+
 import type { ReactNode } from 'react';
 import { View, StyleSheet } from 'react-native';
 

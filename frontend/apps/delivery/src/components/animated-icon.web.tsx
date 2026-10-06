@@ -1,3 +1,9 @@
+/**
+ * Web Animated Splash Overlay Component
+ * 
+ * Web-specific fallback for the animated splash screen overlay.
+ */
+
 import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 import Animated, { Keyframe, Easing } from 'react-native-reanimated';

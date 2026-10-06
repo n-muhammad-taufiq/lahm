@@ -1,3 +1,10 @@
+/**
+ * Merchant Bottom Navigation Bar Component
+ * 
+ * Fixed bottom navigation bar for merchants to switch between the Home dashboard
+ * and the Products catalog with a real-time item count badge.
+ */
+
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
