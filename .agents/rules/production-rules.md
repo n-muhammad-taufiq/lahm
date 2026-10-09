@@ -1,18 +1,18 @@
 # Production Development Rules
 
-## 1. Never use mock or fake data
+## 1. Strictly Production-Only Code: Zero Mock, Sandbox, or Development Artifacts
 
-For production code:
+Every piece of code that we write across the monorepo MUST be considered final code for production:
 
-- NEVER use mock data.
-- NEVER use hardcoded sample data to make a feature appear functional.
-- NEVER create fake API responses.
-- NEVER create placeholder database records.
-- NEVER use fallback data when the real data/API/database is unavailable.
+- NEVER add development, sandbox, or mock data, code, or UI elements.
+- NEVER add sandbox notices, test bypasses, mock hints (e.g. mock OTP notices), or development-only branching.
+- NEVER use mock data or hardcoded sample data to make a feature appear functional.
+- NEVER create fake API responses or placeholder database records.
+- NEVER use fallback data when real data/API/database is unavailable.
 - NEVER replace a real integration with a temporary mock implementation.
 - NEVER silently return fabricated/default business data.
 
-If real data cannot be retrieved, handle the actual error or ask for clarification.
+If real data cannot be retrieved, handle the actual error properly or ask for clarification. Every single line of code must be production-ready.
 
 ## 2. Use the real application flow
 

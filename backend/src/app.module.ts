@@ -17,11 +17,15 @@ import { ConfigModule } from '@nestjs/config';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      database: process.env.DB_NAME,
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
+      ...(process.env.DB_URL
+        ? { url: process.env.DB_URL }
+        : {
+            database: process.env.DB_NAME,
+            host: process.env.DB_HOST,
+            port: Number(process.env.DB_PORT),
+            username: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
+          }),
       synchronize: true,
       autoLoadEntities: true,
     }),

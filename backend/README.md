@@ -31,7 +31,45 @@
 $ npm install
 ```
 
+## Database configuration
+
+The backend supports either a PostgreSQL connection string or individual local
+database settings:
+
+- In Codespaces, add `DB_URL` as a Codespaces secret or environment variable,
+  using the connection string from Neon. When `DB_URL` is set, it takes
+  precedence over the individual `DB_*` settings.
+- For local development, copy `.env.example` to `.env` and set
+  `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, and `DB_NAME` for your
+  local PostgreSQL database. Leave `DB_URL` unset.
+
+Do not commit `.env` or put database credentials in source control.
+
+## Authentication configuration
+
+The backend requires `JWT_ACCESS_TOKEN_SECRET` and
+`JWT_REFRESH_TOKEN_SECRET` to sign access and refresh tokens. Set both in
+`backend/.env` (or as Codespaces secrets/environment variables), using separate
+random values. For local development, generate them with:
+
+```bash
+openssl rand -hex 32
+```
+
+Do not commit these secrets or reuse development values in production.
+
 ## Compile and run the project
+
+In the configured GitHub Codespace, the backend starts automatically and
+port 3000 is forwarded. Startup output is written to
+`~/.lahm-backend.log`. For manual development startup, run the following from
+the repository root:
+
+```bash
+npm run start:backend
+```
+
+You can also run these commands directly from the backend directory:
 
 ```bash
 # development
