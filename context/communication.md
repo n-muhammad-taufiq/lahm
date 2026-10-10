@@ -259,4 +259,19 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Proceed with Phase 6.1 Backend Orders Module Step 2: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
 
+### [2026-10-10 10:56] — Remote Agent Turn Update
+- **Phase & Step:** Frontend Visual Pipeline Setup (Universal Screen Capture Tool)
+- **Files Touched / Created:**
+  - [`scripts/capture-screen.js`](../scripts/capture-screen.js) (Created - Cross-platform mobile screen capture script supporting ADB, Expo Web, and Phone Bridge fallback)
+  - [`context/agent-workflow-guide.md`](./agent-workflow-guide.md) (Updated - Added step 1b Design and 3b Visual Self-Correction to execution sequence)
+- **Important Points for Local Agent:**
+  - **Works on Local Machine:** `node scripts/capture-screen.js --app <customer|merchant|delivery>` automatically detects:
+    1. An Android phone/emulator connected locally via ADB.
+    2. Headless Expo Web viewport (390×844) via Playwright.
+    3. Uploaded screenshots in `reports/` from Phone Bridge.
+  - Saves the image to `reports/latest-screen.png` so `mobile-designer` can visually inspect and self-correct UI code!
+- **Next Required Step:**
+  - Proceed with Phase 6.1 Backend Orders Module Step 2: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
+
+
 

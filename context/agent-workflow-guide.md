@@ -131,15 +131,18 @@ Follow this exact sequence to ensure flawless execution without token waste or d
 
 ### ✍️ Execution Order (During Feature Execution)
 ```
-1. (At Module Boundary): Pre-Flight Review ──> Invoke production-auditor (Mode 1) for failure modes & questions.
-                                           ──> Present questions to User; feed answers back.
-                                           ──> Receive final blueprint with DB Indexes, Concurrency & Caching.
-2. Target Source Code Files                ──> Implement 1–2 files (<100 lines) with pre-step explanation.
-3. Compiler Verification                   ──> Run `npx tsc --noEmit` to ensure 0 errors.
-4. Gate 1 (Outcome Audit)                  ──> Invoke outcome-auditor; verify final-outcome.md & update checklist.
-5. Gate 2 (Production Audit)               ──> Invoke production-auditor (Mode 2); check tokens, zero mocks, code rules.
-6. context/communication.md                ──> Append the timestamped turn log entry.
-7. Git Commit & Push                       ──> Commit with a descriptive message and push to origin/main.
+1a. (Backend Module Boundary): Pre-Flight ──> Invoke production-auditor (Mode 1) for failure modes & questions.
+                                          ──> Present questions to User; feed answers back.
+                                          ──> Receive final blueprint with DB Indexes, Concurrency & Caching.
+1b. (Frontend Screen Boundary): Design     ──> Invoke mobile-designer (Mode 1) for layout tree & token blueprint.
+2. Target Source Code Files               ──> Implement 1–2 files (<100 lines) with pre-step explanation.
+3a. Compiler Verification                  ──> Run `npx tsc --noEmit` to ensure 0 errors.
+3b. (Frontend Screen Verification): Visual ──> Run `node scripts/capture-screen.js --app <name>`
+                                          ──> Invoke mobile-designer (Mode 2) on reports/latest-screen.png for visual fixes.
+4. Gate 1 (Outcome Audit)                 ──> Invoke outcome-auditor; verify final-outcome.md & update checklist.
+5. Gate 2 (Production Audit)              ──> Invoke production-auditor (Mode 2); check tokens, zero mocks, code rules.
+6. context/communication.md               ──> Append the timestamped turn log entry.
+7. Git Commit & Push                      ──> Commit with a descriptive message and push to origin/main.
 ```
 
 ---
