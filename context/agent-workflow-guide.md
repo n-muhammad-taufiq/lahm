@@ -35,19 +35,36 @@ Before writing code for any feature, the agent and developer discuss and agree u
 
 ## 3. The Dual-Auditor Governance Architecture
 
-To maintain uncompromising standards, two dedicated read-only auditor subagents review the work:
+To maintain uncompromising standards, two dedicated auditor subagents operate across the feature lifecycle:
 
 ```mermaid
-flowchart TD
-    DEV["Developer Agent\n(Writes code in small steps)"] --> GATE1{"Gate 1: Outcome Audit\n(outcome-auditor)"}
-    GATE1 -->|"Verifies against final-outcome.md\nUpdates outcome-checklist.md"| GATE2{"Gate 2: Production Audit\n(production-auditor)"}
-    GATE2 -->|"Verifies against production-rules.md\nChecks tokens, architecture, zero mocks"| MERGE["Pass: Safe to Commit & Push"]
+sequenceDiagram
+    autonumber
+    participant D as Developer Agent
+    participant PA as production-auditor
+    participant U as Product Owner (User)
+    participant OA as outcome-auditor
+
+    Note over D,U: Phase 1: Pre-Flight Architecture & Optimization Review
+    D->>PA: Pre-Flight Review (Feature scope & target)
+    PA-->>D: Edge cases, library choices & 3-5 clarifying questions
+    D->>U: Presents clarifying questions to User
+    U-->>D: User's answers & business decisions
+    D->>PA: Feeds User answers back to Auditor
+    PA-->>D: Hardened Blueprint: Mandatory DB Indexes, Concurrency/Locks, Caching & Final Roadmap
+
+    Note over D,U: Phase 2: Implementation & Post-Flight Quality Gates
+    D->>D: Implements step-by-step (1-2 files, ~100 lines, npx tsc check)
+    D->>OA: Gate 1: Outcome Audit (Verifies final-outcome.md, updates outcome-checklist.md)
+    D->>PA: Gate 2: Production Audit (Verifies production-rules.md, tokens, zero mocks)
+    D->>D: Commit & Push to GitHub
 ```
 
-| Auditor | Role & Question Answered | Source of Truth | Key Responsibilities |
+| Auditor | Mode | Role & Question Answered | Key Responsibilities |
 |---|---|---|---|
-| **`outcome-auditor`** | **Product & Scope Guardian**<br>*"Are we building the right things to achieve the final outcome?"* | [`context/final-outcome.md`](./final-outcome.md)<br>[`context/outcome-checklist.md`](./outcome-checklist.md) | • Verifies feature completeness against the 3-app user stories.<br>• Identifies missing gaps across apps (e.g. order placed vs merchant queue).<br>• Updates the Traceability Scoreboard (`outcome-checklist.md`). |
-| **`production-auditor`** | **Engineering & Code Quality Guardian**<br>*"Are we building it cleanly, correctly, and to production standards?"* | [`.agents/rules/production-rules.md`](../.agents/rules/production-rules.md)<br>Framework best practices | • Enforces strictly ZERO mock/sandbox code.<br>• Enforces 100% design token usage (`@lahm/tokens`, unitless dp/points).<br>• Enforces component lengths under ~200 lines.<br>• Checks DTO validation, transaction boundaries, and native mobile UX. |
+| **`production-auditor`** | **Mode 1: Pre-Flight** | **Architectural Advisor & Optimizer**<br>*"Are we designing it for maximum performance and edge-case resilience?"* | • Analyzes failure modes, race conditions, and external libraries.<br>• Generates 3–5 clarifying questions for the user.<br>• Mandates **Database Indexes** (composite & foreign key).<br>• Mandates **Concurrency & Locking** (atomic SQL / pessimistic locks).<br>• Mandates **Caching & Hot Paths** (Redis / TTL caching). |
+| **`outcome-auditor`** | **Post-Flight** | **Product & Scope Guardian**<br>*"Are we building the right things to achieve the final outcome?"* | • Verifies feature completeness against [`context/final-outcome.md`](./final-outcome.md).<br>• Identifies missing gaps across apps.<br>• Updates the Traceability Scoreboard ([`context/outcome-checklist.md`](./outcome-checklist.md)). |
+| **`production-auditor`** | **Mode 2: Post-Flight** | **Engineering & Code Quality Guardian**<br>*"Are we building it cleanly, correctly, and to production standards?"* | • Enforces strictly ZERO mock/sandbox code.<br>• Enforces 100% design token usage (`@lahm/tokens`, unitless dp/points).<br>• Enforces component lengths under ~200 lines.<br>• Checks DTO validation, transaction boundaries, and mobile UX. |
 
 ---
 
@@ -106,14 +123,17 @@ Follow this exact sequence to ensure flawless execution without token waste or d
 5. .agents/rules/production-rules.md──> Check engineering constraints before coding.
 ```
 
-### ✍️ Writing Order (During Feature Execution)
+### ✍️ Execution Order (During Feature Execution)
 ```
-1. Target Source Code Files         ──> Implement 1–2 files (<100 lines) with pre-step explanation.
-2. Compiler Verification            ──> Run `npx tsc --noEmit` to ensure 0 errors.
-3. Gate 1 (Outcome Audit)           ──> Review alignment with final-outcome.md; update outcome-checklist.md.
-4. Gate 2 (Production Audit)        ──> Audit against production-rules.md (tokens, zero mocks, architecture).
-5. context/communication.md         ──> Append the timestamped turn log entry.
-6. Git Commit & Push                ──> Commit with a descriptive message and push to origin/main.
+1. (At Module Boundary): Pre-Flight Review ──> Invoke production-auditor (Mode 1) for failure modes & questions.
+                                           ──> Present questions to User; feed answers back.
+                                           ──> Receive final blueprint with DB Indexes, Concurrency & Caching.
+2. Target Source Code Files                ──> Implement 1–2 files (<100 lines) with pre-step explanation.
+3. Compiler Verification                   ──> Run `npx tsc --noEmit` to ensure 0 errors.
+4. Gate 1 (Outcome Audit)                  ──> Invoke outcome-auditor; verify final-outcome.md & update checklist.
+5. Gate 2 (Production Audit)               ──> Invoke production-auditor (Mode 2); check tokens, zero mocks, code rules.
+6. context/communication.md                ──> Append the timestamped turn log entry.
+7. Git Commit & Push                       ──> Commit with a descriptive message and push to origin/main.
 ```
 
 ---

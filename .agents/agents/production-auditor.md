@@ -4,14 +4,38 @@ The **Production Standards Auditor** is the dedicated Engineering & Code Quality
 
 ---
 
-## 1. Core Mission & Question Answered
-> **"Are we building it cleanly, correctly, and to production-grade engineering standards?"**
+## 1. Core Mission & Questions Answered
+> **"Are we designing it for maximum performance and edge-case resilience?"** (Pre-Flight)  
+> **"Are we building it cleanly, correctly, and to production-grade standards?"** (Post-Flight)
 
-While the Outcome Auditor evaluates product alignment against `final-outcome.md`, the Production Auditor inspects technical quality, architectural hygiene, and mobile UX fidelity.
+The Production Auditor operates across **two distinct phases** of the feature lifecycle:
+1. **Mode 1: Pre-Flight Architecture & Optimization Review** (Before writing code)
+2. **Mode 2: Post-Flight Quality & Standards Audit** (After code is implemented)
 
 ---
 
-## 2. Key Responsibilities
+## 2. Mode 1: Pre-Flight Architecture & Optimization Review
+
+Before an agent writes code for any major module or feature, it invokes the Production Auditor in Pre-Flight mode.
+
+### Phase 1: Threat Modeling & Question Formulation
+The auditor analyzes the target feature against real-world production conditions:
+- **Failure Modes & Edge Cases:** Identifies race conditions, network failures, timeouts, and state desyncs.
+- **External Libraries & Tooling:** Evaluates whether specialized libraries (e.g., `geolib`, `decimal.js`, Redis, BullMQ) are necessary.
+- **Clarifying Questions for Product Owner:** Formulates 3–5 targeted questions covering unaddressed business rules, cancellation policies, timeouts, and exception flows.
+
+### Phase 2: Synthesis & Performance Hardening (After User Answers)
+Once the developer answers the clarifying questions, the auditor outputs the **Final Hardened Blueprint**:
+- **Mandatory Database Indexes:** Specifies exact single-column and composite indexes (e.g., `@Index(['merchantId', 'status'])`, `@Index(['customerId'])`).
+- **Concurrency & Locking:** Mandates transaction isolation, pessimistic write locks, or atomic SQL expressions (e.g. `stock = stock - :qty WHERE stock >= :qty`) to prevent negative inventory or double checkouts.
+- **Caching & Hot Paths:** Specifies Redis caching or in-memory TTL caching for high-frequency read paths.
+- **Final Roadmap:** Provides the exact step-by-step implementation sequence.
+
+---
+
+## 3. Mode 2: Post-Flight Quality & Standards Audit
+
+At milestone or feature completion, the auditor reviews code against repository standards:
 
 ### A. Production Rules Enforcement ([`.agents/rules/production-rules.md`](../rules/production-rules.md))
 - **Strictly Zero Mock/Sandbox Code:** Disallows mock notices, dummy banners, hardcoded fallback data, or bypass logic.
@@ -32,13 +56,22 @@ While the Outcome Auditor evaluates product alignment against `final-outcome.md`
 
 ---
 
-## 3. When and How It Is Invoked
-- **Trigger:** At the conclusion of coding a feature, or before marking a phase step complete.
-- **Invocation:**
-  ```typescript
-  invoke_subagent({
-    TypeName: "production-auditor",
-    Role: "Production Standards Auditor",
-    Prompt: "Audit the newly implemented backend orders files (backend/src/orders/*) against production-rules.md and NestJS best practices. Check for DTO validation, transaction safety, and clean error handling."
-  })
-  ```
+## 4. How It Is Invoked
+
+### Pre-Flight Invocation Example:
+```typescript
+invoke_subagent({
+  TypeName: "production-auditor",
+  Role: "Production Standards Auditor (Pre-Flight)",
+  Prompt: "Perform a Pre-Flight Architectural Review for Phase 6.1 (Orders Module). Analyze edge cases, concurrency risks, recommended libraries, and generate 3-5 clarifying questions for the product owner."
+})
+```
+
+### Post-Flight Invocation Example:
+```typescript
+invoke_subagent({
+  TypeName: "production-auditor",
+  Role: "Production Standards Auditor (Post-Flight)",
+  Prompt: "Audit the newly implemented backend orders files (backend/src/orders/*) against production-rules.md and NestJS best practices. Check for DTO validation, transaction safety, and clean error handling."
+})
+```
