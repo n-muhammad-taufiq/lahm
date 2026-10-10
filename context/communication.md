@@ -246,5 +246,17 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Local Agent to test the Closed-Loop Pre-Flight Review on the Orders module or proceed with Step 2: [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
 
+### [2026-10-10 10:41] — Remote Agent Turn Update
+- **Phase & Step:** Governance & Specialized Agents Setup (`mobile-designer` Subagent Activated)
+- **Files Touched / Created:**
+  - [`.agents/agents/mobile-designer.md`](../.agents/agents/mobile-designer.md) (Created - Defined Mobile UI/UX Architect & Visual Self-Correction Inspector subagent)
+  - Registered Antigravity Subagent: `mobile-designer` (Defined via `define_subagent`)
+  - [`context/agent-workflow-guide.md`](./agent-workflow-guide.md) (Updated - Added `mobile-designer` to the active subagents roster)
+- **Important Points for Local Agent:**
+  - **`mobile-designer` Role:**
+    - Mode 1: Pre-Flight UI/UX Blueprint (Apple HIG + Material 3 + `@lahm/tokens`, component splits <200 lines, native bottom sheets, haptics, spring physics).
+    - Mode 2: Visual Self-Correction Inspector (multimodal vision inspection of live rendered screenshots to detect and patch visual/layout flaws).
+- **Next Required Step:**
+  - Proceed with Phase 6.1 Backend Orders Module Step 2: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
 
 

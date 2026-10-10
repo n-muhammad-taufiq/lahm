@@ -67,8 +67,10 @@ sequenceDiagram
 | Auditor | Mode | Role & Question Answered | Key Responsibilities |
 |---|---|---|---|
 | **`production-auditor`** | **Mode 1: Pre-Flight** | **Architectural Advisor & Optimizer**<br>*"Are we designing it for maximum performance and edge-case resilience?"* | • Analyzes failure modes, race conditions, and external libraries.<br>• Generates 3–5 clarifying questions for the user.<br>• Mandates **Database Indexes** (composite & foreign key).<br>• Mandates **Concurrency & Locking** (atomic SQL / pessimistic locks).<br>• Mandates **Caching & Hot Paths** (Redis / TTL caching). |
+| **`mobile-designer`** | **Mode 1: Pre-Flight<br>Mode 2: Visual Audit** | **Mobile UI/UX Architect & Visual Inspector**<br>*"How should this screen look & feel for thumb ergonomics, and is it glitch-free?"* | • Grounds layouts in Apple HIG, Material 3, and `@lahm/tokens`.<br>• Decomposes screens into sub-views under 200 lines.<br>• Mandates bottom sheets, haptics, spring physics, and skeletons.<br>• Inspects live rendered screenshots for visual alignment & fixes. |
 | **`outcome-auditor`** | **Post-Flight** | **Product & Scope Guardian**<br>*"Are we building the right things to achieve the final outcome?"* | • Verifies feature completeness against [`context/final-outcome.md`](./final-outcome.md).<br>• Identifies missing gaps across apps.<br>• Updates the Traceability Scoreboard ([`context/outcome-checklist.md`](./outcome-checklist.md)). |
 | **`production-auditor`** | **Mode 2: Post-Flight** | **Engineering & Code Quality Guardian**<br>*"Are we building it cleanly, correctly, and to production standards?"* | • Enforces strictly ZERO mock/sandbox code.<br>• Enforces 100% design token usage (`@lahm/tokens`, unitless dp/points).<br>• Enforces component lengths under ~200 lines.<br>• Checks DTO validation, transaction boundaries, and mobile UX. |
+
 
 ---
 
