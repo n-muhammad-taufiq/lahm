@@ -37,7 +37,15 @@ Before coding any mobile screen, the agent invokes `mobile-designer` to produce 
 ### C. Modular Sub-View Decomposition
 - Splits every screen into focused sub-components kept strictly under ~200 lines each (e.g. Header, ItemList, FloatingCheckoutBar).
 
+### D. Layout Variations & Product Owner Selection
+- **Never jump straight into coding a screen.**
+- In Mode 1, generate and present **the best distinct layout & UX options (typically 2 to 4 compelling variations)** to the Product Owner in the chat.
+- **Do NOT artificially limit to only two options:** If there are 3 or 4 viable, distinct layout patterns exploring different UX flows, present them all clearly.
+- Each variation must use the exact established brand tokens (`@lahm/tokens`) but explore different **interaction models, visual hierarchies, and information densities**.
+- Present the trade-offs of each option to the Product Owner. Wait for the user to select their preferred option before writing any component code.
+
 ---
+
 
 ## 3. Mode 2: Visual Self-Correction Inspector
 

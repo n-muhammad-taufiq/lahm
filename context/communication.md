@@ -273,5 +273,16 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Proceed with Phase 6.1 Backend Orders Module Step 2: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
 
+### [2026-10-10 12:14] — Remote Agent Turn Update
+- **Phase & Step:** Governance & Frontend Design Protocol (2-Step UI Design & Layout Variations)
+- **Files Touched / Updated:**
+  - [`context/agent-workflow-guide.md`](./agent-workflow-guide.md) (Updated - Added Section 2.C: 2-Step Frontend UI/UX Protocol, mandating presenting 2–4 layout options to user before coding any screen)
+  - [`.agents/agents/mobile-designer.md`](../.agents/agents/mobile-designer.md) (Updated - Added Mode 1.D: mandating presenting the best distinct layout options without artificially limiting to only two)
+- **Important Points for Local Agent:**
+  - **No Blind Coding of Screens:** Before writing code for any frontend screen, `mobile-designer` must present the top 2–4 compelling layout & interaction options using `@lahm/tokens`. The user chooses their favorite, and the agent implements that chosen layout.
+- **Next Required Step:**
+  - Proceed with Phase 6.1 Backend Orders Module Step 2: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
+
+
 
 

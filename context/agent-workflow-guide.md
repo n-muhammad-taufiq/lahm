@@ -31,7 +31,22 @@ Before writing code for any feature, the agent and developer discuss and agree u
 - **Outcome Grounding:** Before implementing a step, the agent must check which specific user flow from `final-outcome.md` is being built.
 - **Traceability:** Completed features are tracked in [`context/outcome-checklist.md`](./outcome-checklist.md), connecting requirements directly to real code files.
 
+### C. The 2-Step Frontend UI/UX Design Protocol
+To achieve modern, beautiful, and consistent native mobile screens across all 3 applications:
+1. **Step 1 (Global Brand Identity & Tokens — Done Once Upfront):**
+   - The brand DNA is locked once in [`@lahm/tokens`](../frontend/packages/tokens/src/tokens.json) and shared base primitives in [`@lahm/ui`](../frontend/packages/ui/).
+   - Establishes colors (terracotta, warm sand), typography scales (`screenTitle`), border radiuses, and elevation rules.
+2. **Step 2 (Per-Screen Layout Variations & User Selection):**
+   - Before writing code for *any* frontend screen, the agent MUST NOT jump straight into coding.
+   - The `mobile-designer` agent generates and presents **the best distinct layout & UX options (typically 2 to 4 compelling variations)** to the Product Owner in chat.
+   - **Do NOT artificially restrict options to only two:** If there are 3 or 4 strong, distinct UX patterns (e.g. accordion vs. bottom-sheet drawer vs. sticky-footer card), present them clearly.
+   - The variations use the *same brand tokens* but explore different **interaction models and layout structures**.
+   - The Product Owner chooses their favorite option, and only then does the Developer Agent implement that chosen design.
+3. **Native Antigravity Generation (No External Web Translators):**
+   - All layouts, mockups, and code are produced natively within Antigravity directly in React Native (Tailwind / NativeWind) to avoid clunky web-to-mobile translation issues.
+
 ---
+
 
 ## 3. The Dual-Auditor Governance Architecture
 
