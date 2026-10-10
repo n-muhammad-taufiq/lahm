@@ -283,6 +283,18 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Proceed with Phase 6.1 Backend Orders Module Step 2: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
 
+### [2026-10-10 12:18] — Remote Agent Turn Update
+- **Phase & Step:** Governance & QA Automation Architecture (`qa-engineer` Subagent Activated)
+- **Files Touched / Created:**
+  - Registered Antigravity Subagent: `qa-engineer` (Defined via `define_subagent`)
+  - [`.agents/agents/qa-engineer.md`](../.agents/agents/qa-engineer.md) (Created - Defined QA Engineer & Test Architect subagent for adversarial edge-case testing)
+  - [`context/agent-workflow-guide.md`](./agent-workflow-guide.md) (Updated - Added `qa-engineer` to the subagents roster and Gate 2 in Execution Order)
+- **Important Points for Local Agent:**
+  - **`qa-engineer` Role:** Writes Jest / NestJS `.spec.ts` adversarial test suites focusing on business invariants: price math, illegal state jumps, stock concurrency race conditions, and OTP verification.
+- **Next Required Step:**
+  - Proceed with Phase 6.1 Backend Orders Module Step 2: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
+
+
 
 
 

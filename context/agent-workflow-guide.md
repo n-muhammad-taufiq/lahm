@@ -83,8 +83,10 @@ sequenceDiagram
 |---|---|---|---|
 | **`production-auditor`** | **Mode 1: Pre-Flight** | **Architectural Advisor & Optimizer**<br>*"Are we designing it for maximum performance and edge-case resilience?"* | • Analyzes failure modes, race conditions, and external libraries.<br>• Generates 3–5 clarifying questions for the user.<br>• Mandates **Database Indexes** (composite & foreign key).<br>• Mandates **Concurrency & Locking** (atomic SQL / pessimistic locks).<br>• Mandates **Caching & Hot Paths** (Redis / TTL caching). |
 | **`mobile-designer`** | **Mode 1: Pre-Flight<br>Mode 2: Visual Audit** | **Mobile UI/UX Architect & Visual Inspector**<br>*"How should this screen look & feel for thumb ergonomics, and is it glitch-free?"* | • Grounds layouts in Apple HIG, Material 3, and `@lahm/tokens`.<br>• Decomposes screens into sub-views under 200 lines.<br>• Mandates bottom sheets, haptics, spring physics, and skeletons.<br>• Inspects live rendered screenshots for visual alignment & fixes. |
+| **`qa-engineer`** | **Post-Flight** | **Adversarial QA & Test Architect**<br>*"How can this feature break, and what edge cases did the developer overlook?"* | • Writes unit and integration tests (`*.spec.ts`) for business invariants.<br>• Tests dirty inputs, race conditions, and illegal state transitions.<br>• Tests OTP brute-force limits and pricing calculations. |
 | **`outcome-auditor`** | **Post-Flight** | **Product & Scope Guardian**<br>*"Are we building the right things to achieve the final outcome?"* | • Verifies feature completeness against [`context/final-outcome.md`](./final-outcome.md).<br>• Identifies missing gaps across apps.<br>• Updates the Traceability Scoreboard ([`context/outcome-checklist.md`](./outcome-checklist.md)). |
 | **`production-auditor`** | **Mode 2: Post-Flight** | **Engineering & Code Quality Guardian**<br>*"Are we building it cleanly, correctly, and to production standards?"* | • Enforces strictly ZERO mock/sandbox code.<br>• Enforces 100% design token usage (`@lahm/tokens`, unitless dp/points).<br>• Enforces component lengths under ~200 lines.<br>• Checks DTO validation, transaction boundaries, and mobile UX. |
+
 
 
 ---
@@ -155,9 +157,10 @@ Follow this exact sequence to ensure flawless execution without token waste or d
 3b. (Frontend Screen Verification): Visual ──> Run `node scripts/capture-screen.js --app <name>`
                                           ──> Invoke mobile-designer (Mode 2) on reports/latest-screen.png for visual fixes.
 4. Gate 1 (Outcome Audit)                 ──> Invoke outcome-auditor; verify final-outcome.md & update checklist.
-5. Gate 2 (Production Audit)              ──> Invoke production-auditor (Mode 2); check tokens, zero mocks, code rules.
-6. context/communication.md               ──> Append the timestamped turn log entry.
-7. Git Commit & Push                      ──> Commit with a descriptive message and push to origin/main.
+5. Gate 2 (Adversarial QA Testing)        ──> Invoke qa-engineer; writes edge-case & regression test suite (*.spec.ts).
+6. Gate 3 (Production Standards Audit)    ──> Invoke production-auditor (Mode 2); check tokens, zero mocks, code rules.
+7. context/communication.md               ──> Append the timestamped turn log entry.
+8. Git Commit & Push                      ──> Commit with a descriptive message and push to origin/main.
 ```
 
 ---
