@@ -290,17 +290,29 @@ Customer taps a shop from the list and sees shop details + products.
 
 Customer adds products to cart, manages quantities, proceeds to checkout.
 
-#### 6.1 Backend: Orders Module
-Create the orders module from scratch:
+#### 6.1 Backend: Orders Module (Specification-Driven Development)
+Create the production-grade orders module serving Customer, Merchant, and Delivery Partner applications:
 
-- **Order Entity** — id, customerId, merchantId, status (enum), totalAmount, deliveryFee, deliveryAddressId, paymentMethod, paymentStatus, deliveryOtp, createdAt, updatedAt
-- **OrderItem Entity** — id, orderId, productId, productName, quantity, unitPrice, totalPrice
-- **OrderStatus Enum** — PLACED, ACCEPTED, PREPARING, READY_FOR_PICKUP, DELIVERY_PARTNER_ASSIGNED, PICKED_UP, OUT_FOR_DELIVERY, DELIVERED, CANCELLED, DECLINED
-- **Create Order DTO** — items array, delivery address, payment method
-- **Orders Service** — create, findByCustomer, findByMerchant, findById, updateStatus
-- **Orders Controller** — POST /orders, GET /orders, GET /orders/:id, PATCH /orders/:id/status
+##### Architectural Principles
+1. **Server-Authoritative Pricing (Anti-Tampering):** Clients submit only `{ merchantId, items: [{ productId, quantity }], deliveryAddress, customerCoordinates }`. The backend looks up active prices from PostgreSQL, calculates `unitPrice`, `subtotal`, dynamic `deliveryFee`, `platformFee`, and `totalAmount`.
+2. **Atomic Database Transactions:** Multi-table writes (`orders`, `order_items`) execute inside `DataSource.transaction`.
+3. **Dynamic Distance-Based Delivery Pricing:**
+   - Great-circle distance calculated via Haversine formula using merchant coordinates (`merchant.latitude`, `merchant.longitude`) and dropoff coordinates (`deliveryLatitude`, `deliveryLongitude`).
+   - Pricing Formula: `baseFare + (extraKm * perKmRate) + platformFee` (capped by min/max boundaries). Configurable now in code/env; ready for Admin DB configuration later.
+4. **Strict State Machine & Role-Based Transitions:**
+   - States: `PLACED` -> `ACCEPTED` -> `PREPARING` -> `READY_FOR_PICKUP` -> `OUT_FOR_DELIVERY` -> `DELIVERED`. Terminals: `CANCELLED`, `DECLINED`.
+   - Transitions enforced by role (`CUSTOMER`, `MERCHANT`, `DELIVERY_PARTNER`).
+5. **Secure 4-Digit Delivery OTP:** Generated on order creation, shown only to customer on tracking screen, verified by delivery partner on dropoff via `POST /orders/:id/verify-delivery`.
 
-Each file is a separate incremental change.
+##### 7-Step Implementation Roadmap (1–2 files per step, ~100 lines/step)
+- [x] **Step 1:** Create `order-status.enum.ts` & `order-item.entity.ts` (Done & verified with `npx tsc`).
+- [ ] **Step 2:** Create `order.entity.ts` with relationships (`Customer`, `Merchant`, `DeliveryPartner`), coordinates, numeric transformers, dynamic pricing columns, and `deliveryOtp`.
+- [ ] **Step 3:** Create DTOs (`create-order.dto.ts`, `update-order-status.dto.ts`, `verify-delivery-otp.dto.ts`) with `class-validator`.
+- [ ] **Step 4:** Implement `orders.service.ts` (Part 1: Order creation with atomic transaction and backend pricing calculation).
+- [ ] **Step 5:** Implement `orders.service.ts` (Part 2: Order queries and state machine transition engine).
+- [ ] **Step 6:** Implement `orders.controller.ts` with guards (`JwtAuthGuard`, `RolesGuard`, `@Roles()`).
+- [ ] **Step 7:** Create `orders.module.ts`, register in `app.module.ts`, and run compiler/type verification.
+
 
 #### 6.2 Backend: Customer Addresses
 - Add addresses to Customer entity or create separate Address entity

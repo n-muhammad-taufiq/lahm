@@ -221,3 +221,16 @@ When logging a turn or session handoff, append an entry using this structure:
   - **Step 1 Verification:** `npx tsc --noEmit` executed in `backend/` and passed cleanly with **0 errors**.
 - **Next Required Step:**
   - Execute **Step 2**: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts) with relations to `Customer`, `Merchant`, `DeliveryPartner`, numeric transformers, dynamic fee columns, and delivery OTP.
+
+### [2026-10-10 06:00] — Remote Agent Turn Update
+- **Phase & Step:** Governance & Workflow Synchronization (Agent Handbook Established)
+- **Files Touched / Created:**
+  - [`context/agent-workflow-guide.md`](./agent-workflow-guide.md) (Created - Primary operating manual for Remote & Local agents)
+  - [`context/plan.md`](./plan.md) (Updated - Detailed Phase 6.1 SDD architecture, principles, and 7-step roadmap)
+  - [`context/outcome-checklist.md`](./outcome-checklist.md) (Updated - Requirement C.6 marked as In Progress with Step 1 files)
+- **Important Points for Local Agent:**
+  - **Read Order Standardized:** All agents must read [`context/agent-workflow-guide.md`](./agent-workflow-guide.md) first, followed by [`context/communication.md`](./communication.md) and [`context/plan.md`](./plan.md).
+  - **Orders Specification Locked:** Phase 6.1 architecture is formalized with server-authoritative pricing, atomic transactions, dynamic Haversine delivery pricing, and 8-state transition matrix.
+- **Next Required Step:**
+  - Proceed with Phase 6.1 **Step 2**: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
+

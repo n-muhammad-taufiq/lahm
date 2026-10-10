@@ -13,7 +13,7 @@ This living checklist tracks the end-to-end implementation status of every requi
 | **C.3** | **Storefront & Fresh Meat Cuts Browsing** | [ ] Pending | `GET /merchant/storefront/:id` in `merchants.controller.ts` | Target: `features/shop/screens/ShopProfileScreen.tsx` | Not started |
 | **C.4** | **Single-Merchant Cart & Quantity Controls** | [ ] Pending | Target: backend cart validation | Target: `stores/cartStore.ts`, `QuantityStepper.tsx` | Not started |
 | **C.5** | **Delivery Address Management** | [ ] Pending | Target: `addresses/` module | Target: `features/address/` | Not started |
-| **C.6** | **Checkout & Order Placement (`POST /orders`)** | [ ] Pending | Target: `orders/` module (`POST /orders`) | Target: `features/checkout/screens/CheckoutScreen.tsx` | Not started |
+| **C.6** | **Checkout & Order Placement (`POST /orders`)** | [⏳] In Progress | `orders/` module (`order-status.enum.ts`, `order-item.entity.ts` created) | Target: `features/checkout/screens/CheckoutScreen.tsx` | Step 1 verified with clean tsc build |
 | **C.7** | **Live Order Tracking Timeline & 4-Digit OTP** | [ ] Pending | Target: `GET /orders/:id` | Target: `features/orders/screens/OrderTrackingScreen.tsx` | Not started |
 | **C.8** | **Order History & Itemized Receipts** | [ ] Pending | Target: `GET /orders/customer/:id` | Target: `features/orders/screens/OrderHistoryScreen.tsx` | Not started |
 
