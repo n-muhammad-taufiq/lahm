@@ -294,6 +294,20 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Proceed with Phase 6.1 Backend Orders Module Step 2: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
 
+### [2026-10-10 13:14] — Remote Agent Turn Update
+- **Phase & Step:** Governance & Multi-Agent Architecture (Unified Lead Orchestrator, Supervisor & Tech Advisor Activated)
+- **Files Touched / Updated:**
+  - [`context/agent-workflow-guide.md`](./agent-workflow-guide.md) (Updated - Formalized Primary Agent Triple Mandate: Chief Orchestrator, Governance Supervisor & Tech/FinOps Advisor, with local workstation sync protocol)
+- **Important Points for Local Agent:**
+  - **Option 1 Activated:** The primary Antigravity interface agent (both Remote and Local) operates with the full authority of the **Lead Orchestrator, Supervisor & Tech Advisor**:
+    1. **Chief Orchestrator:** Drives roadmap, invokes subagents, manages reviews with Product Owner.
+    2. **Governance Supervisor:** Enforces strict execution constraints (1–2 files, ~100 lines, strictly zero mocks, 100% token usage, unconstrained QA, 2–4 UI variations). Flags violations with immediate `[SUPERVISOR ALERT]`.
+    3. **Tech & FinOps Advisor:** Evaluates npm packages, prevents Maps/SMS API bill shock, optimizes mobile battery/GPS polling, and drafts ADRs.
+  - **Local Workstation Sync:** Simply run `git pull origin main`. Antigravity on the local machine reads `context/agent-workflow-guide.md` and immediately assumes this exact Lead role.
+- **Next Required Step:**
+  - Proceed with Phase 6.1 Backend Orders Module Step 2: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
+
+
 
 
 
