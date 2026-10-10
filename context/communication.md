@@ -240,9 +240,11 @@ When logging a turn or session handoff, append an entry using this structure:
   - [`.agents/agents/production-auditor.md`](../.agents/agents/production-auditor.md) (Updated - Added Mode 1 Pre-Flight Architecture & Optimization Review alongside Mode 2 Post-Flight Audit)
   - [`context/agent-workflow-guide.md`](./agent-workflow-guide.md) (Updated - Codified Closed-Loop Pre-Flight Review sequence: failure modes, user Q&A, and mandatory DB indexes / caching / locking specs)
 - **Important Points for Local Agent:**
-  - **Closed-Loop Pre-Flight Activated:** Before writing code for any module, the agent triggers `production-auditor` (Mode 1), presents questions to the user, feeds back answers, and receives the finalized blueprint with mandatory DB indexes, concurrency locks, and caching.
+  - **Closed-Loop Pre-Flight Activated:** Before writing code for any major module/feature, the agent triggers `production-auditor` (Mode 1), presents questions to the user, feeds back answers, and receives the finalized blueprint with mandatory DB indexes, concurrency locks, and caching.
+  - **FREQUENCY RULE:** Pre-Flight Review runs **EXACTLY ONCE per module**, NEVER for individual micro-steps. Once the module plan is set, individual steps proceed sequentially.
   - Ready for Local Agent to test or resume at Phase 6.1 Step 2.
 - **Next Required Step:**
-  - Local Agent to test the Closed-Loop Pre-Flight Review or proceed with Step 2: [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
+  - Local Agent to test the Closed-Loop Pre-Flight Review on the Orders module or proceed with Step 2: [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
+
 
 

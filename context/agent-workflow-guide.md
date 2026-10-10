@@ -35,10 +35,14 @@ Before writing code for any feature, the agent and developer discuss and agree u
 
 ## 3. The Dual-Auditor Governance Architecture
 
-To maintain uncompromising standards, two dedicated auditor subagents operate across the feature lifecycle:
+> [!IMPORTANT]
+> **Pre-Flight Review Frequency Rule:**  
+> The Pre-Flight Review runs **EXACTLY ONCE per major module or feature** at the very beginning (e.g. once for Orders Module, once for Payments, once for Delivery Allocation).  
+> **NEVER run Pre-Flight for individual micro-steps** (such as creating an enum, a DTO, or an entity). Once the module's architecture and optimization blueprint are finalized, the individual implementation steps proceed rapidly and sequentially without re-running Pre-Flight.
 
 ```mermaid
 sequenceDiagram
+
     autonumber
     participant D as Developer Agent
     participant PA as production-auditor

@@ -16,7 +16,10 @@ The Production Auditor operates across **two distinct phases** of the feature li
 
 ## 2. Mode 1: Pre-Flight Architecture & Optimization Review
 
+> **FREQUENCY RULE:** Mode 1 is invoked **EXACTLY ONCE per major module or feature** at the start (e.g. before starting Orders, before starting Payments). It is **NEVER invoked for individual micro-steps** (e.g. creating a single DTO or enum). Once the module blueprint is delivered, all individual steps proceed directly to implementation.
+
 Before an agent writes code for any major module or feature, it invokes the Production Auditor in Pre-Flight mode.
+
 
 ### Phase 1: Threat Modeling & Question Formulation
 The auditor analyzes the target feature against real-world production conditions:
