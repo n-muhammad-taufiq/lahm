@@ -290,9 +290,10 @@ When logging a turn or session handoff, append an entry using this structure:
   - [`.agents/agents/qa-engineer.md`](../.agents/agents/qa-engineer.md) (Created - Defined QA Engineer & Test Architect subagent for adversarial edge-case testing)
   - [`context/agent-workflow-guide.md`](./agent-workflow-guide.md) (Updated - Added `qa-engineer` to the subagents roster and Gate 2 in Execution Order)
 - **Important Points for Local Agent:**
-  - **`qa-engineer` Role:** Writes Jest / NestJS `.spec.ts` adversarial test suites focusing on business invariants: price math, illegal state jumps, stock concurrency race conditions, and OTP verification.
+  - **`qa-engineer` Role:** Conducts unconstrained, 360-degree test engineering (never limited to a small list of tests). Writes comprehensive Jest / NestJS `.spec.ts` test suites covering boundary limits, DTO fuzzing, security/RBAC, illegal state machine jumps, concurrency race conditions, and error resiliency.
 - **Next Required Step:**
   - Proceed with Phase 6.1 Backend Orders Module Step 2: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
+
 
 
 
