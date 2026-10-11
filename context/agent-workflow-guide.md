@@ -82,6 +82,12 @@ Whether running as the **Remote Agent** (in Codespaces) or the **Local Agent** (
 | **`outcome-auditor`** | **Post-Flight** | **Product & Scope Guardian**<br>• Verifies feature completeness against [`context/final-outcome.md`](./final-outcome.md).<br>• Maintains the Traceability Scoreboard in [`context/outcome-checklist.md`](./outcome-checklist.md). |
 | **`production-auditor`** | **Mode 2: Post-Flight** | **Code Quality Guardian**<br>• Enforces strictly ZERO mock code.<br>• Enforces 100% design token usage (`@lahm/tokens`, unitless dp/points).<br>• Enforces component lengths under ~200 lines. |
 
+#### How to Dispatch Subagents (CLI Execution Runner)
+Both Remote (Codespaces) and Local agents dispatch independent, un-biased subagent processes via the Antigravity CLI:
+- **QA Engineer:** `agy --agent qa-engineer --dangerously-skip-permissions -p "<instructions>"`
+- **Production Auditor:** `agy --agent production-auditor --dangerously-skip-permissions -p "<instructions>"`
+Subagent definitions are located in [`.agents/plugins/lahm-governance/agents/`](../.agents/plugins/lahm-governance/agents/). Running them through `agy --agent` creates an isolated agent process with its own fresh context window, eliminating confirmation bias.
+
 ---
 
 ### C. The End-to-End Governance Sequence

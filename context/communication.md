@@ -404,8 +404,10 @@ When logging a turn or session handoff, append an entry using this structure:
   - **Atomicity:** `OrdersService.create` commits parent order and line items inside `DataSource.transaction`.
   - **Input Validation & Security:** Strict DTO validation with `class-validator`, decimal precision float transformers on financial columns, and RBAC via `@Roles()`, `JwtAuthGuard`, and `RolesGuard`.
   - **Phase 6.1 Status:** 100% COMPLETE and production-ready.
-- **Next Required Step:**
-  - Git commit and push Phase 6.1 changes to `main`.
-  - Proceed to **Phase 6.2 (Backend Customer Addresses)** or **Phase 6.3 (Frontend Cart Store)**.
+  - **Git Status:** Committed to `main` (`1e53d5c`) and pushed to `origin/main`.
+- **Handoff Note for Remote Agent:**
+  - Pull latest with `git pull origin main`.
+  - All 7 backend test suites pass with 91 tests total (`npm test`).
+  - Next task on the master roadmap is **Phase 6.2 (Backend Customer Addresses Module)**: build `Address` entity, `addresses.service.ts`, `addresses.controller.ts`, DTOs, and quality gates.
 
 
