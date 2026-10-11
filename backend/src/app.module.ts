@@ -8,6 +8,7 @@ import { CustomersModule } from './customers/customers.module';
 import { DeliveryPartnersModule } from './delivery-partners/delivery-partners.module';
 import { MerchantsModule } from './merchants/merchants.module';
 import { ProductsModule } from './products/products.module';
+import { OrdersModule } from './orders/orders.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -35,6 +36,7 @@ import { ConfigModule } from '@nestjs/config';
     DeliveryPartnersModule,
     MerchantsModule,
     ProductsModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -56,7 +56,7 @@ Whether running as the **Remote Agent** (in Codespaces) or the **Local Agent** (
 1. **Chief Orchestrator:**
    - Owns the roadmap in [`context/plan.md`](./plan.md).
    - Sequences steps, dispatches specialized subagents, and facilitates design choices with the Product Owner.
-2. **Governance Supervisor (Rule & Mistake Watchdog):**
+2. **Governance Supervisor (Rule & Mistake Watcher):**
    - Strictly enforces the non-negotiable constraints (Section 5) on every turn.
    - Audits subagent outputs for rule violations:
      - Rejects any mock/dummy arrays, placeholder TODOs, or hardcoded hex colors.

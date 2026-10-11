@@ -290,7 +290,7 @@ Customer taps a shop from the list and sees shop details + products.
 
 Customer adds products to cart, manages quantities, proceeds to checkout.
 
-#### 6.1 Backend: Orders Module (Specification-Driven Development)
+#### 6.1 Backend: Orders Module [x] Completed (Specification-Driven Development)
 Create the production-grade orders module serving Customer, Merchant, and Delivery Partner applications:
 
 ##### Architectural Principles
@@ -306,12 +306,13 @@ Create the production-grade orders module serving Customer, Merchant, and Delive
 
 ##### 7-Step Implementation Roadmap (1–2 files per step, ~100 lines/step)
 - [x] **Step 1:** Create `order-status.enum.ts` & `order-item.entity.ts` (Done & verified with `npx tsc`).
-- [ ] **Step 2:** Create `order.entity.ts` with relationships (`Customer`, `Merchant`, `DeliveryPartner`), coordinates, numeric transformers, dynamic pricing columns, and `deliveryOtp`.
-- [ ] **Step 3:** Create DTOs (`create-order.dto.ts`, `update-order-status.dto.ts`, `verify-delivery-otp.dto.ts`) with `class-validator`.
-- [ ] **Step 4:** Implement `orders.service.ts` (Part 1: Order creation with atomic transaction and backend pricing calculation).
-- [ ] **Step 5:** Implement `orders.service.ts` (Part 2: Order queries and state machine transition engine).
-- [ ] **Step 6:** Implement `orders.controller.ts` with guards (`JwtAuthGuard`, `RolesGuard`, `@Roles()`).
-- [ ] **Step 7:** Create `orders.module.ts`, register in `app.module.ts`, and run compiler/type verification.
+- [x] **Step 2:** Create `order.entity.ts` with relationships (`Customer`, `Merchant`, `DeliveryPartner`), coordinates, numeric transformers, dynamic pricing columns, and `deliveryOtp` (Done & verified with `npx tsc`).
+- [x] **Step 3:** Create DTOs (`create-order.dto.ts`, `update-order-status.dto.ts`, `verify-delivery-otp.dto.ts`) with `class-validator` (Done & verified with `npx tsc`).
+- [x] **Step 4:** Implement `orders.service.ts` (Part 1: Order creation with atomic transaction and backend pricing calculation) (Done & verified with `npx tsc`).
+- [x] **Step 5:** Implement `orders.service.ts` (Part 2: Order queries and state machine transition engine) (Done & verified with `npx tsc`).
+- [x] **Step 6:** Implement `orders.controller.ts` with guards (`JwtAuthGuard`, `RolesGuard`, `@Roles()`) (Done & verified with `npx tsc`).
+- [x] **Step 7:** Create `orders.module.ts`, register in `app.module.ts`, and run compiler/type verification (Done & verified with `npx tsc`).
+- [x] **Step 8:** Author comprehensive 360-degree unit test suite for `OrdersService` (`orders.service.spec.ts`) with 100% coverage across creation, pricing, state machine, and delivery OTP verification (Done & verified with `npm test`).
 
 
 #### 6.2 Backend: Customer Addresses

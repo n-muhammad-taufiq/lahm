@@ -13,9 +13,9 @@ This living checklist tracks the end-to-end implementation status of every requi
 | **C.3** | **Storefront & Fresh Meat Cuts Browsing** | [ ] Pending | `GET /merchant/storefront/:id` in `merchants.controller.ts` | Target: `features/shop/screens/ShopProfileScreen.tsx` | Not started |
 | **C.4** | **Single-Merchant Cart & Quantity Controls** | [ ] Pending | Target: backend cart validation | Target: `stores/cartStore.ts`, `QuantityStepper.tsx` | Not started |
 | **C.5** | **Delivery Address Management** | [ ] Pending | Target: `addresses/` module | Target: `features/address/` | Not started |
-| **C.6** | **Checkout & Order Placement (`POST /orders`)** | [⏳] In Progress | `orders/` module (`order-status.enum.ts`, `order-item.entity.ts` created) | Target: `features/checkout/screens/CheckoutScreen.tsx` | Step 1 verified with clean tsc build |
-| **C.7** | **Live Order Tracking Timeline & 4-Digit OTP** | [ ] Pending | Target: `GET /orders/:id` | Target: `features/orders/screens/OrderTrackingScreen.tsx` | Not started |
-| **C.8** | **Order History & Itemized Receipts** | [ ] Pending | Target: `GET /orders/customer/:id` | Target: `features/orders/screens/OrderHistoryScreen.tsx` | Not started |
+| **C.6** | **Checkout & Order Placement (`POST /orders`)** | [⏳] In Progress | [`orders.controller.ts`](../backend/src/orders/orders.controller.ts), [`orders.service.ts`](../backend/src/orders/orders.service.ts), [`orders.module.ts`](../backend/src/orders/orders.module.ts) | Target: `features/checkout/screens/CheckoutScreen.tsx` | Backend 100% complete; dynamic Haversine pricing, atomic transaction; 0 tsc errors |
+| **C.7** | **Live Order Tracking Timeline & 4-Digit OTP** | [⏳] In Progress | `GET /orders/:id` in [`orders.controller.ts`](../backend/src/orders/orders.controller.ts), 4-digit OTP generator in [`orders.service.ts`](../backend/src/orders/orders.service.ts) | Target: `features/orders/screens/OrderTrackingScreen.tsx` | Backend complete with relational hydration; Frontend pending Phase 6.7 |
+| **C.8** | **Order History & Itemized Receipts** | [⏳] In Progress | `GET /orders/customer/my-orders` in [`orders.controller.ts`](../backend/src/orders/orders.controller.ts) | Target: `features/orders/screens/OrderHistoryScreen.tsx` | Backend complete with `createdAt: 'DESC'` sort; Frontend pending Phase 6.8 |
 
 ---
 
@@ -26,9 +26,9 @@ This living checklist tracks the end-to-end implementation status of every requi
 | **M.1** | **Merchant Authentication & Session** | [x] Complete | `POST /auth/firebase-otp-login` (`role: merchant`) | `MerchantLoginScreen.tsx` | Authenticates merchant role |
 | **M.2** | **Store Online/Offline Availability Toggle** | [ ] Pending | Target: `PATCH /merchants/status` | Target: Merchant Dashboard status switch | Not started |
 | **M.3** | **Catalog Management (CRUD & In-Stock)** | [⏳] In Progress | `products.controller.ts`, `products.service.ts` | `ProductCatalogView.tsx`, `ProductFormModal.tsx` | Backend CRUD complete with `@Roles(Role.MERCHANT)`; Frontend rebuild planned |
-| **M.4** | **Real-Time Incoming Order Queue** | [ ] Pending | Target: `GET /orders/merchant/:id` | Target: `features/orders/screens/MerchantOrdersScreen.tsx` | Not started |
-| **M.5** | **Order Preparation Flow (Accept/Preparing/Ready)** | [ ] Pending | Target: `PATCH /orders/:id/status` | Target: Merchant order action buttons | Not started |
-| **M.6** | **Delivery Partner Pickup Handover Verification** | [ ] Pending | Target: `orders.service.ts` status transition | Target: Handover checklist modal | Not started |
+| **M.4** | **Real-Time Incoming Order Queue** | [⏳] In Progress | `GET /orders/merchant/:merchantId` in [`orders.controller.ts`](../backend/src/orders/orders.controller.ts) | Target: `features/orders/screens/MerchantOrdersScreen.tsx` | Backend complete with store ownership gating; Frontend pending Phase 7.2 |
+| **M.5** | **Order Preparation Flow (Accept/Preparing/Ready)** | [⏳] In Progress | `PATCH /orders/:id/status` in [`orders.controller.ts`](../backend/src/orders/orders.controller.ts) | Target: Merchant order action buttons | Backend complete with 8-state machine engine; Frontend pending Phase 7.3 |
+| **M.6** | **Delivery Partner Pickup Handover Verification** | [⏳] In Progress | `orders.service.ts` status transition (`READY_FOR_PICKUP`) | Target: Handover checklist modal | Backend complete; Frontend pending Phase 7.4 |
 
 ---
 
@@ -39,8 +39,8 @@ This living checklist tracks the end-to-end implementation status of every requi
 | **D.1** | **Partner Auth & Vehicle Profile Setup** | [x] Complete | `POST /auth/firebase-otp-login` (`role: delivery_partner`) | `DeliveryLoginScreen.tsx`, `DeliveryRegisterWizard.tsx` | Profile captures vehicle details |
 | **D.2** | **Online/Offline Duty Toggle** | [ ] Pending | Target: `PATCH /delivery-partners/duty` | Target: Delivery Dashboard duty switch | Not started |
 | **D.3** | **Dispatch Allocation & Incoming Request Card** | [ ] Pending | Target: `delivery-allocation/` module | Target: Incoming dispatch modal / card | Not started |
-| **D.4** | **Merchant Pickup Confirmation** | [ ] Pending | Target: `PATCH /orders/:id/status` (`OUT_FOR_DELIVERY`) | Target: `ConfirmPickupButton` in Delivery App | Not started |
-| **D.5** | **Customer OTP Delivery Verification** | [ ] Pending | Target: `POST /orders/:id/verify-delivery` | Target: `DeliveryOtpModal` in Delivery App | Not started |
+| **D.4** | **Merchant Pickup Confirmation** | [⏳] In Progress | `PATCH /orders/:id/status` (`OUT_FOR_DELIVERY`) in [`orders.controller.ts`](../backend/src/orders/orders.controller.ts) | Target: `ConfirmPickupButton` in Delivery App | Backend complete with driver assignment; Frontend pending Phase 8.3 |
+| **D.5** | **Customer OTP Delivery Verification** | [⏳] In Progress | `POST /orders/:id/verify-delivery` in [`orders.controller.ts`](../backend/src/orders/orders.controller.ts) | Target: `DeliveryOtpModal` in Delivery App | Backend complete with 4-digit OTP match & `DELIVERED` state jump; Frontend pending Phase 8.4 |
 
 ---
 

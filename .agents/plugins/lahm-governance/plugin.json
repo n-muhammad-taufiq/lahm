@@ -1,0 +1,6 @@
+{
+  "name": "lahm-governance",
+  "displayName": "Lahm Governance Squad",
+  "version": "1.0.0",
+  "description": "Specialized subagents for Project Lahm (QA Engineer, Production Auditor, Outcome Auditor, Mobile Designer)"
+}

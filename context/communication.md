@@ -307,9 +307,105 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Proceed with Phase 6.1 Backend Orders Module Step 2: Create [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts).
 
+### [2026-10-10 18:58] — Local Agent Turn Update
+- **Phase & Step:** Phase 6.1 — Backend Orders Module (Step 2 Completed)
+- **Files Touched / Created:**
+  - [`backend/src/orders/entities/order.entity.ts`](../backend/src/orders/entities/order.entity.ts) (Created - `Order` entity with relationships, decimal transformers, coordinates, dynamic pricing, and delivery OTP)
+  - [`backend/src/orders/entities/order-item.entity.ts`](../backend/src/orders/entities/order-item.entity.ts) (Updated - Added `@ManyToOne(() => Order, order => order.items)` cascade relation)
+- **Important Points for Remote Agent:**
+  - `Order` entity includes indexed foreign keys (`customerId`, `merchantId`, `deliveryPartnerId`), decimal float transformers for `subtotal`, `deliveryFee`, `platformFee`, and `total`.
+  - Dropoff details (`deliveryAddress`, coordinates, `distanceKm`) and 4-digit `deliveryOtp` are mapped.
+  - Verified clean TypeScript compilation in `backend/` (`npx tsc --noEmit` passed with 0 errors).
+- **Next Required Step:**
+  - Execute **Step 3**: Create DTOs (`create-order.dto.ts`, `update-order-status.dto.ts`, `verify-delivery-otp.dto.ts`) with `class-validator`.
 
+### [2026-10-10 19:15] — Local Agent Turn Update
+- **Phase & Step:** Phase 6.1 — Backend Orders Module (Step 3 Completed)
+- **Files Touched / Created:**
+  - [`backend/src/orders/dtos/create-order.dto.ts`](../backend/src/orders/dtos/create-order.dto.ts) (Created - `CreateOrderDto` & `CreateOrderItemDto` with nested array validation, coordinate validation, and positive quantities)
+  - [`backend/src/orders/dtos/order-action.dto.ts`](../backend/src/orders/dtos/order-action.dto.ts) (Created - `UpdateOrderStatusDto` with `OrderStatus` enum validation and `VerifyDeliveryOtpDto` with 4-digit regex validation)
+- **Important Points for Remote Agent:**
+  - Strict input validation via `class-validator` / `class-transformer` guarantees safe payload parsing before reaching services.
+  - Verified clean TypeScript compilation in `backend/` (`npx tsc --noEmit` passed with 0 errors).
+- **Next Required Step:**
+  - Execute **Step 4**: Implement `orders.service.ts` Part 1 (Order creation with atomic transaction, backend product pricing verification, Haversine distance calculation, and dynamic delivery fee).
 
+### [2026-10-10 19:24] — Local Agent Turn Update
+- **Phase & Step:** Phase 6.1 — Backend Orders Module (Step 4 Completed & Refactored)
+- **Files Touched / Created:**
+  - [`backend/src/common/utils/geo.util.ts`](../backend/src/common/utils/geo.util.ts) (Created - Global reusable `calculateHaversineDistance` with non-negative guarantee)
+  - [`backend/src/orders/constants/pricing.constants.ts`](../backend/src/orders/constants/pricing.constants.ts) (Created - `DEFAULT_PRICING_CONFIG`, `DEFAULT_PLATFORM_FEE`, and decoupled `calculateDeliveryFee` rejecting negative distance)
+  - [`backend/src/orders/orders.service.ts`](../backend/src/orders/orders.service.ts) (Updated - Uses extracted geo utility, pricing constants, 4-digit OTP generation, and atomic TypeORM transaction)
+- **Important Points for Remote Agent:**
+  - `calculateHaversineDistance` is now a reusable utility in `common/utils/geo.util.ts`.
+  - Delivery pricing is cleanly decoupled from the platform fee in `orders/constants/pricing.constants.ts`, and strictly guards against negative distances.
+  - Server-authoritative subtotal is strictly calculated from DB `Product.price`.
+  - All DB writes (`Order` and `OrderItem[]`) occur inside `this.dataSource.transaction(...)`.
+  - Verified clean TypeScript compilation in `backend/` (`npx tsc --noEmit` passed with 0 errors).
+- **Next Required Step:**
+  - Execute **Step 5**: Implement `orders.service.ts` Part 2 (Order query methods and 8-state machine transition engine with role-based checks and delivery OTP verification).
 
+### [2026-10-11 11:10] — Local Agent Turn Update
+- **Phase & Step:** Phase 6.1 — Backend Orders Module (Step 5 Completed)
+- **Files Touched / Created:**
+  - [`backend/src/orders/orders.service.ts`](../backend/src/orders/orders.service.ts) (Updated - Added query methods `findById`, `findByCustomerId`, `findByMerchantId`, `findByDeliveryPartnerId`, the 8-state machine engine `updateStatus`, and `verifyDelivery` OTP verification)
+- **Important Points for Remote Agent:**
+  - Single-order and collection queries hydrate `items.product`, `customer.user`, `merchant`, and `deliveryPartner.user` sorted `createdAt: 'DESC'`.
+  - `updateStatus` enforces strict role transitions (`CUSTOMER`: `PLACED` -> `CANCELLED`; `MERCHANT`: `PLACED` -> `ACCEPTED`/`DECLINED` -> `PREPARING` -> `READY_FOR_PICKUP`; `DELIVERY_PARTNER`: `READY_FOR_PICKUP` -> `OUT_FOR_DELIVERY`).
+  - `verifyDelivery` guards matching `deliveryPartnerId`, status `OUT_FOR_DELIVERY`, and validates 4-digit OTP match before transitioning to `DELIVERED`.
+  - Verified clean TypeScript compilation in `backend/` (`npx tsc --noEmit` passed with 0 errors).
+- **Next Required Step:**
+  - Execute **Step 6**: Implement `orders.controller.ts` with guards (`JwtAuthGuard`, `RolesGuard`, `@Roles()`).
 
+### [2026-10-11 11:14] — Local Agent Turn Update
+- **Phase & Step:** Phase 6.1 — Backend Orders Module (Step 6 Completed)
+- **Files Touched / Created:**
+  - [`backend/src/orders/orders.controller.ts`](../backend/src/orders/orders.controller.ts) (Created - REST API controller with 7 endpoints, `JwtAuthGuard`, `RolesGuard`, and `@Roles()` enforcement)
+- **Important Points for Remote Agent:**
+  - `POST /orders` creates orders for authenticated customers (`Role.CUSTOMER`).
+  - `GET /orders/customer/my-orders`, `GET /orders/merchant/:merchantId`, `GET /orders/delivery-partner/my-orders` enforce role-based scoped access.
+  - `GET /orders/:id` verifies actor ownership (customer, merchant, or assigned courier).
+  - `PATCH /orders/:id/status` delegates to the 8-state machine engine.
+  - `POST /orders/:id/verify-delivery` allows assigned couriers to verify the customer 4-digit OTP.
+### [2026-10-11 11:32] — Local Agent Turn Update
+- **Phase & Step:** Phase 6.1 — Backend Orders Module (Step 7 Completed)
+- **Files Touched / Created:**
+  - [`backend/src/orders/orders.module.ts`](../backend/src/orders/orders.module.ts) (Created - `OrdersModule` importing TypeOrm entities `Order`, `OrderItem`, `Customer`, `Merchant`, `Product`, `DeliveryPartner`, binding `OrdersController` and `OrdersService`, exporting `OrdersService`)
+  - [`backend/src/app.module.ts`](../backend/src/app.module.ts) (Updated - Registered `OrdersModule` in `AppModule.imports`)
+- **Important Points for Remote Agent:**
+  - `OrdersModule` is fully registered in `AppModule`.
+  - Type-checking with `npx tsc --noEmit` exited cleanly with **0 errors**.
+  - Jest test suite runs cleanly with all 6 suites and 41 tests passing.
+- **Next Required Step:**
+  - Update [`context/outcome-checklist.md`](./outcome-checklist.md) requirements (C.6, C.7, C.8, M.4, M.5, M.6, D.4, D.5) to reflect backend completion (Done).
+  - Create comprehensive unit test suite [`backend/src/orders/orders.service.spec.ts`](../backend/src/orders/orders.service.spec.ts) validating pricing, state machine rules, atomic transactions, and delivery OTP verification (Done).
+
+### [2026-10-11 14:27] — Local Agent Turn Update
+- **Phase & Step:** Phase 6.1 — Backend Orders Module (Gate 2: QA Engineer Test Suite Completed)
+- **Files Touched / Created:**
+  - [`backend/src/orders/orders.service.spec.ts`](../backend/src/orders/orders.service.spec.ts) (Created - 50 exhaustive adversarial unit tests across 5 testing dimensions)
+  - [`backend/src/orders/orders.service.ts`](../backend/src/orders/orders.service.ts) (Updated - Added defensive items collection check rejecting empty/missing orders)
+  - [`.agents/plugins/lahm-governance/agents/qa-engineer.md`](../.agents/plugins/lahm-governance/agents/qa-engineer.md) (Created - Registered autonomous QA Engineer subagent)
+- **Important Points for Remote Agent:**
+  - The autonomous `qa-engineer` subagent was dispatched via `agy --agent qa-engineer` and completed its mission in ~90 seconds.
+  - Test suite achieves **100% statement, function, and line coverage** for `OrdersService`.
+  - All 7 backend test suites and all 91 tests pass cleanly (`npm test` exits 0 in ~9.3s).
+  - Clean TypeScript compilation with `npx tsc --noEmit` (**0 errors**).
+- **Next Required Step:**
+  - Register `production-auditor` in `lahm-governance` plugin and dispatch **Gate 3 (Production Auditor)** to audit backend code against `production-rules.md` (zero mocks, token consistency, and clean architecture) (Done).
+
+### [2026-10-11 15:43] — Local Agent Turn Update
+- **Phase & Step:** Phase 6.1 — Backend Orders Module (Gate 3: Production Code Audit Completed & Phase 6.1 Closed)
+- **Files Touched / Created:**
+  - [`.agents/plugins/lahm-governance/agents/production-auditor.md`](../.agents/plugins/lahm-governance/agents/production-auditor.md) (Created - Registered autonomous Production Standards Auditor subagent)
+- **Important Points for Remote Agent:**
+  - `production-auditor` was dispatched via `agy --agent production-auditor` and returned a **100% PASS** verdict across all 6 core audit dimensions.
+  - **Zero mock data:** Strictly production-grade code, zero dummy fallbacks, and real database relationships.
+  - **Atomicity:** `OrdersService.create` commits parent order and line items inside `DataSource.transaction`.
+  - **Input Validation & Security:** Strict DTO validation with `class-validator`, decimal precision float transformers on financial columns, and RBAC via `@Roles()`, `JwtAuthGuard`, and `RolesGuard`.
+  - **Phase 6.1 Status:** 100% COMPLETE and production-ready.
+- **Next Required Step:**
+  - Git commit and push Phase 6.1 changes to `main`.
+  - Proceed to **Phase 6.2 (Backend Customer Addresses)** or **Phase 6.3 (Frontend Cart Store)**.
 
 
