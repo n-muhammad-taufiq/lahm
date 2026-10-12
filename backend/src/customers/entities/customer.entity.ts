@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity";
+import { Address } from "../../addresses/entities/address.entity";
 
 @Entity()
 export class Customer {
@@ -9,6 +10,9 @@ export class Customer {
 
     @OneToOne(() => User)
     @JoinColumn()
-    user: User
+    user: User;
+
+    @OneToMany(() => Address, (address) => address.customer)
+    addresses: Address[];
 
 }

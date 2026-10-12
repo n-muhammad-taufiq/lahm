@@ -1,0 +1,1 @@
+export const MAX_ADDRESSES_PER_CUSTOMER = 20;

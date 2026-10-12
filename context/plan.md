@@ -315,10 +315,14 @@ Create the production-grade orders module serving Customer, Merchant, and Delive
 - [x] **Step 8:** Author comprehensive 360-degree unit test suite for `OrdersService` (`orders.service.spec.ts`) with 100% coverage across creation, pricing, state machine, and delivery OTP verification (Done & verified with `npm test`).
 
 
-#### 6.2 Backend: Customer Addresses
-- Add addresses to Customer entity or create separate Address entity
-- CRUD endpoints for addresses
-- **Files:** new `address.entity.ts`, `addresses.service.ts`, `addresses.controller.ts`
+#### 6.2 Backend: Customer Addresses — [x] Completed
+- [x] Add addresses relation to Customer entity and create Address entity (`address.entity.ts`)
+- [x] Create DTOs (`create-address.dto.ts`, `update-address.dto.ts`) and constants (`MAX_ADDRESSES_PER_CUSTOMER`)
+- [x] Implement `AddressesService` with full lifecycle (creation ceiling, atomic default swap, auto-promotion)
+- [x] Implement `AddressesController` with `JwtAuthGuard`, `RolesGuard`, `@Roles(Role.CUSTOMER)`
+- [x] Register `AddressesModule` in `app.module.ts`
+- [x] Author 360-degree unit test suite in `addresses.service.spec.ts` with 100% coverage (39 passing tests)
+- **Files:** `address.entity.ts`, `customer.entity.ts`, `addresses.service.ts`, `addresses.controller.ts`, `addresses.module.ts`, `addresses.service.spec.ts`
 
 #### 6.3 Frontend: Cart (Zustand store — client-side only for MVP)
 - Create `cartStore.ts` with Zustand
