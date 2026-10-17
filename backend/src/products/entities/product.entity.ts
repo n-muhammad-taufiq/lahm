@@ -4,15 +4,39 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
 import { Merchant } from "../../merchants/entities/merchant.entity";
+import { ProductVertical } from "../enums/product-vertical.enum";
+import { MeatProductDetails } from "./meat-product-details.entity";
+import { CustomizationGroup } from "./customization-group.entity";
 
 @Entity()
 export class Product {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Column({
+        type: 'enum',
+        enum: ProductVertical,
+    })
+    vertical?: ProductVertical;
+
+    @OneToOne(() => MeatProductDetails, (details) => details.product, {
+        cascade: true,
+        eager: true,
+        nullable: true,
+    })
+    meatDetails?: MeatProductDetails;
+
+    @OneToMany(() => CustomizationGroup, (group) => group.product, {
+        cascade: true,
+        eager: true,
+    })
+    customizationGroups?: CustomizationGroup[];
 
     @Column()
     name: string;

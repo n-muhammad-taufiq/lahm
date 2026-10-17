@@ -10,6 +10,7 @@ import { MerchantsModule } from './merchants/merchants.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
 import { AddressesModule } from './addresses/addresses.module';
+import { DeliveryAllocationModule } from './delivery-allocation/delivery-allocation.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -39,6 +40,7 @@ import { ConfigModule } from '@nestjs/config';
     ProductsModule,
     OrdersModule,
     AddressesModule,
+    DeliveryAllocationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

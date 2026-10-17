@@ -65,7 +65,18 @@ export class ProductsService {
             await this.merchantsService.findById(updateProductDto.merchantId);
         }
 
-        Object.assign(product, updateProductDto);
+        const { meatDetails, ...baseUpdates } = updateProductDto;
+
+        Object.assign(product, baseUpdates);
+
+        if (meatDetails) {
+            if (product.meatDetails) {
+                Object.assign(product.meatDetails, meatDetails);
+            } else {
+                product.meatDetails = meatDetails as any;
+            }
+        }
+
         return this.productRepository.save(product);
     }
 

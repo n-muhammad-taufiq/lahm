@@ -2,7 +2,9 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, In, Repository } from 'typeorm';
@@ -15,6 +17,7 @@ import { CreateOrderDto } from './dtos/create-order.dto';
 import { OrderStatus } from './enums/order-status.enum';
 import { Role } from '../users/enums/role.enum';
 import { calculateHaversineDistance } from '../common/utils/geo.util';
+import { DeliveryAllocationService } from '../delivery-allocation/delivery-allocation.service';
 import {
   DEFAULT_PLATFORM_FEE,
   DEFAULT_PRICING_CONFIG,
@@ -27,6 +30,8 @@ export function generateDeliveryOtp(): string {
 
 @Injectable()
 export class OrdersService {
+  private readonly logger = new Logger(OrdersService.name);
+
   constructor(
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
@@ -39,6 +44,8 @@ export class OrdersService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
     private readonly dataSource: DataSource,
+    @Optional()
+    private readonly deliveryAllocationService?: DeliveryAllocationService,
   ) {}
 
   calculateDeliveryFee(
@@ -320,7 +327,21 @@ export class OrdersService {
       order.deliveryPartnerId = deliveryPartnerId;
     }
 
-    return this.orderRepository.save(order);
+    const savedOrder = await this.orderRepository.save(order);
+
+    // Trigger delivery partner dispatch when merchant begins preparing food
+    if (newStatus === OrderStatus.PREPARING && this.deliveryAllocationService) {
+      this.deliveryAllocationService
+        .dispatchOrder(savedOrder.id)
+        .catch((err: any) => {
+          this.logger.error(
+            `Failed to dispatch order #${savedOrder.id}: ${err.message}`,
+            err.stack,
+          );
+        });
+    }
+
+    return savedOrder;
   }
 
   async verifyDelivery(

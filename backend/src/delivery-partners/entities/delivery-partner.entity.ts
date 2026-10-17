@@ -2,6 +2,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    Index,
     JoinColumn,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -9,6 +10,8 @@ import {
 } from "typeorm";
 import { User } from "../../users/entities/user.entity";
 
+@Index(['isOnline', 'activeOrderCount', 'isVerified'])
+@Index(['lastLocationUpdatedAt'])
 @Entity()
 export class DeliveryPartner {
     @PrimaryGeneratedColumn()
@@ -76,6 +79,38 @@ export class DeliveryPartner {
     // Status & Auditing
     @Column({ default: false })
     isVerified: boolean;
+
+    // Duty, Concurrency & Live Location Tracking
+    @Column({ default: false })
+    isOnline: boolean;
+
+    @Column({ default: 0 })
+    activeOrderCount: number;
+
+    @Column('decimal', {
+        precision: 10,
+        scale: 7,
+        nullable: true,
+        transformer: {
+            to: (value?: number) => value,
+            from: (value?: string) => (value ? parseFloat(value) : null),
+        },
+    })
+    latitude?: number;
+
+    @Column('decimal', {
+        precision: 10,
+        scale: 7,
+        nullable: true,
+        transformer: {
+            to: (value?: number) => value,
+            from: (value?: string) => (value ? parseFloat(value) : null),
+        },
+    })
+    longitude?: number;
+
+    @Column({ type: 'timestamptz', nullable: true })
+    lastLocationUpdatedAt?: Date;
 
     @CreateDateColumn()
     createdAt: Date;

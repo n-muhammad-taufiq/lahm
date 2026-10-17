@@ -6,6 +6,7 @@ import { Customer } from '../customers/entities/customer.entity';
 import { Merchant } from '../merchants/entities/merchant.entity';
 import { Product } from '../products/entities/product.entity';
 import { DeliveryPartner } from '../delivery-partners/entities/delivery-partner.entity';
+import { DeliveryAllocationModule } from '../delivery-allocation/delivery-allocation.module';
 import { OrdersService } from './orders.service';
 import { OrdersController } from './orders.controller';
 
@@ -19,6 +20,7 @@ import { OrdersController } from './orders.controller';
       Product,
       DeliveryPartner,
     ]),
+    DeliveryAllocationModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService],

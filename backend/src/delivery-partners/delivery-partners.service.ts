@@ -5,6 +5,8 @@ import * as bcrypt from 'bcrypt';
 import { DeliveryPartner } from "./entities/delivery-partner.entity";
 import { RegisterDeliveryPartnerDto } from "./dtos/register-delivery-partner-dto";
 import { UpdateDeliveryPartnerDto } from "./dtos/update-delivery-partner-dto";
+import { UpdateDutyDto } from "./dtos/update-duty.dto";
+import { UpdateLocationDto } from "./dtos/update-location.dto";
 import { User } from "src/users/entities/user.entity";
 import { Role } from "src/users/enums/role.enum";
 import { UsersService } from "src/users/users.service";
@@ -107,6 +109,20 @@ export class DeliveryPartnersService {
     async updateByUserId(userId: number, updateDto: UpdateDeliveryPartnerDto): Promise<DeliveryPartner> {
         const deliveryPartner = await this.findByUserId(userId);
         Object.assign(deliveryPartner, updateDto);
+        return this.deliveryPartnerRepository.save(deliveryPartner);
+    }
+
+    async updateDutyStatus(userId: number, updateDutyDto: UpdateDutyDto): Promise<DeliveryPartner> {
+        const deliveryPartner = await this.findByUserId(userId);
+        deliveryPartner.isOnline = updateDutyDto.isOnline;
+        return this.deliveryPartnerRepository.save(deliveryPartner);
+    }
+
+    async updateLocation(userId: number, updateLocationDto: UpdateLocationDto): Promise<DeliveryPartner> {
+        const deliveryPartner = await this.findByUserId(userId);
+        deliveryPartner.latitude = updateLocationDto.latitude;
+        deliveryPartner.longitude = updateLocationDto.longitude;
+        deliveryPartner.lastLocationUpdatedAt = new Date();
         return this.deliveryPartnerRepository.save(deliveryPartner);
     }
 }

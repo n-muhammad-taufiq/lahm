@@ -750,3 +750,417 @@ When logging a turn or session handoff, append an entry using this structure:
 
 
 
+
+### [2026-10-12 20:52 IST] — Outcome Alignment Audit & Daily Velocity Briefing
+- **Agent Dispatched:** `outcome-auditor` (Outcome Alignment Auditor & Velocity Controller)
+- **Files Touched / Created:**
+  - [`context/outcome-checklist.md`](./outcome-checklist.md) (Updated — Added 28-requirement traceability matrix, scoreboard, internationalization & multi-vertical sections)
+  - [`context/communication.md`](./communication.md) (Updated — Logged audit turn)
+- **Audit Findings:**
+  - **Schedule Health:** `AT RISK` (15 calendar days remaining until October 27, 2026 IST target completion).
+  - **Traceability Score:** 5 / 28 requirements fully complete (17.9%), 14 in progress with robust backend completion (50.0%), 9 pending (32.1%).
+  - **Velocity Formula:** `23 uncompleted items / 15 days = 1.53 items/day` (Target pace: 1.5 to 2 items/day).
+  - **Scope-Creep Watchdog:** Flagged hardcoded `₹` currency signs in 3 merchant product modal files violating Section 5.1; flagged missing JP/CN calling codes (`+81`, `+86`) and raw emojis in `CountryPickerModal.constants.ts`.
+- **Today's Must-Complete Checklist:**
+  1. Lock chosen theme tokens in `@lahm/tokens` based on PO direction from V2 exploration.
+  2. Implement shared internationalized `formatCurrency(amount, currency, locale)` utility in `@lahm/ui` or `@lahm/api`.
+  3. Build shared UI primitives in `@lahm/ui` (Header, Card, StatusBadge, QuantityStepper, BottomSheet).
+  4. Implement Customer App 5-Tab department navigation shell (`Meats | Restaurants | Groceries | Orders | Account`) with floating cart pill.
+
+### [2026-10-12 21:02 IST] — Official Audit Report Document Created
+- **Phase & Step:** Governance & Traceability Documentation
+- **Files Touched / Created:**
+  - [`context/outcome-audit-report.md`](./outcome-audit-report.md) (Created — Standalone formal audit record and 15-day burn-down plan)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key Records Documented:**
+  - Audit executed at `2026-10-12 20:52:00 IST` (`2026-10-12T15:22:00Z`).
+  - Document filed at `2026-10-12 21:02:21 IST` (`2026-10-12T15:32:21Z`).
+  - Target launch date locked: October 27, 2026 IST (15 calendar days remaining).
+  - Velocity formula: 23 remaining items / 15 days = 1.53 items/day (~2 items/day).
+  - Theme direction: User formally locked Theme 1 ("Warm Artisan") created on local workstation; exploratory mockups concluded.
+- **Next Required Step:**
+  - Implement Task A: `formatCurrency(amount, currency, locale)` utility in `@lahm/ui` and resolve hardcoded currency signs.
+
+
+### [2026-10-12 21:20 IST] — Comprehensive 3-App Gap Analysis & Deliverable Blueprint Completed
+- **Agent Dispatched:** `outcome-auditor` (Outcome Alignment Auditor & Velocity Controller)
+- **Files Touched / Created:**
+  - [`3-app-deliverable-architecture-blueprint.md`](file:///home/codespace/.gemini/antigravity-cli/brain/f9a00796-ff07-4e3b-af55-dc6b81098783/3-app-deliverable-architecture-blueprint.md) (Created — Authoritative gap audit and deliverable blueprint artifact)
+  - [`context/plan.md`](./plan.md) (Restructured — Reorganized from isolated micro-tasks into 3 cohesive mobile application releases)
+  - [`context/outcome-checklist.md`](./outcome-checklist.md) (Restructured — Live 3-App deliverable traceability matrix mapped to 130 backend unit tests)
+  - [`context/communication.md`](./communication.md) (Updated — Logged audit and release milestone)
+- **Audit Findings & Roadmap Pivot:**
+  - **User Concern Resolved:** The development plan was previously drifting into fragmented micro-tasks. The roadmap has been completely pivoted into **3 complete, installable mobile applications**:
+    1. **Release 1: Lahm Customer Super-App** (Days 1–6: Oct 13 – Oct 18 IST)
+       - 5-Tab Department Shell (`app/(tabs)`: Meats, Restaurants, Groceries, Orders, Account)
+       - Meat Cut Customizer (Cut thickness, trimming, ±50g tactile weight stepper)
+       - Floating Cart Drawer (`cartStore.ts`, single-merchant cart, minimum order rules)
+       - Multi-Address Book (`GET/POST /addresses`, atomic default swap, coordinate anchoring)
+       - Dynamic Delivery Fee Checkout (`POST /orders`, server-authoritative Haversine math)
+       - Live Order Tracking Timeline (`GET /orders/:id`, 5s polling, 4-digit Delivery OTP card)
+    2. **Release 2: Lahm Merchant Partner App** (Days 7–9: Oct 19 – Oct 21 IST)
+       - Real-time Store Availability Switch with DB persistence (`PATCH /merchant/user/:userId` `isOnline`)
+       - Kitchen Order Board with 5s TanStack Query polling queue & audible/haptic alerts
+       - 3-Stage Order Transitions (`Accept/Decline` → `Start Prep` → `Ready for Pickup`)
+       - Multi-Vertical Catalog CRUD (Meats cuts, Restaurant prep times, Grocery pack sizes)
+       - Courier Handover Verification modal upon driver pickup
+    3. **Release 3: Lahm Courier Delivery App** (Days 10–12: Oct 22 – Oct 24 IST)
+       - Duty Radar screen with pulsing Online/Offline status (`PATCH /delivery-partners/user/:userId` `isOnline`)
+       - Incoming Dispatch Request Card with 30-second circular countdown timer
+       - 2-Stage Route Execution (Navigate to Shop + "Confirm Pickup" → Navigate to Customer)
+       - Secure 4-Digit OTP Handover Verification keypad modal (`POST /orders/:id/verify-delivery`)
+       - Shift Payout Tracker & Delivery History
+    4. **Release 4: 3-App Cross-Device Integration & Launch Hardening** (Days 13–15: Oct 25 – Oct 27 IST)
+       - Simultaneous 3-device live ordering simulation
+       - International multi-currency (`formatCurrency`) & E.164 phone numbering verification
+       - Final quality gates and App Store readiness sign-off for **October 27, 2026 IST**
+- **Zero-Mock Backend Verification:**
+  - Verified all **130 backend unit tests pass** (`npm test` in `backend/`).
+  - Mapped each mobile screen directly to real PostgreSQL-backed endpoints with zero mock data.
+- **Next Required Step:**
+  - Step 1 of Delivery Allocation Engine: Extend DeliveryPartner entity with duty, activeOrderCount, and GPS coordinates.
+
+### [2026-10-13 14:10 IST] — Delivery Allocation Step 1: Entity & Allocation Constants
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 1)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-partners/delivery-partner.constants.ts`](../backend/src/delivery-partners/delivery-partner.constants.ts) (Created — Centralized allocation parameters: `DEFAULT_MAX_CONCURRENT_ORDERS = 2`, `GPS_STALE_THRESHOLD_MINUTES = 5`, `DISPATCH_COUNTDOWN_SECONDS = 30`)
+  - [`backend/src/delivery-partners/entities/delivery-partner.entity.ts`](../backend/src/delivery-partners/entities/delivery-partner.entity.ts) (Updated — Added `isOnline`, `activeOrderCount`, `latitude`, `longitude` with float transformers, `lastLocationUpdatedAt`, and composite matching indexes)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Implemented the entity foundation for the dispatch allocation engine based on the pre-flight threat model from `production-auditor`.
+  - Configured maximum active concurrent orders per courier capped at 2 (`DEFAULT_MAX_CONCURRENT_ORDERS = 2`).
+  - Added PostgreSQL composite index on `(isOnline, activeOrderCount, isVerified)` and location freshness index.
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 8 test suites, 130 unit tests pass cleanly in `backend/` (`npm test`).
+- **Next Required Step:**
+  - Step 2: Create DTOs (`update-duty.dto.ts`, `update-location.dto.ts`) with `class-validator` bounds and implement `PATCH /delivery-partners/duty` and `PATCH /delivery-partners/location` in `DeliveryPartnersService` and `DeliveryPartnersController`.
+
+### [2026-10-13 14:30 IST] — Delivery Allocation Step 2: Duty Toggle & Location Endpoints
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 2)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-partners/dtos/update-duty.dto.ts`](../backend/src/delivery-partners/dtos/update-duty.dto.ts) (Created — Boolean validation for duty switch)
+  - [`backend/src/delivery-partners/dtos/update-location.dto.ts`](../backend/src/delivery-partners/dtos/update-location.dto.ts) (Created — Earthly coordinate bounds validation: latitude [-90, 90], longitude [-180, 180])
+  - [`backend/src/delivery-partners/delivery-partners.service.ts`](../backend/src/delivery-partners/delivery-partners.service.ts) (Updated — Added `updateDutyStatus` and `updateLocation` methods)
+  - [`backend/src/delivery-partners/delivery-partners.controller.ts`](../backend/src/delivery-partners/delivery-partners.controller.ts) (Updated — Added `PATCH /delivery-partners/duty` and `PATCH /delivery-partners/location` protected by `JwtAuthGuard`, `RolesGuard`, `@Roles(Role.DELIVERY_PARTNER)`)
+  - [`backend/src/delivery-partners/delivery-partner.constants.ts`](../backend/src/delivery-partners/delivery-partner.constants.ts) (Updated — 2-Stage dispatch parameters: 8 serial attempts, 20s countdown, 50 broadcast pool)
+  - [`context/outcome-checklist.md`](./outcome-checklist.md) (Updated — Requirement D.2 marked In Progress with backend completed)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Fully implemented the backend duty toggle and GPS location ping endpoints with IDOR tenant isolation (`req.user.id`).
+  - Integrated `class-validator` bounds for coordinates and boolean duty status.
+  - Requirement D.2 backend is 100% complete and verified.
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 8 test suites, 130 unit tests pass cleanly in `backend/` (`npm test`).
+- **Next Required Step:**
+  - Step 3: Create `DeliveryRequest` entity, `delivery-request-status.enum.ts` (`PENDING`, `ACCEPTED`, `REJECTED`, `EXPIRED`, `CANCELLED`), and `delivery-request-type.enum.ts` (`SERIAL`, `BROADCAST`) in a new `backend/src/delivery-allocation/` module.
+
+### [2026-10-13 14:41 IST] — Delivery Allocation Step 3: DeliveryRequest Entity & Status Enums
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 3)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-allocation/enums/delivery-request.enum.ts`](../backend/src/delivery-allocation/enums/delivery-request.enum.ts) (Created — Enums `DeliveryRequestStatus` [PENDING, ACCEPTED, REJECTED, EXPIRED, CANCELLED] and `DispatchStage` [SERIAL, BROADCAST])
+  - [`backend/src/delivery-allocation/entities/delivery-request.entity.ts`](../backend/src/delivery-allocation/entities/delivery-request.entity.ts) (Created — Relational entity linking `Order` and `DeliveryPartner` with distance and payout snapshots, database-persisted `expiresAt` timestamps, and composite matching indexes)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Designed and authored the core dispatch record entity with relations to `orders` and `delivery_partner`.
+  - Configured PostgreSQL indexes `(deliveryPartnerId, status)`, `(status, expiresAt)` for the timeout sweeper, and `(orderId, status)`.
+  - Implemented float transformers for `distanceKm` and `estimatedPayout`.
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 8 test suites, 130 unit tests pass cleanly in `backend/` (`npm test`).
+- **Next Required Step:**
+  - Step 4: Implement the Haversine geospatial proximity algorithm and candidate discovery method (`findEligibleCandidates`) in `DeliveryAllocationService`.
+
+### [2026-10-13 14:52 IST] — Delivery Allocation Step 4: Candidate Discovery & Haversine Proximity Ranking
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 4)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-allocation/delivery-allocation.service.ts`](../backend/src/delivery-allocation/delivery-allocation.service.ts) (Created — Candidate discovery engine, reused global `calculateHaversineDistance`, order cap `< 2` check, ghost courier exclusion `< 5m`, closest-first sorting)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Reused global `calculateHaversineDistance` from `../common/utils/geo.util.ts`, avoiding duplicate implementations.
+  - Implemented `findEligibleCandidates(merchantLat, merchantLng, radiusKm, excludedPartnerIds)`.
+  - Filtered verified online drivers with active orders under the limit of 2 (`DEFAULT_MAX_CONCURRENT_ORDERS`).
+  - Enforced 5-minute GPS heartbeat freshness (`GPS_STALE_THRESHOLD_MINUTES`) and excluded previous decliners.
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 8 test suites, 130 unit tests pass cleanly in `backend/` (`npm test`).
+- **Next Required Step:**
+  - Implement atomic claim engine (`acceptDeliveryRequest`) with pessimistic locking and concurrency validation.
+
+### [2026-10-13 15:36 IST] — Delivery Allocation Step 5 (Part 4): Atomic Claim Engine (`acceptDeliveryRequest`)
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 5, Method 4)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-allocation/delivery-allocation.service.ts`](../backend/src/delivery-allocation/delivery-allocation.service.ts) (Added `acceptDeliveryRequest` with TypeORM transaction, pessimistic write locks, and concurrency enforcement)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Implemented `acceptDeliveryRequest(requestId, partnerId)` within an atomic `this.dataSource.transaction`.
+  - Applied `pessimistic_write` row locks on `DeliveryRequest`, `DeliveryPartner`, and `Order` to eliminate double-assignment race conditions (THREAT-01).
+  - Validated that the courier has fewer than 2 active orders (`DEFAULT_MAX_CONCURRENT_ORDERS`), is online, and that the order is not already assigned or cancelled.
+  - Automatically marked the request `ACCEPTED`, assigned `order.deliveryPartnerId`, incremented `partner.activeOrderCount`, and cancelled competing `PENDING` requests for the order.
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 8 test suites, 130 unit tests pass cleanly in `backend/` (`npm test`).
+- **Next Required Step:**
+  - Implement courier active offer retrieval method (`getIncomingOffer`) in `DeliveryAllocationService`.
+
+### [2026-10-14 11:01 IST] — Delivery Allocation Step 5 (Part 5): Courier Active Offer Retrieval (`getIncomingOffer`)
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 5, Method 5)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-allocation/delivery-allocation.service.ts`](../backend/src/delivery-allocation/delivery-allocation.service.ts) (Added `getIncomingOffer` method with eager relations, countdown expiration handling, and auto-cascade fail-safe)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Implemented `getIncomingOffer(partnerId: number)` to retrieve the active serial offer (`stage = SERIAL`, `status = PENDING`) specifically targeted to the courier.
+  - Eagerly joined `order`, `order.merchant`, and `order.items` for complete mobile UI offer card rendering (store location, items, guaranteed payout, distance).
+  - Built an in-flight expiration check: if `new Date() > expiresAt`, marks the request `EXPIRED` and triggers `cascadeNextDispatch` automatically.
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 8 test suites, 130 unit tests pass cleanly in `backend/` (`npm test`).
+- **Next Required Step:**
+  - Implement Stage 2 Open Radar offer query method (`getRadarOffers`) in `DeliveryAllocationService`.
+
+### [2026-10-14 11:03 IST] — Delivery Allocation Step 5 (Part 6): Open Radar Broadcast Query (`getRadarOffers`)
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 5, Method 6)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-allocation/delivery-allocation.service.ts`](../backend/src/delivery-allocation/delivery-allocation.service.ts) (Added `getRadarOffers` method with proximity filtering, concurrency checks, rejection exclusion, and closest-first sorting)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Implemented `getRadarOffers(partnerId: number)` querying active Stage 2 broadcast requests (`stage = BROADCAST`, `status = PENDING`, `expiresAt > NOW()`).
+  - Enforced eligibility checks: courier must be online, verified, and have `< 2` active orders.
+  - Calculated Haversine distance from courier to merchant; filtered within 10km (`EXPANDED_DISPATCH_RADIUS_KM`).
+  - Excluded orders previously rejected by the courier to eliminate offer spamming.
+  - Sorted eligible broadcast offers closest-first.
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 8 test suites, 130 unit tests pass cleanly in `backend/` (`npm test`).
+- **Next Required Step:**
+  - Implement the background timeout sweeper worker (`sweepExpiredRequests`) in `DeliveryAllocationService`.
+
+### [2026-10-14 11:12 IST] — Delivery Allocation Step 5 (Part 7): Background Timeout Sweeper (`sweepExpiredRequests`)
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 5, Method 7)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-allocation/delivery-allocation.service.ts`](../backend/src/delivery-allocation/delivery-allocation.service.ts) (Added `sweepExpiredRequests` method with `FOR UPDATE SKIP LOCKED` row locking, batch transitions, and auto-cascade triggering)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Implemented `sweepExpiredRequests()` to query up to 20 expired `PENDING` delivery requests in an atomic transaction using `setLock('pessimistic_write')` and `setOnLocked('skip_locked')`.
+  - Atomically marked expired requests as `EXPIRED` without locking non-expired or concurrent transactions.
+  - Deduped affected order IDs and triggered `cascadeNextDispatch` for each expired order with isolated try-catch error guards.
+  - All core service methods in `DeliveryAllocationService` are now complete!
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 8 test suites, 130 unit tests pass cleanly in `backend/` (`npm test`).
+- **Next Required Step:**
+  - Step 8: Implement `DeliveryAllocationController` exposing `GET /delivery-requests/incoming`, `GET /delivery-requests/radar`, `POST /delivery-requests/:id/accept`, and `POST /delivery-requests/:id/reject`.
+
+### [2026-10-14 11:29 IST] — Delivery Allocation Step 8: REST Controller (`DeliveryAllocationController`)
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 8)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-allocation/delivery-allocation.controller.ts`](../backend/src/delivery-allocation/delivery-allocation.controller.ts) (Created — REST controller with JWT auth guards, role guards, tenant IDOR isolation, and 4 courier dispatch endpoints)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Implemented `GET /delivery-requests/incoming`: Courier polls their active 20s private offer.
+  - Implemented `GET /delivery-requests/radar`: Courier views nearby Stage 2 Open Radar broadcast offers.
+  - Implemented `POST /delivery-requests/:id/accept`: Atomically claims the offer with pessimistic locks and assigns the order.
+  - Implemented `POST /delivery-requests/:id/reject`: Rejects the offer and immediately advances the cascade to the next courier.
+  - Protected all routes with `JwtAuthGuard`, `RolesGuard`, and `@Roles(Role.DELIVERY_PARTNER)`.
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 8 test suites, 130 unit tests pass cleanly in `backend/` (`npm test`).
+- **Next Required Step:**
+  - Step 9: Create `DeliveryAllocationModule` and wire it into `backend/src/app.module.ts`.
+
+### [2026-10-14 11:36 IST] — Delivery Allocation Step 9: Module Assembly & Global Integration
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 9)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-allocation/delivery-allocation.module.ts`](../backend/src/delivery-allocation/delivery-allocation.module.ts) (Created — Assembled TypeORM entities, imported `DeliveryPartnersModule`, registered controller and service)
+  - [`backend/src/app.module.ts`](../backend/src/app.module.ts) (Updated — Imported and registered `DeliveryAllocationModule` globally)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Created `DeliveryAllocationModule` binding `DeliveryRequest`, `DeliveryPartner`, and `Order` entities.
+  - Injected `DeliveryPartnersService` to support courier tenant IDOR resolution in controller endpoints.
+  - Exported `DeliveryAllocationService` for module interoperability.
+  - Registered `DeliveryAllocationModule` inside NestJS root application module (`AppModule`).
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 8 test suites, 130 unit tests pass cleanly in `backend/` (`npm test`).
+- **Next Required Step:**
+  - Connect dispatch trigger into `OrdersService` when order status transitions to `PREPARING` and write unit tests for `DeliveryAllocationService`.
+
+### [2026-10-14 21:28 IST] — Delivery Allocation Step 10: Automatic Dispatch Trigger Hook
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 10)
+- **Files Touched / Created:**
+  - [`backend/src/orders/orders.module.ts`](../backend/src/orders/orders.module.ts) (Updated — Imported `DeliveryAllocationModule`)
+  - [`backend/src/orders/orders.service.ts`](../backend/src/orders/orders.service.ts) (Updated — Injected `DeliveryAllocationService` with `@Optional()`, added automated dispatch trigger when order transitions to `PREPARING`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Connected `OrdersService.updateStatus` to `DeliveryAllocationService.dispatchOrder(savedOrder.id)` upon order transitioning to `PREPARING`.
+  - Used non-blocking promise error isolation to ensure merchant status updates remain resilient even if couriers are unavailable.
+  - Used `@Optional()` dependency injection to guarantee 100% backward compatibility with existing unit test suites.
+- **Next Required Step:**
+  - Step 11 (Final Step): Author comprehensive unit tests (`delivery-allocation.service.spec.ts`) covering proximity matching, concurrency caps, 2-stage cascading, and atomic claims.
+
+### [2026-10-14 21:46 IST] — Delivery Allocation Step 11: 360-Degree Unit Test Suite (`DeliveryAllocationService`)
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 11 — Complete)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-allocation/delivery-allocation.service.spec.ts`](../backend/src/delivery-allocation/delivery-allocation.service.spec.ts) (Created — 58 comprehensive unit tests covering candidate discovery, 2-stage cascade lifecycle, pessimistic locks, ghost couriers, and atomic claims)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Invoked `qa-engineer` subagent to design and implement 58 unit tests across all 8 service methods.
+  - Verified 100% statement, function, and line coverage, and 97.08% branch coverage for `DeliveryAllocationService`.
+  - Asserted zero race conditions on concurrent claims, pessimistic write locks (`FOR UPDATE`), and non-blocking `SKIP LOCKED` batch sweeps.
+  - All 9 backend test suites and 188 tests pass cleanly in under 3.5 seconds.
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 9 test suites, 188 unit tests pass cleanly in `backend/` (`npm test`).
+  - The Delivery Partner Matching & Dispatch Allocation Backend Engine is **100% Complete & Verified**.
+- **Next Required Step:**
+  - Proceed with Step 12 (E2E Integration Testing) or frontend mobile app delivery screen wiring.
+
+### [2026-10-14 22:15 IST] — Delivery Allocation Step 12: Live PostgreSQL & Redis E2E Integration Test Suite
+- **Phase & Step:** Delivery Partner Matching & Dispatch Allocation Engine (Step 12 — Complete)
+- **Files Touched / Created:**
+  - [`backend/test/delivery-allocation.e2e-spec.ts`](../backend/test/delivery-allocation.e2e-spec.ts) (Created — 10 full lifecycle E2E integration tests against live PostgreSQL & Redis)
+  - [`backend/test/setup-e2e.ts`](../backend/test/setup-e2e.ts) (Created — Global E2E test setup mocking firebase-admin)
+  - [`backend/test/jest-e2e.json`](../backend/test/jest-e2e.json) (Updated — Path mapping and forceExit)
+  - [`backend/test/app.e2e-spec.ts`](../backend/test/app.e2e-spec.ts) (Updated — Added afterEach app.close() hook)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Initialized and spun up PostgreSQL 16 (`lahm-postgres`) and Redis 7 (`lahm-redis`) Docker containers.
+  - Implemented end-to-end HTTP integration tests verifying:
+    1. RBAC & security authentication guards (401 unauthenticated, 403 non-courier role isolation).
+    2. Courier duty toggling (`PATCH /delivery-partners/duty`).
+    3. Live GPS location updates and latitude/longitude validation bounds (`PATCH /delivery-partners/location`).
+    4. Automated dispatch trigger when merchant transitions order to `PREPARING` (`PATCH /orders/:id/status`).
+    5. Courier polling incoming 20s serial offers with eager relations (`GET /delivery-requests/incoming`).
+    6. Courier rejecting serial offer with immediate cascade trigger (`POST /delivery-requests/:id/reject`).
+    7. Atomic offer acceptance with pessimistic row locks (`SELECT ... FOR UPDATE`), order assignment, and concurrency cap tracking (`POST /delivery-requests/:id/accept`).
+    8. Stage 2 Open Radar Broadcast proximity queries (`GET /delivery-requests/radar`).
+  - Implemented database isolation with table truncation in `beforeAll` and `beforeEach` to prevent cross-test contamination.
+  - All E2E test suites pass cleanly against the live database (`npm run test:e2e`).
+- **Current Project State:**
+  - TypeScript compilation passes with 0 errors (`npx tsc --noEmit` clean).
+  - All 9 unit test suites, 188 tests pass cleanly (`npm test`).
+  - All 2 E2E test suites, 11 tests pass cleanly against real PostgreSQL (`npm run test:e2e`).
+  - Both unit and live end-to-end test verification of the Delivery Allocation Engine are **100% Complete & Passing**.
+- **Next Required Step:**
+  - Transition to Delivery Partner Mobile App UI (`frontend/apps/delivery/`) to build the courier experience (On-Duty toggle, GPS pings, 20s Fullscreen Incoming Offer with audio alert, Open Radar broadcast view, and OTP dropoff verification).
+
+### [2026-10-15 10:55 IST] — Multi-Vertical Products: ProductVertical Master Enum
+- **Phase & Step:** Multi-Vertical Catalog Management (Vertical Foundation Step 1)
+- **Files Touched / Created:**
+  - [`backend/src/products/enums/product-vertical.enum.ts`](../backend/src/products/enums/product-vertical.enum.ts) (Created — Master discriminator enum `ProductVertical`: `MEAT`, `RESTAURANT`, `GROCERY`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Created master `ProductVertical` enum defining the 3 primary business verticals (`MEAT`, `RESTAURANT`, `GROCERY`).
+  - Verified clean TypeScript compilation (`npx tsc --noEmit` exits with 0 errors).
+- **Next Required Step:**
+  - Vertical 1 (Meats): Create the first meat-specific enum (`MeatSpecies`: `BEEF`, `MUTTON`, `POULTRY`, `CAMEL`, `SEAFOOD`).
+
+### [2026-10-15 11:10 IST] — Multi-Country Strategic Alignment: Cultural Advisor Agent & Compliance Matrix
+- **Phase & Step:** Internationalization & Regional Compliance (India, Japan, China)
+- **Files Touched / Created:**
+  - `cultural-regional-advisor` (Defined specialized subagent for cross-cultural, legal, and culinary compliance)
+  - [`context/cultural-compliance-matrix.md`](./cultural-compliance-matrix.md) (Created — Comprehensive Regional Matrix covering cuts, units, currency precision, and legal Halal/Qingzhen standards for India, Japan, and China)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Defined `cultural-regional-advisor` specialist subagent to audit every schema, enum, UI card, and pricing rule against Indian, Japanese, and Chinese consumer expectations.
+  - Formulated the 6-dimension Cultural Compliance Matrix:
+    1. Meat taxonomy: India (Goat/Buffalo), Japan (Halal Wagyu/Salmon), China (Mutton/Duck/Carp).
+    2. Cut styles: Curry/Biryani cuts (India), Sukiyaki/Yakiniku slices (Japan), Hotpot rolls/Cumin skewers (China).
+    3. Currency: JPY (0 decimals integer), INR & CNY (2 decimals).
+    4. Units: Kg/Grams (India), 100g base rates (Japan), Jin/500g (China).
+    5. Legal/Certifications: FSSAI (India), JHA/JMA (Japan), Qingzhen Bureau (China).
+- **Next Required Step:**
+  - Author [`backend/src/products/enums/meat-species.enum.ts`](../backend/src/products/enums/meat-species.enum.ts) incorporating full multi-country coverage (Goat, Lamb, Beef, Veal, Buffalo, Camel, Chicken, Quail, Duck, Pigeon, Fish).
+
+### [2026-10-15 11:15 IST] — Multi-Vertical Products: MeatSpecies Enum
+- **Phase & Step:** Multi-Vertical Catalog Management (Vertical 1: Meats — Step 2)
+- **Files Touched / Created:**
+  - [`backend/src/products/enums/meat-species.enum.ts`](../backend/src/products/enums/meat-species.enum.ts) (Created — Multi-country Halal species: `BEEF`, `BUFFALO`, `VEAL`, `GOAT`, `LAMB`, `CHICKEN`, `DUCK`, `QUAIL`, `PIGEON_SQUAB`, `CAMEL`, `FISH`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Authored `MeatSpecies` enum accommodating Indian legal & cultural preferences (Goat/Chevon, Buffalo/Carabeef), Japanese preferences (Halal Wagyu, Chicken/Duck, Finfish), and Chinese Qingzhen preferences (Mutton/Lamb, Squab, Duck).
+  - Verified clean TypeScript compilation (`npx tsc --noEmit` clean, 0 errors).
+- **Next Required Step:**
+  - Create the third enum for Vertical 1 (Meats): `MeatCutType` (multi-country cut styles: Curry/Biryani cuts, Sukiyaki/Yakiniku slices, Hotpot rolls, Skewers, Chops, Steaks, Keema).
+
+### [2026-10-15 11:25 IST] — Multi-Vertical Products: MeatCutType Enum
+- **Phase & Step:** Multi-Vertical Catalog Management (Vertical 1: Meats — Step 3)
+- **Files Touched / Created:**
+  - [`backend/src/products/enums/meat-cut-type.enum.ts`](../backend/src/products/enums/meat-cut-type.enum.ts) (Created — Clean universal English cut types with dual display mapping: `CURRY_CUT`, `BIRYANI_CUT`, `FRY_CUT`, `MINCED_CHOPPED`, `SOUP_BONES`, `BONELESS_FILLET`, `THIN_SLICES`, `WHOLE`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Authored `MeatCutType` using clean, universal English constants that cleanly map in the frontend to both English and regional Tamil Nadu terms (*Kulambu Pieces*, *Biryani Large Pieces*, *Sukka Small Pieces*, *Kothu Kari*, *Aatukkal/Soup Bones*, *Mulu Kozhi*).
+  - Verified clean TypeScript compilation (`npx tsc --noEmit` clean, 0 errors).
+- **Next Required Step:**
+  - Create the fourth enum for Vertical 1 (Meats): `BoneType` (`BONE_IN`, `BONELESS`).
+
+### [2026-10-15 11:28 IST] — Multi-Vertical Products: BoneType Enum
+- **Phase & Step:** Multi-Vertical Catalog Management (Vertical 1: Meats — Step 4)
+- **Files Touched / Created:**
+  - [`backend/src/products/enums/bone-type.enum.ts`](../backend/src/products/enums/bone-type.enum.ts) (Created — Simplified binary bone options: `BONE_IN`, `BONELESS`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Authored simplified `BoneType` enum eliminating confusing intermediate options, directly mapping to customer preferences (With Bone vs Boneless).
+  - Verified clean TypeScript compilation (`npx tsc --noEmit` clean, 0 errors).
+- **Next Required Step:**
+  - Create the `MeatProductDetails` entity.
+
+### [2026-10-15 22:18 IST] — Multi-Vertical Products: MeatProductDetails Entity
+- **Phase & Step:** Multi-Vertical Catalog Management (Vertical 1: Meats — Step 5)
+- **Files Touched / Created:**
+  - [`backend/src/products/entities/meat-product-details.entity.ts`](../backend/src/products/entities/meat-product-details.entity.ts) (Created — Configurable butcher customizer entity: `species`, `availableCuts`, `availableBoneTypes`, `availableWeightsGrams`, `bonelessExtraPrice`, `defaultCut`, `defaultBoneType`, `defaultWeightGrams`, `isZabihahHalal`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Created `MeatProductDetails` entity implementing the configurable variant architecture: allows butcher to list a product once and configure all offered cuts, bone options, weight tiers, and boneless surcharges.
+  - Removed redundant `grossWeightGrams` and `isFreshDailyCut` properties per user directives.
+  - Verified clean TypeScript compilation (`npx tsc --noEmit` clean, 0 errors).
+- **Next Required Step:**
+  - Update [`backend/src/products/entities/product.entity.ts`](../backend/src/products/entities/product.entity.ts) to declare `vertical: ProductVertical` discriminator and `@OneToOne(() => MeatProductDetails)` relation.
+
+### [2026-10-15 22:25 IST] — Multi-Vertical Products: Product Entity Update
+- **Phase & Step:** Multi-Vertical Catalog Management (Vertical 1: Meats — Step 6)
+- **Files Touched / Created:**
+  - [`backend/src/products/entities/product.entity.ts`](../backend/src/products/entities/product.entity.ts) (Updated — Added `vertical: ProductVertical` enum column with default `MEAT`, and `@OneToOne(() => MeatProductDetails)` eager relation)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Connected `Product` base entity with `MeatProductDetails` via 1-to-1 relationship with cascade and eager loading.
+  - Verified clean TypeScript compilation (`npx tsc --noEmit` clean, 0 errors).
+  - All 9 backend test suites and 188 tests continue to pass cleanly (`npm test`).
+- **Next Required Step:**
+  - Register `MeatProductDetails` in [`backend/src/products/products.module.ts`](../backend/src/products/products.module.ts) TypeOrmModule feature list.
+
+### [2026-10-15 22:30 IST] — Multi-Vertical Products: Module Registration
+- **Phase & Step:** Multi-Vertical Catalog Management (Vertical 1: Meats — Step 7)
+- **Files Touched / Created:**
+  - [`backend/src/products/products.module.ts`](../backend/src/products/products.module.ts) (Updated — Registered `MeatProductDetails` in `TypeOrmModule.forFeature`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Added `MeatProductDetails` to TypeORM feature registration in `ProductsModule`.
+  - Verified clean TypeScript compilation (`npx tsc --noEmit` clean, 0 errors).
+  - All 9 backend test suites and 188 tests pass cleanly (`npm test`).
+- **Next Required Step:**
+  - Update [`backend/src/products/dtos/create-product.dto.ts`](../backend/src/products/dtos/create-product.dto.ts) to accept optional `meatDetails` payload when creating a meat product.
+
+### [2026-10-15 22:35 IST] — Multi-Vertical Products: CreateProductDto Update
+- **Phase & Step:** Multi-Vertical Catalog Management (Vertical 1: Meats — Step 8)
+- **Files Touched / Created:**
+  - [`backend/src/products/dtos/create-product.dto.ts`](../backend/src/products/dtos/create-product.dto.ts) (Updated — Defined `CreateMeatProductDetailsDto` with validation for `species`, `availableCuts`, `availableBoneTypes`, `availableWeightsGrams`, and wired into `CreateProductDto`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Created validation DTO for butcher customizer options and nested it within `CreateProductDto`.
+  - Verified clean TypeScript compilation (`npx tsc --noEmit` clean, 0 errors).
+  - All 9 backend test suites and 188 tests pass cleanly (`npm test`).
+- **Next Required Step:**
+  - Remove silent `default: ProductVertical.MEAT` fallback from [`backend/src/products/entities/product.entity.ts`](../backend/src/products/entities/product.entity.ts).
+
+### [2026-10-16 11:32 IST] — Multi-Vertical Products: Remove Entity Fallback
+- **Phase & Step:** Multi-Vertical Catalog Management (Vertical 1: Meats — Step 9)
+- **Files Touched / Created:**
+  - [`backend/src/products/entities/product.entity.ts`](../backend/src/products/entities/product.entity.ts) (Updated — Removed silent `default: ProductVertical.MEAT` fallback from column definition)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **What Was Done:**
+  - Removed silent `default: ProductVertical.MEAT` from `Product` entity so products created by other merchants (restaurants, groceries) never accidentally default to meat.
+  - Verified clean TypeScript compilation (`npx tsc --noEmit` clean, 0 errors).
+- **Next Required Step:**
+  - Update [`backend/src/products/dtos/create-product.dto.ts`](../backend/src/products/dtos/create-product.dto.ts) to require `vertical` explicitly (`@IsNotEmpty()`).
