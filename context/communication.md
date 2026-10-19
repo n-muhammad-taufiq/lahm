@@ -1164,3 +1164,350 @@ When logging a turn or session handoff, append an entry using this structure:
   - Verified clean TypeScript compilation (`npx tsc --noEmit` clean, 0 errors).
 - **Next Required Step:**
   - Update [`backend/src/products/dtos/create-product.dto.ts`](../backend/src/products/dtos/create-product.dto.ts) to require `vertical` explicitly (`@IsNotEmpty()`).
+
+### [2026-10-17 22:50 IST] — UI Design: Theme 1 ("Warm Artisan") Color Palette Exploration
+- **Phase & Step:** UI / UX Design Exploration — Theme 1 ("Warm Artisan") Color Variations
+- **Files Touched / Created:**
+  - [`artisan_palette_exploration.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/artisan_palette_exploration.md) (Created — Palette exploration artifact with carousel and color token breakdown)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Palette Variations Generated & Explored:**
+  - **Palette A ("Gourmet Crimson & Warm Linen"):** Deep gourmet crimson burgundy (`#8B1E1E` / `#991B1B`), warm ivory linen surface (`#FBF9F5`), espresso dark typography (`#1F1815`). High appetite stimulation, luxury butchery & rotisserie feel.
+  - **Palette B ("Mediterranean Olive & Toasted Oat"):** Deep culinary olive green (`#365314`), warm toasted oat cream (`#F8F5EE`), espresso typography (`#1C1917`), subtle terracotta accents (`#C2410C`). Organic halal trust, fresh farm-to-table aesthetic.
+  - **Palette C ("Warm Amber Honey & Roasted Charcoal"):** Rich spiced amber caramel (`#C27803`), warm antique parchment (`#FAF7F0`), deep roasted charcoal typography (`#18181B`). Aromatic warm culinary glow.
+  - **Palette D ("Terracotta Peach & Warm Cream"):** Original baseline palette (`#E77A62` + `#FAF8F5`).
+- **Next Required Step:**
+  - Solicit Product Owner's preferred palette choice (Palette A, B, C, or D) to lock primary design tokens in `@lahm/tokens`.
+
+### [2026-10-17 22:55 IST] — UI Design: Next-Gen Reimagined Concepts & UX Improvements
+- **Phase & Step:** UI / UX Design Exploration — 4 Next-Generation Reimagined Super-App Concepts
+- **Files Touched / Created:**
+  - [`nextgen_design_concepts.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/nextgen_design_concepts.md) (Created — Next-Gen design concepts artifact with carousel and architectural breakdowns)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **New Reimagined Concepts Generated:**
+  - **Concept 1 ("Obsidian Luxe / Midnight Ember"):** Ultra-premium dark mode (`#0C0C0F` obsidian canvas), frosted glass cards with ambient border glows, glowing ember coral active accents (`#FF6536`), gold halal certificate stamps, floating frosted cart capsule. Luxury halal butchery & Michelin-grade dining.
+  - **Concept 2 ("Modern Bento Minimalist"):** Apple/Linear-grade asymmetric bento grid (`#F8F9FA` alabaster surface), interactive circular meat cut story reels, in-feed weight selector pills (`500g` vs `1kg`) with instant `+` stepper, floating glassmorphic cart bar with real item thumbnails and live `$102.50` subtotal. High-tech ordering speed.
+  - **Concept 3 ("Nordic Botanical & Crisp Sage"):** Scandinavian Kinfolk-inspired editorial layout, pure milk-white backdrop (`#FFFFFF`), muted eucalyptus sage green (`#1B382B`), lifestyle photography on slate with coarse sea salt, pasture origin verification badges.
+  - **Concept 4 ("Vibrant Halal Super-App"):** Deliveroo/DoorDash 2026 evolution, high-energy ruby crimson (`#E11D48`), 3D promo billboard (`20% OFF`), merchant storefront cards with live distance (`1.2 km`) and star ratings (`4.9 ★ 2.4k`), prominent floating red cart pill (`$48.50`).
+- **Next Required Step:**
+  - Solicit Product Owner's feedback on these 4 improved concepts to select the definitive mobile visual identity for Lahm.
+
+### [2026-10-17 22:59 IST] — UI Design: Clean, Effortless & Attractive Ordering Concepts
+- **Phase & Step:** UI / UX Design Exploration — Clean, High-Conversion, Frictionless Ordering UI
+- **Files Touched / Created:**
+  - [`clean_effortless_designs.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/clean_effortless_designs.md) (Created — Clean and effortless UI designs artifact with carousel and UX breakdown)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Designs Generated:**
+  - **Design A ("Crisp White & Crimson Accents"):** Wolt & Apple-inspired pure white minimalist canvas (`#FFFFFF`), high-visibility red active department switcher (`[🥩 Fresh Meats] [🍽️ Restaurants] [🛒 Groceries]`), clean single-row category icons, 2-column spacious product cards with clear weights (`500g`), bold prices (`$18.50`), and friction-free `+ Add` button. Floating bottom cart pill (`2 items • $34.00`).
+  - **Design B ("Clean Gourmet Market & Emerald Accents"):** Instacart & M&S Fresh-inspired soft off-white canvas (`#FAFAFA`), emerald green halal accent (`#15803D`), diverse product cuts (Wagyu Ribeye 400g, Organic Chicken Breast 1kg, Lamb Skewers 6pcs, Minced Beef 500g), clean horizontal chip filters, floating cart capsule with item badge.
+- **Next Required Step:**
+  - Solicit Product Owner's confirmation on Design A vs Design B to lock final design tokens in `@lahm/tokens`.
+
+### [2026-10-17 23:03 IST] — UI Design: Theme 1 ("Warm Artisan") Exact Layout Color Palette Variations
+- **Phase & Step:** UI / UX Design Exploration — Theme 1 ("Warm Artisan") 100% Identical Layout with Color Variations
+- **Files Touched / Created:**
+  - [`theme1_color_variations.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/theme1_color_variations.md) (Created — Theme 1 exact layout color variations artifact with carousel and color token breakdown)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Variations Generated (All using identical Theme 1 layout, serif typography, 18px curves, product cards, and 5-department navigation):**
+  - **1. Original Baseline:** Terracotta Peach (`#E77A62`) & Warm Cream (`#FAF8F5`).
+  - **2. Halal Emerald Green & Clean White:** Halal Emerald Green (`#15803D`) on pure white (`#FFFFFF`) with charcoal text (`#111827`). Maximum certified halal trust and farm freshness.
+  - **3. Charcoal Slate & Crisp White:** Dark slate charcoal (`#18181B`) on crisp white (`#FFFFFF`). Modern minimalist, ultra-high contrast and clean readability.
+  - **4. Gourmet Crimson Burgundy & Cream White:** Rich culinary crimson (`#991B1B`) on warm cream (`#FAF8F5`). Prime boutique butcher & steakhouse appetite appeal.
+  - **5. Midnight Slate Blue & Linen White:** Elegant midnight slate blue (`#1E293B`) on linen white (`#F8F9FA`). Contemporary boutique gourmet deli.
+- **Next Required Step:**
+  - Solicit Product Owner's preferred color palette choice among the 5 Theme 1 variations to lock primary design tokens in `@lahm/tokens`.
+
+### [2026-10-18 14:19 IST] — UI Design: Theme 1 ("Warm Artisan") Merchant Discovery View
+- **Phase & Step:** UI / UX Design Exploration — Theme 1 ("Warm Artisan") Merchant Discovery Feed
+- **Files Touched / Created:**
+  - [`theme1_merchant_feed.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/theme1_merchant_feed.md) (Created — Theme 1 Merchant Discovery artifact comparing product vs merchant views)
+  - [`context/ui/ui-theme-merchants.jpg`](../context/ui/ui-theme-merchants.jpg) (Created — High-resolution reference mockup saved in `context/ui/`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key UX & Design Updates:**
+  - Preserved **100% of Theme 1's Warm Artisan aesthetic**: warm terracotta peach (`#E77A62`), soft cream surface (`#FAF8F5`), espresso text (`#1C1611`), editorial Serif typography, and 18px curves.
+  - Replaced individual product cut cards with **Merchant & Storefront Discovery Cards**:
+    - High-quality photo of the artisan butcher shop & fresh display counter.
+    - Official 100% Halal Verified stamp on the top-right corner.
+    - Merchant name (e.g. *Al-Barakah Prime Butchery*, *Sultan Artisan Meats*, *Madina Halal Cuts*).
+    - Store performance metadata: rating (`★ 4.9`), delivery time (`20-30 min`), and distance (`1.2 km`).
+    - Specialty tags: `Fresh Lamb • Wagyu • Poultry`.
+    - `100% Halal certified` pill badge.
+  - Floating terracotta cart pill (`View Cart - 2 Items`) and 5-department bottom navigation (`[🥩 Meats | 🍽️ Restaurants | 🛒 Groceries | 📦 Orders | 👤 Profile]`) remain identical.
+- **Next Required Step:**
+  - Confirm with Product Owner if this merchant-first discovery layout meets all requirements, then lock tokens in `@lahm/tokens` and proceed to UI implementation.
+
+### [2026-10-18 14:24 IST] — UI Design: Theme 1 ("Warm Artisan") Restaurant Discovery View (Zero Humans)
+- **Phase & Step:** UI / UX Design Exploration — Theme 1 ("Warm Artisan") Restaurant Tab View
+- **Files Touched / Created:**
+  - [`theme1_restaurant_feed.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/theme1_restaurant_feed.md) (Created — Theme 1 Restaurant Discovery artifact detailing restaurant department view)
+  - [`context/ui/ui-theme-restaurants.jpg`](../context/ui/ui-theme-restaurants.jpg) (Created — High-resolution reference mockup saved in `context/ui/`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key UX & Design Updates:**
+  - **Zero Humans on Screen:** Removed all people/faces; cards feature mouth-watering, gourmet halal restaurant food photography (sizzling charcoal seekh kebabs on hot skillet, golden saffron Mandi rice with braised lamb shank, Mediterranean charcoal grill platter).
+  - **Restaurants Tab Active:** In the `Hero Department` switcher, `[🍽️ Restaurants]` is highlighted with the solid terracotta peach badge (`#E77A62`), while `Meats` and `Groceries` are unselected.
+  - **Halal Restaurant Identity:** Features restaurants (*Al-Basha Mandi & Grills*, *Saffron Gourmet Kitchen*, *Ottoman Charcoal Dining*) with ratings (`4.9 ★`), delivery time (`20-30 min`), distance (`1.2 km`), cuisine tags (`Mandi Rice • Grills • Shawarma`), and `100% Halal certified` badges.
+  - **100% Preserved Theme 1 Foundation:** Exact same warm peach and cream Warm Artisan color system, editorial Serif headline (*Featured Halal Restaurants*), 18px curves, floating cart pill (`View Cart - 2 Items`), and 5-department bottom navigation with `Restaurants` active.
+- **Next Required Step:**
+  - Confirm with Product Owner to lock design tokens in `@lahm/tokens` and begin implementing the Customer App department navigation and merchant card components.
+
+### [2026-10-18 14:26 IST] — UI Design: Theme 1 ("Warm Artisan") Placeholder Wireframe View
+- **Phase & Step:** UI / UX Design Exploration — Theme 1 ("Warm Artisan") Image Placeholder State
+- **Files Touched / Created:**
+  - [`theme1_placeholder_feed.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/theme1_placeholder_feed.md) (Created — Theme 1 Placeholder Wireframe artifact detailing image fallback and loading architecture)
+  - [`context/ui/ui-theme-placeholder.jpg`](../context/ui/ui-theme-placeholder.jpg) (Created — High-resolution reference mockup saved in `context/ui/`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key UX & Design Updates:**
+  - **Clean Image Placeholder:** Replaced food photography with a soft warm neutral-gray container (`#EFECE6`), featuring a centered question mark `?` icon and `Photo Placeholder` sub-label.
+  - **100% Retained Theme 1 Framework:** Exact same warm peach and cream Warm Artisan palette (`#E77A62`, `#FAF8F5`, `#1C1611`), 18px curves, `Restaurants` active department pill, serif headline (*Featured Halal Restaurants*), restaurant metadata (*Al-Basha Mandi & Grills*, *Saffron Gourmet Kitchen*, *Ottoman Charcoal Dining*), floating cart pill (`View Cart - 2 Items`), and 5-department bottom navigation with `Restaurants` active.
+- **Next Required Step:**
+  - Solicit Product Owner final approval to lock design tokens in `@lahm/tokens` and begin implementing the Customer App 5-department shell and merchant card components.
+
+### [2026-10-18 14:44 IST] — UI Design: Customer Home Screen Version 6
+- **Phase & Step:** UI / UX Design Exploration — Customer Home Screen Version 6 (Green Hero Banner & 4-Tab Bottom Bar)
+- **Files Touched / Created:**
+  - [`version6_design.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/version6_design.md) (Created — Version 6 design artifact detailing the two requested improvements and carousel comparison)
+  - [`context/ui/version6.png`](../context/ui/version6.png) (Created — High-resolution Version 6 mockup saved in `context/ui/`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key UX & Design Updates:**
+  - **Natural Green Hero Banner:** Changed the background of the "FRESH & HALAL — Premium Meat for Your Family" section from peach to a rich, organic natural green gradient (`#15803D` / `#1E5E45`). White typography (`Premium Meat for Your Family`), `Shop Meat ➔` button, and `? Meat Image` placeholder box preserved with high readability.
+  - **4-Tab Bottom Navigation Bar:** Streamlined bottom navigation from 5 tabs down to exactly 4: `[🏠 Home (active) | 🏪 Shop | 📋 Orders | 👤 Profile]`. Removed redundant department sub-tabs since departments are already accessible via the top 4 department cards (`Meat Shops`, `Restaurants`, `Groceries`, `Halal Certified`).
+  - **100% Identical Elements Preserved:** Retained `Lahm` header with `Anna Nagar, Chennai ▾` location pin, search bar, 4 top department cards with `Restaurants` active in terracotta, `Nearby Restaurants` section, and `Popular Meat Shops` section.
+- **Next Required Step:**
+  - Solicit Product Owner's confirmation on Version 6 to lock design system tokens in `@lahm/tokens` and begin implementing the 4-tab bottom navigation shell and home screen components in `frontend/apps/customer/`.
+
+### [2026-10-18 14:50 IST] — UI Design: Customer Home Screen Version 7 (White, Dark Grey & Targeted Peach Accent)
+- **Phase & Step:** UI / UX Design Exploration — Customer Home Screen Version 7 (Professional 60-30-10 Color Balance)
+- **Files Touched / Created:**
+  - [`version7_professional_design.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/version7_professional_design.md) (Created — Version 7 design artifact detailing 60-30-10 color rule and comparison carousel)
+  - [`context/ui/version7.png`](../context/ui/version7.png) (Created — High-resolution Version 7 mockup saved in `context/ui/`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key UX & Design Updates:**
+  - **Solved "Full of Peach" Problem via 60-30-10 Rule:**
+    - **60% Pure White Canvas (`#FFFFFF`):** Replaced all-over cream/peach tint with crisp white background and neutral light-grey outer canvas (`#EDF2F7`).
+    - **30% Dark Slate Charcoal (`#0F172A`):** Deep charcoal typography for `Lahm` header, section titles, merchant names, and unselected category icons. High contrast, sharp and executive.
+    - **10% Brand Terracotta Peach Accent (`#E77A62`):** Brand color reserved exclusively for high-intent interactive focal points: the active `Restaurants >` category card, the active `Home` icon in the bottom bar, and location pins.
+  - **Natural Green Hero Banner Stands Out:** Against the crisp white canvas, the "Premium Meat for Your Family" natural green gradient banner looks significantly more lush, fresh, and trustworthy.
+  - **Preserved Version 6 Framework:** 4-tab bottom navigation bar (`Home`, `Shop`, `Orders`, `Profile`), 4 top category cards, `Nearby Restaurants` and `Popular Meat Shops` with placeholder containers.
+- **Next Required Step:**
+  - Solicit Product Owner's feedback on Version 7 to lock design system tokens in `@lahm/tokens` and begin implementing the Customer App UI components.
+
+### [2026-10-18 15:40 IST] — UI Design: Customer Home Screen Version 8 (5 Senior Product Improvements)
+- **Phase & Step:** UI / UX Design Exploration — Customer Home Screen Version 8
+- **Files Touched / Created:**
+  - [`version8_design.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/version8_design.md) (Created — Version 8 design artifact detailing the 5 concrete design improvements and comparison carousel)
+  - [`context/ui/version8.png`](../context/ui/version8.png) (Created — High-resolution Version 8 mockup saved in `context/ui/`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **5 High-Impact Improvements over Version 7:**
+  1. **Delivery Location Hierarchy:** Replaced truncated text with `DELIVER TO: Home - Anna Nagar, Chennai 📍 ▾` dropdown header and top-right notification bell `🔔`.
+  2. **Balanced 3-Department Vertical Taxonomy:** Replaced cramped 4-card row (where "Halal Certified" was mistakenly placed as a store category) with 3 balanced commercial departments: `[🥩 Meat Shops]`, `[🍽️ Restaurants (active)]`, `[🛒 Groceries]`, and an overarching platform trust pill `🛡️ 100% Halal Certified Platform`.
+  3. **Search with Quick Filters:** Added native filter icon `⚙️` to search input for instant sorting (ratings, <30 min delivery, dietary).
+  4. **Cinematic 16:9 Merchant Cards:** Replaced tall stacked cards with 16:9 aspect ratio cards and floating frosted glass badges (`🛡️ Halal`, `⚡ 20-30 min • Free Delivery`), saving ~30% vertical space and increasing browsing speed.
+  5. **Floating Bottom Cart Capsule:** Restored persistent terracotta cart pill `🛒 2 items • ₹650 | View Cart ➔` anchored above the 4-tab bottom navigation bar (`Home`, `Shop`, `Orders`, `Profile`).
+- **Next Required Step:**
+  - Solicit Product Owner's confirmation on Version 8 to lock design tokens in `@lahm/tokens` and build shared UI primitives (`MerchantCard`, `DepartmentSwitcher`, `HeroCampaignBanner`) in `@lahm/ui`.
+
+### [2026-10-18 16:03 IST] — UI Design: Customer Home Screen Version 9 (Full-Bleed Cards & White Floating Cart)
+- **Phase & Step:** UI / UX Design Exploration — Customer Home Screen Version 9
+- **Files Touched / Created:**
+  - [`version9_design.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/version9_design.md) (Created — Version 9 design artifact detailing full-bleed cards and white cart capsule)
+  - [`context/ui/version9.png`](../context/ui/version9.png) (Created — High-resolution Version 9 mockup saved in `context/ui/`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key UX & Design Updates:**
+  - **Full-Bleed Merchant Photography:** Eliminated inner padding/gap between merchant photos and card borders. Images bleed edge-to-edge flush with card container with top-corner radius clipping.
+  - **Taller & Bigger Merchant Cards:** Increased card height and proportion, introducing a favorite heart icon (`🤍`), generous spacing, and rich typography hierarchy.
+  - **Pure White Floating Cart Capsule:** Changed floating cart container to crisp white (`#FFFFFF`) with dark charcoal text (`🛒 2 items • ₹650`) and a terracotta peach CTA button (`View Cart ➔`).
+- **Next Required Step:**
+  - Solicit Product Owner's confirmation on Version 9 to lock design tokens in `@lahm/tokens` and build shared UI primitives (`MerchantCard`, `DepartmentSwitcher`, `HeroCampaignBanner`, `FloatingCartCapsule`) in `@lahm/ui`.
+
+### [2026-10-18 17:34 IST] — UI Implementation: Customer Home Screen Step 1 (Delivery Location Header)
+- **Phase & Step:** Frontend UI Implementation — Customer Home Screen Step 1 (`HomeDeliveryHeader`)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/home/components/HomeDeliveryHeader.tsx`](../frontend/apps/customer/src/features/home/components/HomeDeliveryHeader.tsx) (Created — Delivery address switcher, pin & chevron icons, tactile haptic feedback, notification bell)
+  - [`frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx`](../frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx) (Modified — Reset container to blank canvas with safe area insets and mounted `HomeDeliveryHeader`)
+- **Key Implementation Details:**
+  - Installed `expo-haptics` in `frontend/apps/customer`.
+  - Built `HomeDeliveryHeader` with stroke vector icons (`Ionicons name="location-sharp"`, `Ionicons name="chevron-down"`, `Feather name="bell"`). Zero raw emojis.
+  - Formatted delivery location as `DELIVER TO:` uppercase label and `Home - Anna Nagar, Chennai` with haptic feedback on press.
+  - Mounted header cleanly into `CustomerHomeScreen.tsx` bound to `useCustomerLocation`.
+  - Both new/modified files compile cleanly with **0 TypeScript errors**.
+- **Next Required Step:**
+  - Implement Step 2: The Search & Filter Bar (`HomeSearchBar.tsx`) with search input and quick filter trigger icon.
+
+### [2026-10-18 17:38 IST] — Routing: Customer App Direct Landing on Home Screen
+- **Phase & Step:** Frontend Navigation & Routing — Direct Home Landing on App Launch
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/app/login.tsx`](../frontend/apps/customer/src/app/login.tsx) (Created — Relocated full customer authentication orchestrator flow)
+  - [`frontend/apps/customer/src/app/index.tsx`](../frontend/apps/customer/src/app/index.tsx) (Modified — Updated root `/` route to render `<CustomerHomeScreen />` directly)
+- **Key Implementation Details:**
+  - Configured Expo Router so that launching the Customer App immediately opens `CustomerHomeScreen` with the Delivery Location Header without blocking behind a mandatory login screen.
+  - The login flow is preserved and available at route `/login`.
+  - Both files compile cleanly with **0 TypeScript errors**.
+- **Next Required Step:**
+  - Implement Step 2: The Search & Filter Bar (`HomeSearchBar.tsx`) with search input and quick filter trigger icon.
+
+### [2026-10-18 18:27 IST] — UI Implementation: Customer Home Screen Step 2 (Search & Filter Bar)
+- **Phase & Step:** Frontend UI Implementation — Customer Home Screen Step 2 (`HomeSearchBar`)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/home/components/HomeSearchBar.tsx`](../frontend/apps/customer/src/features/home/components/HomeSearchBar.tsx) (Created — Rounded 16px search pill container, vector search icon, real-time input, text clear button, and tactile filter sliders button)
+  - [`frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx`](../frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx) (Modified — Added search query state and mounted `HomeSearchBar`)
+- **Key Implementation Details:**
+  - Designed `HomeSearchBar` matching the Version 9 mockup: 48dp height, 16dp rounded corners (`rounded-2xl`), light neutral border (`border-zinc-200`), and pure white background.
+  - Left icon: `Feather name="search"` (size 18 in `#71717A`).
+  - Input: Native `TextInput` with placeholder `"Search for meat, groceries or restaurants..."` in `#A1A1AA`, non-autocorrect, non-autocapitalize.
+  - Right action: Tactile filter button with `Feather name="sliders"` (size 18 in `#0F172A`) and `Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)`.
+  - Conditional clear icon (`close-circle`) when query is non-empty.
+  - Both files compile cleanly with **0 TypeScript errors**.
+- **Next Required Step:**
+  - Implement Step 3: The 3-Department Switcher (`DepartmentSwitcher.tsx`) in `@lahm/ui` with `[Meat Shops]`, `[Restaurants]`, `[Groceries]` and Halal trust pill.
+
+### [2026-10-18 18:35 IST] — UI Design: Category Switcher Redesign Exploration
+- **Phase & Step:** Frontend UI Design Exploration — Category Switcher Redesign
+- **Files Touched / Created:**
+  - [`category_switcher_improvements.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/category_switcher_improvements.md) (Created — Design artifact presenting 4 modern category switcher alternatives)
+  - [`context/ui/category-switcher-options.png`](../context/ui/category-switcher-options.png) (Created — High-resolution comparison sheet saved in `context/ui/`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **4 Distinct UX/UI Redesign Options Presented:**
+  1. **Option 1 (Sleek Segmented Capsule Track):** 44dp height, neutral track with sliding elevated white pill. Saves 50% vertical space; zero visual clutter.
+  2. **Option 2 (Soft Tinted Squircles with Store Counts):** 18dp rounded tiles with soft pastel background tints and live store counts (`14 Butcheries`, `28 Kitchens`, `9 Markets`). Warm and culinary.
+  3. **Option 3 (Boutique Bento Capsules):** Executive dark charcoal active capsule (`#0F172A`) with terracotta accent indicator, alongside crisp white capsules. Luxury gourmet butcher feel.
+  4. **Option 4 (Circular Icon Hub with Active Indicator):** 54dp white floating icon discs with labels underneath and terracotta pill indicator. Familiar and tactile.
+- **Next Required Step:**
+  - Solicit Product Owner's preferred design option (1, 2, 3, or 4) to implement `DepartmentSwitcher.tsx`.
+
+### [2026-10-18 18:42 IST] — UI Implementation: Customer Home Screen Step 3 (`DepartmentSwitcher`)
+- **Phase & Step:** Frontend UI Implementation — Customer Home Screen Step 3 (`DepartmentSwitcher`)
+- **Files Touched / Created:**
+  - [`frontend/packages/ui/src/DepartmentSwitcher/DepartmentSwitcher.tsx`](../frontend/packages/ui/src/DepartmentSwitcher/DepartmentSwitcher.tsx) (Created — Option 1 Sleek Segmented Capsule Track with Halal Quality Shield, Dining, and Grocery icons)
+  - [`frontend/packages/ui/src/index.ts`](../frontend/packages/ui/src/index.ts) (Modified — Exported `DepartmentSwitcher`)
+  - [`frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx`](../frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx) (Modified — Mounted `DepartmentSwitcher` with active department state)
+- **Key Implementation Details:**
+  - Developed `DepartmentSwitcher` in `@lahm/ui`: 44dp segmented capsule track in neutral soft-gray (`bg-zinc-100 p-1 rounded-2xl`).
+  - Active vertical slides in as an elevated crisp white pill (`bg-white shadow-xs rounded-xl font-bold text-zinc-900`).
+  - Used non-living, non-meat **Halal Quality Shield icon (`Ionicons name="shield-checkmark-outline"`)** for Meat Shops per user decision, `restaurant-outline` for Restaurants, and `shopping-bag` for Groceries.
+  - Tactile haptic feedback (`expo-haptics`) on department switch.
+  - Verified clean TypeScript compilation in both `@lahm/ui` and `apps/customer`.
+- **Next Required Step:**
+  - Implement Step 4: The Hero Campaign Banner (`HeroCampaignBanner.tsx`) in `@lahm/ui` with organic green gradient (`#15803D`) and promotional CTA.
+
+### [2026-10-18 18:50 IST] — Refactor: DepartmentSwitcher Colocated in Customer App
+- **Phase & Step:** Frontend Architecture Refactor — Colocation of Home Screen Components
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/home/components/DepartmentSwitcher.tsx`](../frontend/apps/customer/src/features/home/components/DepartmentSwitcher.tsx) (Created / Colocated)
+  - [`frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx`](../frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx) (Modified — Updated import to local component)
+  - [`frontend/packages/ui/src/index.ts`](../frontend/packages/ui/src/index.ts) (Cleaned up export and removed old folder)
+- **Key Implementation Details:**
+  - Colocated `DepartmentSwitcher` in `frontend/apps/customer/src/features/home/components/` alongside `HomeDeliveryHeader` and `HomeSearchBar` so all Customer Home components reside together during active screen development.
+  - Can be promoted to `@lahm/ui` in a single step whenever another app needs it.
+  - Verified clean compilation with **0 TypeScript errors** across `@lahm/ui` and `apps/customer`.
+- **Next Required Step:**
+  - Implement Step 4: The Hero Campaign Banner (`HeroCampaignBanner.tsx`) colocated in `apps/customer/src/features/home/components/`.
+
+### [2026-10-18 19:00 IST] — UI Implementation: Customer Home Screen Step 4 (`HeroCampaignBanner` Peach Variant)
+- **Phase & Step:** Frontend UI Implementation — Customer Home Screen Step 4 (`HeroCampaignBanner` Mount & Architecture)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/home/components/HeroCampaignBanner.tsx`](../frontend/apps/customer/src/features/home/components/HeroCampaignBanner.tsx) (Created — Versatile multi-variant gradient banner with peach terracotta `#E77A62` and natural green `#15803D`, tactile CTA button, zero hardcoded images)
+  - [`frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx`](../frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx) (Modified — Wrapped feed in `ScrollView` and mounted `HeroCampaignBanner` with `variant="peach"`)
+- **Key Implementation Details:**
+  - Designed `HeroCampaignBanner` as a single, versatile, clean primitive supporting multiple color variants (`'peach'` and `'green'`) without duplicating code.
+  - Omitted hardcoded images as instructed; used clean geometric ambient depth elements (`rounded-full bg-white/10` and `bg-black/10`) to provide high visual interest without requiring photo downloads.
+  - Wrapped content below pinned header and department switcher in a native `ScrollView` with safe bottom insets.
+  - Active variant mounted as `'peach'` (`#E77A62` -> `#D9664E`) with white headline, soft orange subtitle, and crisp white tactile `Claim Offer ➔` pill button with haptic feedback.
+- **Next Required Step:**
+  - Implement Step 5: The Merchant Discovery Feed (`MerchantCard.tsx`) with full-bleed 16:9 cards, real API query (`useNearbyMerchants`), and shimmer skeletons.
+
+### [2026-10-18 19:20 IST] — UI Design: Dynamic App Brand Hero Banner Exploration (Zero Living/Meat Images)
+- **Phase & Step:** Frontend UI Design Exploration — Dynamic App Brand Hero Banner
+- **Files Touched / Created:**
+  - [`dynamic_hero_banner_options.md`](file:///C:/Users/afriq/.gemini/antigravity-ide/brain/857db99e-304f-4586-87eb-6177612264e0/dynamic_hero_banner_options.md) (Created — Design artifact presenting 4 brand-first, non-commercial hero banner directions)
+  - [`context/ui/dynamic-hero-banner-options.png`](../context/ui/dynamic-hero-banner-options.png) (Created — High-resolution comparison sheet saved in `context/ui/`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Zero Meat & Zero Living Things Standards:**
+  - Adhered strictly to brand rules: 0% meat cuts, 0% butchery animal imagery, and 0% human/people depictions.
+  - Relied on architectural gradients, fine Islamic geometric watermark patterns, gold trust crests, and editorial typography.
+- **4 Distinct UX/UI Directions Presented:**
+  1. **Option 1 (Terracotta Heritage & Geometric Halal Lattice):** Warm peach terracotta gradient (`#E77A62` → `#C85A43`) with tone-on-tone Arabesque lattice watermark and elevated white pill button `Explore Partners ➔`.
+  2. **Option 2 (Obsidian Luxe & Embossed Gold Halal Seal):** Executive dark charcoal canvas (`#111827`) with gold metallic accents and an embossed halal certification shield crest watermark (`"The Gold Standard in Halal Excellence"`).
+  3. **Option 3 (Split Bento with Floating Trust Metric Badges):** Asymmetric clean ceramic bento card (`"Ethical. Fresh. Daily."`) featuring two frosted-glass micro trust capsules (`<30 Min Chilled` & `100% Certified`).
+  4. **Option 4 (Botanical Sage & Pure Monogram):** Scandinavian forest-to-sage green gradient (`#166534` → `#15803D`) with calligraphic monogram watermark (`"Wholesome Halal Sourcing"`).
+- **Next Required Step:**
+  - Solicit Product Owner's preferred design option (1, 2, 3, or 4) to implement the dynamic brand hero component.
+
+### [2026-10-18 19:23 IST] — UI Design: Option 1 Refinement (Background Image & Clean Scrim, Zero Web Grid)
+- **Phase & Step:** Frontend UI Design Refinement — Option 1 with Background Image
+- **Files Touched / Created:**
+  - [`context/ui/option1-bg-image-preview.png`](../context/ui/option1-bg-image-preview.png) (Created — High-resolution mockup of Option 1 with rustic butcher block and rosemary background image, clean terracotta gradient scrim, zero web lines)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key Design Refinements:**
+  - **Zero Web / Map Lines:** Completely eliminated the Islamic geometric lattice/grid pattern that felt like web/map lines.
+  - **Atmospheric Background Image:** Introduced a dark rustic wooden butcher block surface with soft bokeh, coarse sea salt crystals, and a fresh rosemary sprig.
+  - **Gradient Scrim Overlay:** Placed a smooth terracotta peach gradient scrim (`#E77A62` fading horizontally) over the left 60% of the card to ensure 100% text contrast and readability for `"Farm-Fresh Integrity, Delivered in Minutes"`.
+  - **Zero Meat & Zero Humans:** Strictly maintained 0% meat cuts, 0% animal imagery, and 0% humans.
+- **Next Required Step:**
+  - Solicit Product Owner's confirmation on this refined Option 1 design before proceeding to code implementation.
+
+### [2026-10-18 19:27 IST] — UI Implementation: Customer Home Screen Evergreen Brand Hero Banner
+- **Phase & Step:** Frontend UI Implementation — Customer Home Screen Evergreen Brand Hero
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/home/components/HeroCampaignBanner.tsx`](../frontend/apps/customer/src/features/home/components/HeroCampaignBanner.tsx) (Modified — Replaced promotional offer text with evergreen brand messaging, removed carousel dots, removed web grid lines)
+  - [`frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx`](../frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx) (Modified — Mounted Evergreen Brand Hero Banner with warm terracotta theme)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key Implementation Details:**
+  - **Evergreen Brand Statement:** Shifted purpose from commercial offer (`"20% off"`) to core platform trust:
+    - Eyebrow: `100% ETHICALLY SOURCED`
+    - Title: `"Farm-Fresh Integrity, Delivered in Minutes"`
+    - Subtitle: `"Hand-selected from verified master artisans & delivered chilled."`
+    - CTA: `Explore Partners ➔`
+  - **Removed Carousel Dots:** Dropped rotating carousel pagination dots for a calm, stable, non-ad appearance.
+  - **Zero Web / Grid Lines:** Smooth ambient lighting geometry (`rounded-full bg-white/10` and `bg-black/10`) without web-like lines.
+  - Fast-Refresh active on user's live physical device.
+- **Next Required Step:**
+  - Implement Step 5: The Merchant Discovery Feed (`MerchantCard.tsx`) with full-bleed 16:9 cards, real API query (`useNearbyMerchants`), and shimmer skeletons.
+
+### [2026-10-18 19:30 IST] — Refactor: HeroCampaignBanner Tokenization & Code Cleanup
+- **Phase & Step:** Frontend Refactoring — `HeroCampaignBanner.tsx` Anti-Pattern Cleanup
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/home/components/HeroCampaignBanner.tsx`](../frontend/apps/customer/src/features/home/components/HeroCampaignBanner.tsx) (Refactored — Eliminated hardcoded strings, removed scattered ternaries, bound to `@lahm/tokens`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Hardcoding Elimination & Architectural Cleanups:**
+  - **Extracted Centralized `BANNER_THEMES` Dictionary:** Encapsulated gradient stops, tag colors, subtitle colors, CTA text colors, and arrow hexes cleanly inside a typed dictionary mapping by `BannerVariant`.
+  - **Eliminated All Scattered JSX Ternaries:** Removed all 4 repetitive `isPeach ? ... : ...` checks from JSX, replacing them with declarative `${theme.property}` bindings.
+  - **Extracted `DEFAULT_HERO_BANNER` Constants:** Extracted default tag, title, subtitle, and CTA text into a standalone immutable constant instead of inlining strings into component parameter defaults.
+  - **Bound to Design Tokens:** Replaced hardcoded magic number `style={{ borderRadius: 24 }}` with `borderRadius['2xl']` from `@lahm/tokens`.
+  - Clean compilation with 0 errors in component and parent screen.
+- **Next Required Step:**
+  - Implement Step 5: The Merchant Discovery Feed (`MerchantCard.tsx`) with full-bleed 16:9 cards, real API query (`useNearbyMerchants`), and shimmer skeletons.
+
+### [2026-10-18 19:34 IST] — UI Branding: Hero Banner Updated with Lahm Brand Identity
+- **Phase & Step:** Frontend UI Branding — Customer Home Screen Hero Banner
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/home/components/HeroCampaignBanner.tsx`](../frontend/apps/customer/src/features/home/components/HeroCampaignBanner.tsx) (Modified — Updated `DEFAULT_HERO_BANNER` constants with explicit Lahm brand identity copy)
+  - [`frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx`](../frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx) (Modified — Updated mounted props to Lahm brand copy)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key Branding Content Updates:**
+  - **Eyebrow Tag:** `LAHM لحم • 100% HALAL VERIFIED` (combining English brand and Arabic root with official halal certification guarantee).
+  - **Headline Title:** `Pure, Farm-Fresh & 100% Halal Certified` (establishing trust, purity, and excellence).
+  - **Brand Promise Subtitle:** `Fresh meats, curated dining & daily groceries delivered to your door.` (clearly articulating all 3 pillars of the Lahm super-app ecosystem).
+  - **Action CTA Button:** `Discover Lahm ➔` (tactile crisp white pill with haptic feedback).
+  - Verified clean compilation with **0 TypeScript errors**.
+- **Next Required Step:**
+  - Implement Step 5: The Merchant Discovery Feed (`MerchantCard.tsx`) with full-bleed 16:9 cards, real API query (`useNearbyMerchants`), and shimmer skeletons.
+
+### [2026-10-19 09:00 IST] — Governance: Remote Agent Handoff Briefing Authored
+- **Phase & Step:** Governance & Handoff — Detailed Specification for Incoming Remote Agents
+- **Files Touched / Created:**
+  - [`context/handoff.md`](./handoff.md) (Created — Master handoff briefing covering active milestone, completed steps 1–4, non-negotiable rules, visual design references, and Step 5 execution specs)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key Handoff Elements Documented in `context/handoff.md`:**
+  - **Milestone Velocity:** Oct 27, 2026 IST hard launch deadline, active physical Android device testing (`192.168.1.3`).
+  - **Components Completed:** Steps 1–4 ([`HomeDeliveryHeader.tsx`](../frontend/apps/customer/src/features/home/components/HomeDeliveryHeader.tsx), [`HomeSearchBar.tsx`](../frontend/apps/customer/src/features/home/components/HomeSearchBar.tsx), [`DepartmentSwitcher.tsx`](../frontend/apps/customer/src/features/home/components/DepartmentSwitcher.tsx), [`HeroCampaignBanner.tsx`](../frontend/apps/customer/src/features/home/components/HeroCampaignBanner.tsx)).
+  - **Non-Negotiable Directives:** 0% meat/living-thing images, 0% humans, vector icons only (Halal Quality Shield icon for Meats), zero mock data, 1–2 files per turn limit, and no-coding rule during consultation.
+  - **Visual Asset References:** Direct links to `context/ui/version9.png`, `category-switcher-options.png`, `dynamic-hero-banner-options.png`, and `option1-bg-image-preview.png`.
+  - **Immediate Next Step:** Complete specification for Step 5 (Merchant Discovery Feed with 16:9 full-bleed cards, TanStack Query `useNearbyMerchants`, and shimmer skeletons).
+- **Next Required Step:**
+  - Incoming agent begins Step 5: The Merchant Discovery Feed ([`MerchantCard.tsx`](../frontend/apps/customer/src/features/home/components/MerchantCard.tsx)).
+
+
+
+
+
+
+

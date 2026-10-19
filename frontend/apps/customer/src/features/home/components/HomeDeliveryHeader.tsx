@@ -1,0 +1,84 @@
+/**
+ * HomeDeliveryHeader Component
+ * 
+ * Top delivery location switcher and notification entrypoint for the Customer App.
+ * Built with @expo/vector-icons, tactile haptic feedback, and design tokens.
+ */
+
+import React from 'react';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { Feather, Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
+
+export interface HomeDeliveryHeaderProps {
+  /** Optional address tag / label (e.g. "Home", "Work", "Office") */
+  label?: string;
+  /** Street address or locality (e.g. "Anna Nagar, Chennai") */
+  address: string;
+  /** Whether GPS coordinate resolution is currently in-flight */
+  isLocating?: boolean;
+  /** Shows unread badge indicator dot on notification bell */
+  hasUnreadNotifications?: boolean;
+  /** Callback triggered when customer taps the delivery address selector */
+  onPressAddress?: () => void;
+  /** Callback triggered when customer taps the notification bell */
+  onPressNotifications?: () => void;
+}
+
+export function HomeDeliveryHeader({
+  label = 'Home',
+  address,
+  isLocating = false,
+  hasUnreadNotifications = false,
+  onPressAddress,
+  onPressNotifications,
+}: HomeDeliveryHeaderProps) {
+  const handleAddressPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onPressAddress?.();
+  };
+
+  const handleNotificationsPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onPressNotifications?.();
+  };
+
+  const displayAddress = label ? `${label} - ${address}` : address;
+
+  return (
+    <View className="flex-row items-center justify-between px-5 pt-1 pb-3 bg-white">
+      {/* Delivery Location Selector */}
+      <Pressable
+        onPress={handleAddressPress}
+        className="flex-1 mr-3 active:opacity-75"
+        accessibilityRole="button"
+        accessibilityLabel={`Deliver to: ${displayAddress}`}>
+        <Text className="text-[11px] font-bold text-zinc-400 tracking-wider uppercase">
+          DELIVER TO:
+        </Text>
+        <View className="flex-row items-center gap-1.5 mt-0.5">
+          <Text className="text-base font-bold text-zinc-900" numberOfLines={1}>
+            {displayAddress}
+          </Text>
+          <Ionicons name="location-sharp" size={16} color="#0F172A" />
+          <Ionicons name="chevron-down" size={14} color="#0F172A" />
+          {isLocating ? (
+            <ActivityIndicator size="small" color="#E77A62" className="ml-1" />
+          ) : null}
+        </View>
+      </Pressable>
+
+      {/* Notification Bell Button */}
+      <Pressable
+        onPress={handleNotificationsPress}
+        className="w-10 h-10 rounded-full items-center justify-center active:bg-zinc-100 relative"
+        accessibilityRole="button"
+        accessibilityLabel="Notifications">
+        <Feather name="bell" size={22} color="#0F172A" />
+        {hasUnreadNotifications ? (
+          <View className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#E77A62]" />
+        ) : null}
+      </Pressable>
+    </View>
+  );
+}
