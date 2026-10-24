@@ -3,6 +3,8 @@ import {
     CreateDateColumn,
     Entity,
     JoinColumn,
+    JoinTable,
+    ManyToMany,
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -10,6 +12,7 @@ import {
 } from "typeorm";
 import { User } from "../../users/entities/user.entity";
 import { Product } from "../../products/entities/product.entity";
+import { MerchantCategory } from "../../merchant-categories/entities/merchant-category.entity";
 
 @Entity()
 export class Merchant {
@@ -22,6 +25,14 @@ export class Merchant {
 
     @OneToMany(() => Product, (product) => product.merchant)
     products: Product[];
+
+    @ManyToMany(() => MerchantCategory, (cat) => cat.merchants, { eager: true })
+    @JoinTable({
+        name: 'merchant_category_mappings',
+        joinColumn: { name: 'merchantId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'merchantCategoryId', referencedColumnName: 'id' },
+    })
+    merchantCategories: MerchantCategory[];
 
     // Step 2: Shop Details
     @Column({ nullable: true })

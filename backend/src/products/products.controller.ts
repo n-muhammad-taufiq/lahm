@@ -36,6 +36,39 @@ export class ProductsController {
         return this.productsService.findByMerchantId(merchantId);
     }
 
+    @Get('merchant/:merchantId/categories')
+    async getMerchantCategories(
+        @Param('merchantId', ParseIntPipe) merchantId: number,
+        @Query('parentId') parentId?: string,
+        @Query('tree') tree?: string,
+    ) {
+        const parsedParentId =
+            parentId !== undefined && parentId !== '' && !isNaN(Number(parentId))
+                ? Number(parentId)
+                : undefined;
+        const isTree = tree === 'true' || tree === '1';
+        return this.productsService.getMerchantCategories(merchantId, parsedParentId, isTree);
+    }
+
+    @Get('merchant/:merchantId/catalog')
+    async getMerchantCatalog(
+        @Param('merchantId', ParseIntPipe) merchantId: number,
+        @Query('categoryId') categoryId?: string,
+        @Query('search') search?: string,
+        @Query('page') page?: string,
+        @Query('limit') limit?: string,
+    ) {
+        return this.productsService.getMerchantCatalog(merchantId, {
+            categoryId:
+                categoryId !== undefined && categoryId !== '' && !isNaN(Number(categoryId))
+                    ? Number(categoryId)
+                    : undefined,
+            search,
+            page: page ? Number(page) : undefined,
+            limit: limit ? Number(limit) : undefined,
+        });
+    }
+
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number) {
         return this.productsService.findById(id);

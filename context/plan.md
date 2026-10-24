@@ -102,8 +102,17 @@ Customer App Architecture
 - [ ] **🍽️ Restaurants Feed (`RestaurantsHomeScreen.tsx`):** Halal restaurants and dining hotels, cuisine filters, prep times, and dish highlights consuming `GET /merchant/nearby?type=RESTAURANT`.
 - [ ] **🛒 Groceries Feed (`GroceriesHomeScreen.tsx`):** Halal supermarket FMCG staples and grocery merchants consuming `GET /merchant/nearby?type=GROCERY`.
 
-### 1.4 Merchant Storefront & Meat Cut Customizer
-- [ ] Implement `ShopStorefrontScreen.tsx` (`app/shop/[id].tsx`) consuming `GET /merchant/storefront/:id`.
+### 1.4 Merchant Storefront & Recursive Product Category Catalog
+- [x] **Storefront Shell & Header (`ShopHeader.tsx`):**
+  - Hero banner with image scrim, back navigation, and favorite toggle
+  - Identity card with sleek typographic metadata line (`★ 4.9 • Category • Chennai • Open until 11:00 PM`)
+  - Zero-fallback policy strictly enforced
+- [ ] **Multi-Level Recursive Product Category Architecture:**
+  - [x] `ProductCategory` self-referencing database entity with configurable depth limit (`MAX_CATEGORY_DEPTH || '4'`)
+  - [x] `Product` entity linked to `ProductCategory` with composite index on `(merchantId, categoryId)`
+  - [ ] Backend Browsing Endpoints (`GET /products/merchant/:merchantId/categories` & `GET /products/merchant/:merchantId/catalog`)
+  - [ ] Multi-level seeded category data for Ambattur merchants in `seeder.service.ts`
+  - [ ] Customer Storefront UI: `CategoryDrillDownSelector.tsx` (breadcrumbs + category chips) and `StorefrontProductList.tsx`
 - [ ] Implement **Meat Cut Customizer** bottom sheet:
   - Thickness selection (Curry Cut, Biryani Cut, Steaks, Mince)
   - Preparation choice (Bone-In, Boneless, Fat Trimmed)

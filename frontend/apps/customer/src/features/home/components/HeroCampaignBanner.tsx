@@ -7,11 +7,13 @@
  */
 
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { ImageBackground, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { borderRadius } from '@lahm/tokens';
+
+const heroBannerBg = require('../../../../assets/images/hero-banner-bg.jpg');
 
 export type BannerVariant = 'peach' | 'green';
 
@@ -26,15 +28,15 @@ export interface BannerThemeStyle {
 
 export const BANNER_THEMES: Record<BannerVariant, BannerThemeStyle> = {
   peach: {
-    gradientColors: ['#E77A62', '#EA8C76', '#D9664E'],
-    gradientLocations: [0, 0.5, 1],
+    gradientColors: ['rgba(231, 122, 98, 0.95)', 'rgba(234, 140, 118, 0.85)', 'rgba(217, 102, 78, 0.35)'],
+    gradientLocations: [0, 0.55, 1],
     tagColorClass: 'text-amber-100',
     subtitleColorClass: 'text-orange-100',
     ctaTextColorClass: 'text-rose-900',
     ctaArrowColor: '#881337',
   },
   green: {
-    gradientColors: ['#15803D', '#166534', '#0F3E22'],
+    gradientColors: ['rgba(21, 128, 61, 0.95)', 'rgba(22, 101, 52, 0.85)', 'rgba(15, 62, 34, 0.35)'],
     gradientLocations: [0, 0.55, 1],
     tagColorClass: 'text-emerald-200',
     subtitleColorClass: 'text-emerald-100',
@@ -86,54 +88,51 @@ export function HeroCampaignBanner({
 
   return (
     <View className={`px-5 pt-1 pb-3 ${className}`}>
-      <LinearGradient
-        colors={theme.gradientColors}
-        locations={theme.gradientLocations}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <View
         style={{ borderRadius: borderRadius['2xl'] }}
-        className="p-5 overflow-hidden shadow-xs relative">
-        
-        {/* Ambient atmospheric light accents */}
-        <View
-          className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-white/10"
-          pointerEvents="none"
-        />
-        <View
-          className="absolute -right-4 -bottom-8 w-28 h-28 rounded-full bg-black/10"
-          pointerEvents="none"
-        />
+        className="overflow-hidden shadow-xs relative">
+        <ImageBackground
+          source={heroBannerBg}
+          resizeMode="cover"
+          className="w-full">
+          <LinearGradient
+            colors={theme.gradientColors}
+            locations={theme.gradientLocations}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            className="p-5">
+            {/* Text Content */}
+            <View className="max-w-[75%] z-10">
+              <Text className={`text-[10px] font-extrabold tracking-widest uppercase mb-1 ${theme.tagColorClass}`}>
+                {tag}
+              </Text>
 
-        {/* Text Content */}
-        <View className="max-w-[85%] z-10">
-          <Text className={`text-[10px] font-extrabold tracking-widest uppercase mb-1 ${theme.tagColorClass}`}>
-            {tag}
-          </Text>
+              <Text className="text-xl font-bold leading-6 mb-1 text-white">
+                {title}
+              </Text>
 
-          <Text className="text-xl font-bold leading-6 mb-1 text-white">
-            {title}
-          </Text>
+              <Text className={`text-xs mb-4 leading-4 ${theme.subtitleColorClass}`}>
+                {subtitle}
+              </Text>
 
-          <Text className={`text-xs mb-4 leading-4 ${theme.subtitleColorClass}`}>
-            {subtitle}
-          </Text>
-
-          <Pressable
-            onPress={handlePress}
-            className="self-start flex-row items-center px-4 py-2 rounded-full bg-white active:opacity-85 shadow-xs"
-            accessibilityRole="button"
-            accessibilityLabel={ctaText}>
-            <Text className={`text-xs font-bold mr-1.5 ${theme.ctaTextColorClass}`}>
-              {ctaText}
-            </Text>
-            <Feather
-              name="arrow-right"
-              size={13}
-              color={theme.ctaArrowColor}
-            />
-          </Pressable>
-        </View>
-      </LinearGradient>
+              <Pressable
+                onPress={handlePress}
+                className="self-start flex-row items-center px-4 py-2 rounded-full bg-white active:opacity-85 shadow-xs"
+                accessibilityRole="button"
+                accessibilityLabel={ctaText}>
+                <Text className={`text-xs font-bold mr-1.5 ${theme.ctaTextColorClass}`}>
+                  {ctaText}
+                </Text>
+                <Feather
+                  name="arrow-right"
+                  size={13}
+                  color={theme.ctaArrowColor}
+                />
+              </Pressable>
+            </View>
+          </LinearGradient>
+        </ImageBackground>
+      </View>
     </View>
   );
 }

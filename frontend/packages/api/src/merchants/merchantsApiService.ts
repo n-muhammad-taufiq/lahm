@@ -1,6 +1,12 @@
 import { api } from '../client';
 import { ProductResponse } from '../products/productsApiService';
 
+export interface MerchantCategoryDto {
+  id: number;
+  slug: string;
+  name: string;
+}
+
 export interface NearbyMerchant {
   id: number;
   shopName: string;
@@ -22,6 +28,7 @@ export interface NearbyMerchant {
   isVerified: boolean;
   productCount: number;
   featuredProducts: string[];
+  categories?: MerchantCategoryDto[];
 }
 
 export interface NearbyMerchantsQuery {
@@ -49,6 +56,7 @@ export interface MerchantStorefrontResponse {
   closingTime: string;
   workingDays?: string[];
   isVerified: boolean;
+  categories?: MerchantCategoryDto[];
   products: ProductResponse[];
 }
 

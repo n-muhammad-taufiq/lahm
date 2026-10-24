@@ -33,6 +33,7 @@ export interface NearbyMerchantItem {
     isVerified: boolean;
     productCount: number;
     featuredProducts: string[];
+    categories: { id: number; slug: string; name: string }[];
 }
 
 @Injectable()
@@ -137,7 +138,8 @@ export class MerchantsService {
             !isNaN(Number(longitude));
 
         const qb = this.merchantRepository.createQueryBuilder('merchant')
-            .leftJoinAndSelect('merchant.user', 'user');
+            .leftJoinAndSelect('merchant.user', 'user')
+            .leftJoinAndSelect('merchant.merchantCategories', 'merchantCategories');
 
         if (hasCoordinates) {
             const lat = Number(latitude);
@@ -250,6 +252,11 @@ export class MerchantsService {
                 isVerified: merchant.isVerified,
                 productCount: productCountMap.get(merchant.id) ?? 0,
                 featuredProducts: featuredProductsMap.get(merchant.id) ?? [],
+                categories: (merchant.merchantCategories || []).map((c) => ({
+                    id: c.id,
+                    slug: c.slug,
+                    name: c.name,
+                })),
             });
         }
 
@@ -280,6 +287,11 @@ export class MerchantsService {
             closingTime: merchant.closingTime || '',
             workingDays: merchant.workingDays,
             isVerified: merchant.isVerified,
+            categories: (merchant.merchantCategories || []).map((c) => ({
+                id: c.id,
+                slug: c.slug,
+                name: c.name,
+            })),
             products,
         };
     }
@@ -300,7 +312,7 @@ export class MerchantsService {
     async findById(id: number): Promise<Merchant> {
         const merchant = await this.merchantRepository.findOne({
             where: { id },
-            relations: { user: true },
+            relations: { user: true, merchantCategories: true },
         });
 
         if (!merchant) {

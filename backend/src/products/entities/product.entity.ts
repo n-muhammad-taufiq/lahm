@@ -2,6 +2,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    Index,
     JoinColumn,
     ManyToOne,
     OneToOne,
@@ -13,8 +14,10 @@ import { Merchant } from "../../merchants/entities/merchant.entity";
 import { ProductVertical } from "../enums/product-vertical.enum";
 import { MeatProductDetails } from "./meat-product-details.entity";
 import { CustomizationGroup } from "./customization-group.entity";
+import { ProductCategory } from "./product-category.entity";
 
 @Entity()
+@Index(['merchantId', 'categoryId'])
 export class Product {
     @PrimaryGeneratedColumn()
     id: number;
@@ -40,6 +43,13 @@ export class Product {
 
     @Column()
     name: string;
+
+    @Column({ nullable: true })
+    categoryId?: number;
+
+    @ManyToOne(() => ProductCategory, (cat) => cat.products, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn({ name: 'categoryId' })
+    category?: ProductCategory;
 
     @Column({ type: 'text', nullable: true })
     description?: string;

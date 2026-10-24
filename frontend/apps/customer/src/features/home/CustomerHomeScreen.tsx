@@ -5,24 +5,79 @@
  * Features will be assembled incrementally starting with HomeDeliveryHeader.
  */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import type { NearbyMerchant } from '@lahm/api';
 import { useCustomerLocation } from '../location';
+import { useNearbyMerchants } from './hooks/useNearbyMerchants';
 import { HomeDeliveryHeader } from './components/HomeDeliveryHeader';
 import { HomeSearchBar } from './components/HomeSearchBar';
 import { DepartmentSwitcher, type DepartmentId } from './components/DepartmentSwitcher';
 import { HeroCampaignBanner } from './components/HeroCampaignBanner';
+import { MerchantCarouselSection } from './components/MerchantCarouselSection';
+import { type MerchantCardProps } from './components/MerchantCard';
+import { FloatingCartCapsule } from './components/FloatingCartCapsule';
+
+function mapToMerchantCard(merchant: NearbyMerchant): MerchantCardProps {
+  return {
+    id: merchant.id,
+    name: merchant.shopName,
+    coverPhotoUrl: merchant.bannerUrl,
+    rating: merchant.rating,
+    deliveryTimeRange: merchant.deliveryTimeEstimate,
+    distanceKm: merchant.distance ?? undefined,
+    specialties: merchant.featuredProducts ?? [],
+    isHalalCertified: Boolean(merchant.isVerified && merchant.halalCertificateUrl),
+  };
+}
 
 export function CustomerHomeScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { location, isLocating, detectCurrentLocation } = useCustomerLocation(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDepartment, setActiveDepartment] = useState<DepartmentId>('restaurants');
 
-  const displayAddress = location.locality
-    ? `${location.locality}${location.city ? `, ${location.city}` : ''}`
-    : 'Anna Nagar, Chennai';
+  // Hardcoded default coordinates for Ambattur OT, Chennai
+  const AMBATTUR_OT_COORDS = { latitude: 13.1143, longitude: 80.1548 };
+
+  const { merchants, loading } = useNearbyMerchants({
+    latitude: AMBATTUR_OT_COORDS.latitude,
+    longitude: AMBATTUR_OT_COORDS.longitude,
+    search: searchQuery,
+  });
+
+  const displayAddress = 'Ambattur OT, Chennai';
+
+  const handlePressMerchant = (merchantId: number) => {
+    router.push({ pathname: '/shop/[id]', params: { id: merchantId } });
+  };
+
+  const restaurantMerchants = useMemo(
+    () =>
+      merchants
+        .filter((m) => m.categories?.some((c) => c.slug === 'restaurants'))
+        .map(mapToMerchantCard),
+    [merchants]
+  );
+
+  const meatMerchants = useMemo(
+    () =>
+      merchants
+        .filter((m) => m.categories?.some((c) => c.slug === 'meats'))
+        .map(mapToMerchantCard),
+    [merchants]
+  );
+
+  const groceryMerchants = useMemo(
+    () =>
+      merchants
+        .filter((m) => m.categories?.some((c) => c.slug === 'groceries'))
+        .map(mapToMerchantCard),
+    [merchants]
+  );
 
   return (
     <View
@@ -56,7 +111,7 @@ export function CustomerHomeScreen() {
       {/* Scrollable Feed Container */}
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}>
+        contentContainerStyle={{ paddingBottom: insets.bottom + 90 }}>
         {/* 4. Brand Hero Banner (Evergreen Warm Terracotta) */}
         <HeroCampaignBanner
           variant="peach"
@@ -68,7 +123,39 @@ export function CustomerHomeScreen() {
             // Open Halal Promise or brand modal
           }}
         />
+
+        {/* 5. Multi-Section Marketplace Discovery Feed (Version 9) */}
+        <MerchantCarouselSection
+          title="Nearby Restaurants"
+          merchants={restaurantMerchants}
+          isLoading={loading}
+          onPressSeeAll={() => {}}
+          onPressMerchant={(merchant) => handlePressMerchant(merchant.id)}
+        />
+
+        <MerchantCarouselSection
+          title="Popular Meat Shops"
+          merchants={meatMerchants}
+          isLoading={loading}
+          onPressSeeAll={() => {}}
+          onPressMerchant={(merchant) => handlePressMerchant(merchant.id)}
+        />
+
+        <MerchantCarouselSection
+          title="Nearby Halal Groceries"
+          merchants={groceryMerchants}
+          isLoading={loading}
+          onPressSeeAll={() => {}}
+          onPressMerchant={(merchant) => handlePressMerchant(merchant.id)}
+        />
       </ScrollView>
+
+      {/* 6. Floating Cart Capsule (Option 2 - Brand Terracotta Bar) */}
+      <FloatingCartCapsule
+        onPress={() => {
+          // Open Cart Sheet / Flow
+        }}
+      />
     </View>
   );
 }

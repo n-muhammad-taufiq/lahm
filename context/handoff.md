@@ -63,17 +63,25 @@ Before implementing new visual components, refer to the high-resolution mockups 
 
 ## 5. Next Immediate Implementation Tasks
 
-### Step 5: The Merchant Discovery Feed (`MerchantCard.tsx` / `MerchantListSection.tsx`)
-1. **Objective:** Render the location-aware merchant discovery feed beneath the `HeroCampaignBanner` inside [`CustomerHomeScreen.tsx`](file:///c:/Users/afriq/Documents/company/project-lahm/frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx).
-2. **Card Specifications (Version 9 Standard):**
-   - Aspect ratio: Full-bleed **16:9** container with rounded top corners (`rounded-2xl`).
-   - Store Name: Bold typography in `#0F172A`.
-   - Store Metadata: Rating (`4.9 ★ 2.4k`), delivery ETA (`20-30 min`), distance (`1.2 km`), specialty tags (`Fresh Lamb • Wagyu • Poultry`).
-   - Badges: `100% Halal Certified` pill badge and favorite heart button (`🤍`).
-   - Loading State: Content-shaped shimmer skeleton cards (`SkeletonCard.tsx`).
-3. **Data Integration:**
-   - Connect via TanStack Query to `GET /merchants/nearby` (or existing `@lahm/api` client function).
-   - Filter dynamically by `activeDepartment` (`'meat' | 'restaurants' | 'groceries'`).
+### Completed Milestones
+- [x] **Step 5: The Merchant Discovery Feed (`MerchantCard.tsx` / `CustomerHomeScreen.tsx`):** Connected to real Ambattur OT merchants seeded in PostgreSQL via `useNearbyMerchants`. Mock arrays and candy badges eliminated.
+- [x] **Shop Header UI Architecture:** Authored `ShopHeader.tsx`, `ShopHeaderHeroBanner.tsx`, and `ShopIdentityCard.tsx` with clean typographic metadata line (`★ 4.9 • Category • Chennai • Open until 11:00 PM`).
+- [x] **Product Category Database Foundation:** Created `ProductCategory` entity with self-referencing hierarchy (`parentId`), merchant tenant isolation, configurable depth column (`MAX_CATEGORY_DEPTH`), and linked `Product` entity with index.
+
+### Active Milestone: C.5 Merchant Storefront Screen & Recursive Product Category Catalog
+
+We are building the recursive category catalog supporting up to 4 levels of nested categories (e.g., `Biryani → Chicken Biryani → Platters`) with zero mock data.
+
+#### Execution Roadmap (Strict Rule: One Method / One File at a Time):
+1. [x] **Step 4.1:** Implement `getMerchantCategories` method in `ProductsService`:
+   - Returns the category tree up to `process.env.MAX_CATEGORY_DEPTH || '4'`.
+   - Computes `hasChildren` and real-time `productCount`.
+2. [x] **Step 4.2:** Implement `getMerchantCatalog` method in `ProductsService`:
+   - Paginated product browsing by `categoryId` with shop tenant validation, search, and customization options joined (meatDetails omitted per user instruction).
+3. [x] **Step 4.3:** Add endpoints to `ProductsController` (`GET /products/merchant/:merchantId/categories` and `GET /products/merchant/:merchantId/catalog`).
+4. [x] **Step 4.4:** Update `seeder.service.ts` to seed real multi-level categories for Ambattur merchants and re-run seed.
+5. [x] **Step 4.5:** Update `@lahm/api` with category/catalog DTOs & API client methods, and implement TanStack Query hooks (`useMerchantCategories`, `useMerchantCatalog`).
+6. [ ] **Step 4.6 (Active):** Build mobile UI components (`CategoryDrillDownSelector.tsx`, `StorefrontProductList.tsx`) and integrate into `MerchantStorefrontScreen.tsx`.
 
 ### Step 6: White Floating Cart Capsule (`FloatingCartCapsule.tsx`)
 - Persistent white floating pill anchored above safe area bottom insets:
