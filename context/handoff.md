@@ -67,8 +67,23 @@ Before implementing new visual components, refer to the high-resolution mockups 
 - [x] **Step 5: The Merchant Discovery Feed (`MerchantCard.tsx` / `CustomerHomeScreen.tsx`):** Connected to real Ambattur OT merchants seeded in PostgreSQL via `useNearbyMerchants`. Mock arrays and candy badges eliminated.
 - [x] **Shop Header UI Architecture:** Authored `ShopHeader.tsx`, `ShopHeaderHeroBanner.tsx`, and `ShopIdentityCard.tsx` with clean typographic metadata line (`★ 4.9 • Category • Chennai • Open until 11:00 PM`).
 - [x] **Product Category Database Foundation:** Created `ProductCategory` entity with self-referencing hierarchy (`parentId`), merchant tenant isolation, configurable depth column (`MAX_CATEGORY_DEPTH`), and linked `Product` entity with index.
+- [x] **Multi-Outlet Support (1 Brand → Many Fulfillment Branches):**
+  - Created `Outlet` entity (`outlets` table) with GPS coordinates, operating hours, active status.
+  - Created `OutletProduct` junction entity (`outlet_products` table) with `@Unique(['outletId', 'productId'])`, `priceOverride`, `isAvailable`, `stockQuantity`, and `customizationOverrides` JSONB.
+  - Built `OutletsModule`, `OutletsService`, and `OutletsController` (`POST /outlets/merchant/:id`, `GET /outlets/merchant/:id`, `GET /outlets/:id`, `PATCH /outlets/:id`).
+  - Automated seeder migration: Seeded primary branch for all 5 merchants and secondary branch (*Anna Nagar*) for *Al-Basha Mandi & Grills* with live product mappings.
+  - Updated `Order` entity with `outletId` relation and `CreateOrderDto`.
 
-### Active Milestone: C.5 Merchant Storefront Screen & Recursive Product Category Catalog
+### Active Milestone: Multi-Outlet Order Fulfillment & Customer Branch Switching
+
+#### Execution Roadmap:
+1. [ ] **Step O.1 (Next):** Update `OrdersModule` & `OrdersService` to calculate distance, verify stock availability, and apply price overrides against the fulfilling `outletId`.
+2. [ ] **Step O.2:** Implement `GET /outlets/:id/storefront` returning resolved menu pricing and sister branches.
+3. [ ] **Step O.3:** Add `outletsApiService` to `@lahm/api`.
+4. [ ] **Step O.4:** Build `ShopOutletSelectionSheet.tsx` (gesture-driven native bottom sheet) and make `[📍 Location ⌄]` in `ShopIdentityCard.tsx` interactive.
+5. [ ] **Step O.5:** Update `cartStore.ts` with single-outlet scoping and branch-switch confirmation prompt.
+
+### Milestone C.5: Merchant Storefront Screen & Recursive Product Category Catalog
 
 We are building the recursive category catalog supporting up to 4 levels of nested categories (e.g., `Biryani → Chicken Biryani → Platters`) with zero mock data.
 

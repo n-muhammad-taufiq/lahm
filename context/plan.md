@@ -110,9 +110,21 @@ Customer App Architecture
 - [ ] **Multi-Level Recursive Product Category Architecture:**
   - [x] `ProductCategory` self-referencing database entity with configurable depth limit (`MAX_CATEGORY_DEPTH || '4'`)
   - [x] `Product` entity linked to `ProductCategory` with composite index on `(merchantId, categoryId)`
-  - [ ] Backend Browsing Endpoints (`GET /products/merchant/:merchantId/categories` & `GET /products/merchant/:merchantId/catalog`)
-  - [ ] Multi-level seeded category data for Ambattur merchants in `seeder.service.ts`
+  - [x] Backend Browsing Endpoints (`GET /products/merchant/:merchantId/categories` & `GET /products/merchant/:merchantId/catalog`)
+  - [x] Multi-level seeded category data for Ambattur merchants in `seeder.service.ts`
   - [ ] Customer Storefront UI: `CategoryDrillDownSelector.tsx` (breadcrumbs + category chips) and `StorefrontProductList.tsx`
+- [ ] **Multi-Outlet Architecture & Customer Branch Switching (1 Brand → Many Branches):**
+  - [x] `Outlet` entity (`outlets` table) with GPS coordinates, operational hours, active toggle, and `@ManyToOne(() => Merchant)`.
+  - [x] `OutletProduct` junction entity (`outlet_products` table) with `@Unique(['outletId', 'productId'])`, `priceOverride`, `isAvailable`, `stockQuantity`, and `customizationOverrides` JSONB.
+  - [x] `OutletsModule`, `OutletsService`, and `OutletsController` (`POST /outlets/merchant/:id`, `GET /outlets/merchant/:id`, `GET /outlets/:id`, `PATCH /outlets/:id`).
+  - [x] Automated Seeder migration: Provisioned primary outlets for all 5 merchants and secondary branch (*Anna Nagar*) for *Al-Basha Mandi & Grills* with live `outlet_products` mappings.
+  - [x] `Order` entity updated with `outletId` and `@ManyToOne(() => Outlet)` relation, plus `CreateOrderDto.outletId` support.
+  - [ ] Anchor Haversine distance, item stock, and pricing to `outletId` in `OrdersService.createOrder()`.
+  - [ ] Implement `GET /outlets/:id/storefront` returning resolved menu pricing and sister branches.
+  - [ ] Extend `@lahm/api` with `outletsApiService`.
+  - [ ] Native gesture bottom sheet `ShopOutletSelectionSheet.tsx` for branch switching.
+  - [ ] Connect `[📍 Location ⌄]` in `ShopIdentityCard.tsx` to launch branch picker.
+  - [ ] Update `cartStore.ts` with single-outlet scoping and branch-switch confirmation prompt.
 - [ ] Implement **Meat Cut Customizer** bottom sheet:
   - Thickness selection (Curry Cut, Biryani Cut, Steaks, Mince)
   - Preparation choice (Bone-In, Boneless, Fat Trimmed)
