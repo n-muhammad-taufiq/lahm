@@ -1,17 +1,18 @@
 /**
  * MerchantStorefrontScreen Component
  * 
- * Orchestrator screen for the merchant storefront / shop profile.
- * Coordinates the composite ShopHeader, category navigation, product catalog,
- * and floating cart capsule.
+ * Dispatcher screen for merchant storefront profiles.
+ * Determines the merchant category via MerchantCategorySlug enum and renders
+ * the vertical-specialized storefront (e.g. RestaurantStorefront).
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { merchantsApiService, MerchantStorefrontResponse } from '@lahm/api';
-import { ShopHeader } from '../components/header/ShopHeader';
+import { MerchantCategorySlug } from '../types';
+import { RestaurantStorefront } from '../components/storefronts/RestaurantStorefront';
 
 export interface MerchantStorefrontScreenProps {
   merchantId: number;
@@ -48,37 +49,54 @@ export function MerchantStorefrontScreen({ merchantId }: MerchantStorefrontScree
     setIsFavorite((prev) => !prev);
   };
 
-  return (
-    <View className="flex-1 bg-white">
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ flexGrow: 1 }}>
-        {/* 1. Composite Shop Header */}
-        <ShopHeader
-          bannerUrl={storefront?.bannerUrl}
+  // 1. Loading State
+  if (loading && !storefront) {
+    return (
+      <View className="flex-1 bg-white items-center justify-center p-6">
+        <ActivityIndicator size="small" color="#0F172A" />
+        <Text className="text-xs text-zinc-400 mt-3">
+          Loading storefront...
+        </Text>
+      </View>
+    );
+  }
+
+  // 2. Not Found Fallback
+  if (!storefront) {
+    return (
+      <View className="flex-1 bg-white items-center justify-center p-6">
+        <Text className="text-sm text-zinc-500">
+          Storefront not found
+        </Text>
+      </View>
+    );
+  }
+
+  // 3. Category-Driven Vertical Dispatcher
+  const primaryCategory = storefront.categories?.[0]?.slug as MerchantCategorySlug | undefined;
+
+  switch (primaryCategory) {
+    case MerchantCategorySlug.RESTAURANTS:
+      return (
+        <RestaurantStorefront
+          storefront={storefront}
           isFavorite={isFavorite}
           onPressBack={handleBack}
           onToggleFavorite={handleToggleFavorite}
-          shopName={storefront?.shopName}
-          rating={storefront?.rating}
-          isVerified={storefront?.isVerified}
-          city={storefront?.city}
-          openingTime={storefront?.openingTime}
-          closingTime={storefront?.closingTime}
-          hasHalalCertificate={Boolean(storefront?.halalCertificateUrl)}
-          hasFssaiCertificate={Boolean(storefront?.fssaiCertificateUrl)}
-          vertical="meats"
         />
+      );
 
-        {/* 2. Storefront Body Area */}
-        <View className="flex-1 bg-zinc-50/50 p-4">
-          {loading && (
-            <Text className="text-xs text-zinc-400 text-center py-6">
-              Loading storefront catalog...
-            </Text>
-          )}
+    default:
+      return (
+        <View className="flex-1 bg-white items-center justify-center p-6">
+          <Text className="text-sm font-semibold text-zinc-900 mb-1">
+            {storefront.shopName}
+          </Text>
+          <Text className="text-xs text-zinc-400 text-center">
+            Storefront layout for this category is under active development.
+          </Text>
         </View>
-      </ScrollView>
-    </View>
-  );
+      );
+  }
 }
+

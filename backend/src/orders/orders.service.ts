@@ -13,6 +13,8 @@ import { OrderItem } from './entities/order-item.entity';
 import { Customer } from '../customers/entities/customer.entity';
 import { Merchant } from '../merchants/entities/merchant.entity';
 import { Product } from '../products/entities/product.entity';
+import { Outlet } from '../outlets/entities/outlet.entity';
+import { OutletProduct } from '../outlets/entities/outlet-product.entity';
 import { CreateOrderDto } from './dtos/create-order.dto';
 import { OrderStatus } from './enums/order-status.enum';
 import { Role } from '../users/enums/role.enum';
@@ -46,6 +48,12 @@ export class OrdersService {
     private readonly dataSource: DataSource,
     @Optional()
     private readonly deliveryAllocationService?: DeliveryAllocationService,
+    @InjectRepository(Outlet)
+    @Optional()
+    private readonly outletRepository?: Repository<Outlet>,
+    @InjectRepository(OutletProduct)
+    @Optional()
+    private readonly outletProductRepository?: Repository<OutletProduct>,
   ) {}
 
   calculateDeliveryFee(
@@ -76,6 +84,7 @@ export class OrdersService {
   ): Promise<Order> {
     const {
       merchantId,
+      outletId,
       items,
       deliveryAddress,
       deliveryLatitude,
@@ -102,6 +111,31 @@ export class OrdersService {
       throw new NotFoundException(`Merchant #${merchantId} not found`);
     }
 
+    // 2b. Validate Outlet Branch (or resolve default)
+    let resolvedOutlet: Outlet | null = null;
+    if (this.outletRepository) {
+      if (outletId) {
+        resolvedOutlet = await this.outletRepository.findOne({
+          where: { id: outletId, merchantId },
+        });
+        if (!resolvedOutlet) {
+          throw new NotFoundException(
+            `Outlet #${outletId} not found for Merchant #${merchantId}`,
+          );
+        }
+        if (!resolvedOutlet.isActive) {
+          throw new BadRequestException(
+            `Outlet '${resolvedOutlet.name}' is currently not accepting orders`,
+          );
+        }
+      } else {
+        resolvedOutlet = await this.outletRepository.findOne({
+          where: { merchantId },
+          order: { id: 'ASC' },
+        });
+      }
+    }
+
     // 3. Batch-fetch products
     const productIds = items.map((i) => i.productId);
     const products = await this.productRepository.find({
@@ -115,6 +149,18 @@ export class OrdersService {
     }
 
     const productMap = new Map(products.map((p) => [p.id, p]));
+
+    // 3b. Fetch branch-specific product overrides (if outlet resolved)
+    let outletProductMap = new Map<number, OutletProduct>();
+    if (resolvedOutlet && this.outletProductRepository) {
+      const ops = await this.outletProductRepository.find({
+        where: {
+          outletId: resolvedOutlet.id,
+          productId: In(productIds),
+        },
+      });
+      outletProductMap = new Map(ops.map((op) => [op.productId, op]));
+    }
 
     // 4. Validate products and calculate server-authoritative subtotal
     let subtotal = 0;
@@ -135,7 +181,17 @@ export class OrdersService {
         );
       }
 
-      const unitPrice = Number(product.price);
+      const branchProduct = outletProductMap.get(product.id);
+      if (branchProduct && branchProduct.isAvailable === false) {
+        throw new BadRequestException(
+          `Product #${product.id} (${product.name}) is currently out of stock at ${resolvedOutlet?.name || 'this outlet'}`,
+        );
+      }
+
+      const unitPrice =
+        branchProduct?.priceOverride != null
+          ? Number(branchProduct.priceOverride)
+          : Number(product.price);
       const totalPrice =
         Math.round(unitPrice * itemDto.quantity * 100) / 100;
       subtotal += totalPrice;
@@ -151,17 +207,20 @@ export class OrdersService {
 
     subtotal = Math.round(subtotal * 100) / 100;
 
-    // 5. Calculate Haversine distance and dynamic delivery fee
+    // 5. Calculate Haversine distance and dynamic delivery fee anchored to outlet coordinates
+    const originLat = resolvedOutlet?.latitude ?? merchant.latitude;
+    const originLng = resolvedOutlet?.longitude ?? merchant.longitude;
+
     let distanceKm: number | null = null;
     if (
-      merchant.latitude != null &&
-      merchant.longitude != null &&
+      originLat != null &&
+      originLng != null &&
       deliveryLatitude != null &&
       deliveryLongitude != null
     ) {
       distanceKm = calculateHaversineDistance(
-        merchant.latitude,
-        merchant.longitude,
+        originLat,
+        originLng,
         deliveryLatitude,
         deliveryLongitude,
       );
@@ -178,6 +237,7 @@ export class OrdersService {
       const order = manager.create(Order, {
         customerId,
         merchantId,
+        outletId: resolvedOutlet?.id ?? outletId,
         status: OrderStatus.PLACED,
         subtotal,
         deliveryFee,

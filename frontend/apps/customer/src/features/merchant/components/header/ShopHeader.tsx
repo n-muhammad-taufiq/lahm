@@ -19,6 +19,7 @@ export interface ShopHeaderProps {
   onShare?: () => void;
   // Identity details
   shopName?: string;
+  description?: string;
   rating?: number;
   isVerified?: boolean;
   city?: string;
@@ -37,6 +38,7 @@ export function ShopHeader({
   onToggleFavorite,
   onShare,
   shopName,
+  description,
   rating,
   isVerified,
   city,
@@ -49,7 +51,7 @@ export function ShopHeader({
 }: ShopHeaderProps) {
   return (
     <View className={`w-full bg-white ${className}`}>
-      {/* 1. Cover Banner & Top Floating Controls */}
+      {/* 1. Top App Bar with Navigation Controls */}
       <ShopCoverBanner
         bannerUrl={bannerUrl}
         isFavorite={isFavorite}
@@ -61,6 +63,7 @@ export function ShopHeader({
       {/* 2. Shop Identity Card (Store branding, Halal shield, rating, hours) */}
       <ShopIdentityCard
         shopName={shopName}
+        description={description}
         rating={rating}
         isVerified={isVerified}
         city={city}

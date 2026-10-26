@@ -8,6 +8,8 @@ import { Product } from '../products/entities/product.entity';
 import { ProductVertical } from '../products/enums/product-vertical.enum';
 import { MerchantCategory } from '../merchant-categories/entities/merchant-category.entity';
 import { ProductCategory } from '../products/entities/product-category.entity';
+import { Outlet } from '../outlets/entities/outlet.entity';
+import { OutletProduct } from '../outlets/entities/outlet-product.entity';
 
 interface SeedCategoryNode {
   name: string;
@@ -426,6 +428,10 @@ export class SeederService {
     private readonly merchantCategoryRepository: Repository<MerchantCategory>,
     @InjectRepository(ProductCategory)
     private readonly productCategoryRepository: Repository<ProductCategory>,
+    @InjectRepository(Outlet)
+    private readonly outletRepository: Repository<Outlet>,
+    @InjectRepository(OutletProduct)
+    private readonly outletProductRepository: Repository<OutletProduct>,
   ) {}
 
   async seed(): Promise<void> {
@@ -594,6 +600,97 @@ export class SeederService {
           });
         }
         await this.productRepository.save(product);
+      }
+
+      // 5. Seed Primary & Secondary Outlets and Link Products
+      const primaryOutletName = merchant.shopAddress?.includes('Ambattur') ? 'Ambattur OT' : 'Main Branch';
+      let primaryOutlet = await this.outletRepository.findOne({
+        where: { merchantId: merchant.id, name: primaryOutletName },
+      });
+
+      if (!primaryOutlet) {
+        primaryOutlet = this.outletRepository.create({
+          merchantId: merchant.id,
+          name: primaryOutletName,
+          address: merchant.shopAddress || 'Main Road',
+          city: merchant.city || 'Chennai',
+          state: merchant.state || 'Tamil Nadu',
+          pinCode: merchant.pinCode || '600053',
+          latitude: merchant.latitude || 13.1125,
+          longitude: merchant.longitude || 80.1530,
+          phoneNumber: item.ownerPhone,
+          openingTime: merchant.openingTime || '08:00 AM',
+          closingTime: merchant.closingTime || '11:00 PM',
+          workingDays: merchant.workingDays || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          isActive: true,
+          rating: merchant.rating || 4.8,
+        });
+        primaryOutlet = await this.outletRepository.save(primaryOutlet);
+        this.logger.log(`Created primary outlet '${primaryOutlet.name}' for ${merchant.shopName}`);
+      }
+
+      const allMerchantProducts = await this.productRepository.find({
+        where: { merchantId: merchant.id },
+      });
+
+      for (const prod of allMerchantProducts) {
+        let op = await this.outletProductRepository.findOne({
+          where: { outletId: primaryOutlet.id, productId: prod.id },
+        });
+        if (!op) {
+          op = this.outletProductRepository.create({
+            outletId: primaryOutlet.id,
+            productId: prod.id,
+            priceOverride: undefined,
+            isAvailable: true,
+            stockQuantity: prod.stock || 100,
+          });
+          await this.outletProductRepository.save(op);
+        }
+      }
+
+      if (item.shopName.includes('Al-Basha')) {
+        let secondOutlet = await this.outletRepository.findOne({
+          where: { merchantId: merchant.id, name: 'Anna Nagar' },
+        });
+
+        if (!secondOutlet) {
+          secondOutlet = this.outletRepository.create({
+            merchantId: merchant.id,
+            name: 'Anna Nagar',
+            address: '45, 2nd Avenue, Near Roundtana, Anna Nagar',
+            city: 'Chennai',
+            state: 'Tamil Nadu',
+            pinCode: '600040',
+            latitude: 13.0850,
+            longitude: 80.2100,
+            phoneNumber: '+919800000033',
+            openingTime: '11:00 AM',
+            closingTime: '11:30 PM',
+            workingDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            isActive: true,
+            rating: 4.9,
+          });
+          secondOutlet = await this.outletRepository.save(secondOutlet);
+          this.logger.log(`Created 2nd outlet 'Anna Nagar' for ${merchant.shopName}`);
+        }
+
+        for (const prod of allMerchantProducts) {
+          let op = await this.outletProductRepository.findOne({
+            where: { outletId: secondOutlet.id, productId: prod.id },
+          });
+          if (!op) {
+            const priceOverride = prod.name.includes('Saffron') ? Number(prod.price) + 30 : undefined;
+            op = this.outletProductRepository.create({
+              outletId: secondOutlet.id,
+              productId: prod.id,
+              priceOverride,
+              isAvailable: true,
+              stockQuantity: prod.stock || 50,
+            });
+            await this.outletProductRepository.save(op);
+          }
+        }
       }
     }
 

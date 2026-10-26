@@ -47,66 +47,42 @@ export function ShopCoverBanner({
   };
 
   return (
-    <View className={`relative h-56 w-full bg-zinc-900 overflow-hidden ${className}`}>
-      {/* 1. Cover Photo */}
-      {bannerUrl ? (
-        <Image
-          source={{ uri: bannerUrl }}
-          className="w-full h-full"
-          resizeMode="cover"
-        />
-      ) : (
-        <View className="w-full h-full bg-zinc-800 items-center justify-center">
-          <Feather name="image" size={32} color="#71717A" />
-        </View>
-      )}
+    <View
+      style={{ paddingTop: Math.max(insets.top, 12) }}
+      className={`w-full bg-white px-4 pb-2 flex-row items-center justify-between ${className}`}>
+      {/* Back Button */}
+      <Pressable
+        onPress={handleBack}
+        hitSlop={8}
+        className="w-10 h-10 rounded-full bg-zinc-50 border border-zinc-200/80 items-center justify-center active:scale-95 active:bg-zinc-100"
+        accessibilityRole="button"
+        accessibilityLabel="Go back to marketplace">
+        <Ionicons name="chevron-back" size={20} color="#18181B" />
+      </Pressable>
 
-      {/* 2. Top & Bottom Subtle Scrims for Controls Legibility */}
-      <LinearGradient
-        colors={['rgba(0,0,0,0.45)', 'transparent', 'rgba(0,0,0,0.2)']}
-        locations={[0, 0.45, 1]}
-        className="absolute inset-0"
-      />
-
-      {/* 3. Floating Navigation Actions (Safe Area Inset Aware) */}
-      <View
-        style={{ paddingTop: Math.max(insets.top, 12) }}
-        className="absolute top-0 left-0 right-0 px-4 flex-row items-center justify-between">
-        
-        {/* Back Button */}
+      {/* Right Action Icons: Favorite & Share */}
+      <View className="flex-row items-center">
         <Pressable
-          onPress={handleBack}
+          onPress={handleFavorite}
           hitSlop={8}
-          className="w-10 h-10 rounded-full bg-black/40 items-center justify-center active:scale-95"
+          className="w-10 h-10 rounded-full bg-zinc-50 border border-zinc-200/80 items-center justify-center active:scale-95 active:bg-zinc-100 mr-2"
           accessibilityRole="button"
-          accessibilityLabel="Go back to marketplace">
-          <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
+          accessibilityLabel={isFavorite ? 'Remove from favorites' : 'Add to favorites'}>
+          <Ionicons
+            name={isFavorite ? 'heart' : 'heart-outline'}
+            size={19}
+            color={isFavorite ? '#EF4444' : '#18181B'}
+          />
         </Pressable>
 
-        {/* Right Action Icons: Favorite & Share */}
-        <View className="flex-row items-center">
-          <Pressable
-            onPress={handleFavorite}
-            hitSlop={8}
-            className="w-10 h-10 rounded-full bg-black/40 items-center justify-center active:scale-95 mr-2"
-            accessibilityRole="button"
-            accessibilityLabel={isFavorite ? 'Remove from favorites' : 'Add to favorites'}>
-            <Ionicons
-              name={isFavorite ? 'heart' : 'heart-outline'}
-              size={20}
-              color={isFavorite ? '#EF4444' : '#FFFFFF'}
-            />
-          </Pressable>
-
-          <Pressable
-            onPress={handleShare}
-            hitSlop={8}
-            className="w-10 h-10 rounded-full bg-black/40 items-center justify-center active:scale-95"
-            accessibilityRole="button"
-            accessibilityLabel="Share store">
-            <Feather name="share-2" size={18} color="#FFFFFF" />
-          </Pressable>
-        </View>
+        <Pressable
+          onPress={handleShare}
+          hitSlop={8}
+          className="w-10 h-10 rounded-full bg-zinc-50 border border-zinc-200/80 items-center justify-center active:scale-95 active:bg-zinc-100"
+          accessibilityRole="button"
+          accessibilityLabel="Share store">
+          <Feather name="share-2" size={17} color="#18181B" />
+        </Pressable>
       </View>
     </View>
   );

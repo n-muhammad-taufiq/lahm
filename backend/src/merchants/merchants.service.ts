@@ -15,6 +15,7 @@ import { AuthenticationService } from 'src/authentication/authentication.service
 export interface NearbyMerchantItem {
     id: number;
     shopName?: string;
+    description?: string;
     shopAddress?: string;
     city?: string;
     state?: string;
@@ -234,6 +235,7 @@ export class MerchantsService {
             results.push({
                 id: merchant.id,
                 shopName: merchant.shopName,
+                description: merchant.description,
                 shopAddress: merchant.shopAddress,
                 city: merchant.city,
                 state: merchant.state,
@@ -273,6 +275,7 @@ export class MerchantsService {
         return {
             id: merchant.id,
             shopName: merchant.shopName,
+            description: merchant.description,
             shopAddress: merchant.shopAddress,
             city: merchant.city,
             state: merchant.state,

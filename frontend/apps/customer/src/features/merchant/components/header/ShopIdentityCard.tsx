@@ -17,6 +17,7 @@ import type { MerchantCategoryDto } from '@lahm/api';
 
 export interface ShopIdentityCardProps {
   shopName?: string;
+  description?: string;
   rating?: number;
   isVerified?: boolean;
   city?: string;
@@ -25,19 +26,22 @@ export interface ShopIdentityCardProps {
   hasHalalCertificate?: boolean;
   hasFssaiCertificate?: boolean;
   categories?: MerchantCategoryDto[];
+  vertical?: 'meats' | 'restaurants' | 'groceries';
   className?: string;
 }
 
 export function ShopIdentityCard({
   shopName,
+  description,
   rating = 0,
   isVerified = false,
   city,
-  openingTime,
+  openingTime: _openingTime,
   closingTime,
   hasHalalCertificate = false,
   hasFssaiCertificate = false,
   categories,
+  vertical: _vertical,
   className = '',
 }: ShopIdentityCardProps) {
   if (!shopName) {
@@ -50,62 +54,72 @@ export function ShopIdentityCard({
       : null;
 
   return (
-    <View className={`px-4 pt-3.5 pb-3 bg-white border-b border-zinc-100 ${className}`}>
-      {/* 1. Shop Title */}
+    <View className={`bg-white px-5 pt-2 pb-3.5 border-b border-zinc-100 items-center ${className}`}>
+      {/* 1. Centered Accented Store Title */}
       <Text
-        numberOfLines={1}
-        className="text-xl font-black text-slate-900 tracking-tight">
+        numberOfLines={2}
+        className="text-[22px] font-display text-zinc-900 text-center tracking-tight leading-7 px-2">
         {shopName}
       </Text>
 
-      {/* 2. Metadata Text Row: Rating • Category • City • Operating Hours */}
-      <View className="flex-row items-center flex-wrap mt-1">
+      {/* 2. Centered Store Description / Cuisines Subtitle */}
+      {description ? (
+        <Text
+          numberOfLines={3}
+          className="text-xs font-primary text-zinc-500 text-center max-w-[320px] mt-1 leading-relaxed">
+          {description}
+        </Text>
+      ) : categoryNames ? (
+        <Text
+          numberOfLines={2}
+          className="text-xs font-primary-medium text-zinc-500 text-center max-w-[300px] mt-1 leading-normal">
+          {categoryNames}
+        </Text>
+      ) : null}
+
+      {/* 3. Centered Minimalist Metadata Text Row: Rating • City • Hours */}
+      <View className="flex-row items-center justify-center flex-wrap mt-2">
         {rating > 0 && (
           <View className="flex-row items-center">
             <Ionicons name="star" size={12} color="#D97706" />
-            <Text className="text-xs font-bold text-slate-800 ml-1">
+            <Text className="text-xs font-primary-bold text-zinc-800 ml-1">
               {rating.toFixed(1)}
             </Text>
-            <Text className="text-xs text-zinc-400 mx-1.5">•</Text>
           </View>
         )}
 
-        {categoryNames ? (
-          <Text className="text-xs font-medium text-zinc-600">
-            {categoryNames}
-          </Text>
-        ) : null}
-
         {city ? (
           <View className="flex-row items-center">
-            <Text className="text-xs text-zinc-400 mx-1.5">•</Text>
-            <Text className="text-xs text-zinc-600 font-medium">{city}</Text>
+            <Text className="text-xs text-zinc-300 mx-2">•</Text>
+            <Text className="text-xs font-primary-medium text-zinc-600">
+              {city}
+            </Text>
           </View>
         ) : null}
 
         {closingTime ? (
           <View className="flex-row items-center">
-            <Text className="text-xs text-zinc-400 mx-1.5">•</Text>
-            <Text className="text-xs text-zinc-600 font-medium">
+            <Text className="text-xs text-zinc-300 mx-2">•</Text>
+            <Text className="text-xs font-primary-medium text-zinc-600">
               Open until {closingTime}
             </Text>
           </View>
         ) : null}
       </View>
 
-      {/* 3. Verification & Trust Row (Clean Minimal Text) */}
+      {/* 4. Centered Halal & Trust Text Row */}
       {Boolean(isVerified && hasHalalCertificate) && (
-        <View className="flex-row items-center mt-2 pt-2 border-t border-zinc-100">
+        <View className="flex-row items-center justify-center mt-2 pt-2 border-t border-zinc-100/80 w-full">
           <Ionicons name="shield-checkmark" size={13} color="#059669" />
-          <Text className="text-xs font-semibold text-emerald-700 ml-1.5">
+          <Text className="text-xs font-primary-semibold text-emerald-700 ml-1.5">
             100% Halal Verified
           </Text>
 
           {hasFssaiCertificate && (
             <View className="flex-row items-center ml-2.5">
-              <Text className="text-xs text-zinc-300 mr-2.5">|</Text>
+              <Text className="text-xs text-zinc-300 mr-2.5">•</Text>
               <Ionicons name="checkmark-circle" size={13} color="#2563EB" />
-              <Text className="text-xs font-medium text-zinc-600 ml-1">
+              <Text className="text-xs font-primary-medium text-zinc-600 ml-1">
                 FSSAI Certified
               </Text>
             </View>

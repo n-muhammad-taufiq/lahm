@@ -1582,12 +1582,181 @@ When logging a turn or session handoff, append an entry using this structure:
     2. Create [`frontend/apps/customer/src/features/merchant/components/StorefrontProductList.tsx`](../frontend/apps/customer/src/features/merchant/components/StorefrontProductList.tsx) (cards showing item name, description, price, customization indicator, and "+ ADD" button).
     3. Mount them in [`MerchantStorefrontScreen.tsx`](../frontend/apps/customer/src/features/merchant/screens/MerchantStorefrontScreen.tsx).
 
+### [2026-10-24 20:00 IST] — UI Architecture: StorefrontProductsList Plan & 3-Vertical Card Design Mockup
+- **Phase & Step:** Frontend UI Planning & Design Exploration — StorefrontProductsList Component
+- **Files Touched / Created:**
+  - [`context/storefront-products-plan.md`](./storefront-products-plan.md) (Created — Complete architectural plan for StorefrontProductsList and its 3 vertical-specific cards)
+  - [`context/ui/storefront-product-card-options.png`](./ui/storefront-product-card-options.png) (Created — High-resolution mockup sheet of Meat, Restaurant, and Grocery cards with '?' image placeholders)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Design Decisions Clarified with User:**
+  - **Shared Logic & Differentiated Presentation:** Single `StorefrontProductsList.tsx` container utilizing shared `useMerchantCatalog` and `useCartStore`, rendering specialized cards based on `vertical` (`'meats' | 'restaurants' | 'groceries'`).
+  - **Single Category Constraint:** Restricted to one category per merchant for now (fetches primary merchant products directly without multi-level drill-down switching).
+  - **Image Placeholder Standard:** Uses soft warm-neutral container with centered question mark `?` icon. Strictly 0% meat cuts, 0% animal imagery, and 0% humans.
+  - **Cart Interaction:** Tapping `+ ADD` directly adds 1 item to `useCartStore` with haptic feedback (triggers customization sheet if item has required options).
+- **Next Required Step:**
+  - Begin Step 1 of the plan: Build `ProductPlaceholderImage.tsx` and `MeatProductCard.tsx`.
 
+### [2026-10-24 20:06 IST] — Architecture Refinement: Screen-Level Vertical Storefront Dispatcher
+- **Phase & Step:** Frontend UI Architecture — Storefront Layout Dispatcher Refinement
+- **Files Touched / Created:**
+  - [`context/storefront-products-plan.md`](./storefront-products-plan.md) (Updated — Revised architecture from card-level dispatching to screen-level vertical storefront dispatching: `MeatStorefront`, `RestaurantStorefront`, `GroceryStorefront`)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Key Architectural Refinements Adopted:**
+  - **Screen-Level Dispatcher Pattern:** `MerchantStorefrontScreen.tsx` switches cleanly based on `storefront.vertical` to render `<MeatStorefront />`, `<RestaurantStorefront />`, or `<GroceryStorefront />`.
+  - **Clean Component Encapsulation:** Ensures each storefront layout stays under ~120 lines, fully satisfying Lahm's 200-line React component ceiling while preventing a monolithic component bloated with dozens of conditional branches.
+  - **Shared Primitives:** Reuses `ShopHeader`, `ProductPlaceholderImage`, `useMerchantCatalog`, and `useCartStore` across all three storefronts.
+- **Next Required Step:**
+  - Begin Step 1: Implement `ProductPlaceholderImage.tsx` and `MeatProductCard.tsx`.
 
+### [2026-10-24 20:10 IST] — UI Roadmap: Food / Restaurant Storefront Prioritized End-to-End
+- **Phase & Step:** Frontend UI Execution Roadmap — Restaurant Storefront First
+- **Files Touched / Created:**
+  - [`context/storefront-products-plan.md`](./storefront-products-plan.md) (Updated — Prioritized completing the Food/Restaurant Storefront end-to-end before moving to Meat or Grocery)
+  - [`context/communication.md`](./communication.md) (Updated — Logged turn)
+- **Execution Sequencing Adopted:**
+  - **Step 1:** Create `ProductPlaceholderImage.tsx` and `RestaurantProductCard.tsx` (horizontal menu dish card with '?' placeholder, description, customizable tag, price, and '+ ADD').
+  - **Step 2:** Create `RestaurantStorefront.tsx` (complete restaurant storefront layout with header, menu catalog feed, and loading skeleton).
+  - **Step 3:** Wire `MerchantStorefrontScreen.tsx` to dispatch `restaurants` to `RestaurantStorefront` and verify on physical Android phone.
+- **Next Required Step:**
+  - Verify restaurant storefront live on physical Android device via Expo Go.
 
+### [2026-10-24 20:38 IST] — UI Architecture: Dedicated Restaurant Storefront Wired to Live Screen
+- **Phase & Step:** Frontend UI Execution — Food / Restaurant Storefront First (Step 1 & Step 2 Complete)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/merchant/components/cards/ProductPlaceholderImage.tsx`](../frontend/apps/customer/src/features/merchant/components/cards/ProductPlaceholderImage.tsx) (Created — Soft warm-neutral image placeholder container with centered '?')
+  - [`frontend/apps/customer/src/features/merchant/components/cards/RestaurantProductCard.tsx`](../frontend/apps/customer/src/features/merchant/components/cards/RestaurantProductCard.tsx) (Created — Horizontal dish card with title, 2-line description, customizable tag, price, and '+ ADD' button)
+  - [`frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx`](../frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx) (Created — Dedicated restaurant storefront layout component with header and dish feed)
+  - [`frontend/apps/customer/src/features/merchant/types.ts`](../frontend/apps/customer/src/features/merchant/types.ts) (Created — `MerchantCategorySlug` enum for type-safe category dispatching)
+  - [`frontend/apps/customer/src/features/merchant/screens/MerchantStorefrontScreen.tsx`](../frontend/apps/customer/src/features/merchant/screens/MerchantStorefrontScreen.tsx) (Modified — Refactored wrapper into category-driven dispatcher rendering `RestaurantStorefront`)
+- **Key Implementation Details:**
+  1. **Strict 1-File-Per-Step Adherence:** Executed incrementally with explicit user approvals per step.
+  2. **Category Enum Dispatcher:** Uses `MerchantCategorySlug.RESTAURANTS` matching backend seeds rather than raw strings.
+  3. **Zero Mock Data:** Directly displays real seeded dishes for Ambattur restaurants (*Al-Basha Mandi & Grills* and *Zaitoon Signature Restaurant*).
+  4. **Immediate Mobile Visibility:** Tapping on a restaurant in Expo Go displays the live restaurant storefront with dish cards.
+- **Next Required Step:**
+  - Test and verify visually on mobile Expo Go.
 
+### [2026-10-25 14:37 IST] — Live GPS Location Connected to CustomerHomeScreen
+- **Phase & Step:** Release 1: Customer Super-App — Real Geolocation & Delivery Feed
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx`](../frontend/apps/customer/src/features/home/CustomerHomeScreen.tsx) (Modified — Replaced hardcoded Ambattur coordinates with dynamic live device GPS and reverse-geocoded address from `useCustomerLocation`)
+- **Key Implementation Details:**
+  1. **Removed Hardcoded Location:** Replaced `AMBATTUR_OT_COORDS` with live `location.latitude` and `location.longitude` directly from `useCustomerLocation`.
+  2. **Dynamic Reverse-Geocoded Address:** `displayAddress` dynamically formats real street/locality and city, showing `"Locating your address..."` while GPS is in flight.
+  3. **Zero Mock Data Standard Preserved:** Passes real coordinates to `useNearbyMerchants`, which queries `/merchant/nearby` with true distance calculations.
+- **Next Required Step:**
+  - Add native settings redirect fallback in `useCustomerLocation.ts` when permission is permanently denied.
 
+### [2026-10-25 15:16 IST] — Restaurant Storefront: Category-Grouped Menu Sections & Pill Navigation Complete
+- **Phase & Step:** Frontend UI Execution — Restaurant Storefront Category Grouping (Steps 1, 2, & 3 Complete)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantCategorySection.tsx`](../frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantCategorySection.tsx) (Created — Category block with title, dish count pill, and mapped dish cards)
+  - [`frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantCategoryNav.tsx`](../frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantCategoryNav.tsx) (Created — Smooth horizontal capsule pill navigation bar with active highlights and light haptics)
+  - [`frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx`](../frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx) (Modified — Connected `useMerchantCategories`, grouped dishes by category hierarchy, rendered nav bar and sections)
+- **Key Implementation Details:**
+  1. **Strict 1-File-Per-Step:** Completed across 3 atomic turns with clean component encapsulation (<150 lines each).
+  2. **Hierarchical Grouping Algorithm:** Evaluates each dish's `categoryId` against the restaurant's root category tree (*Arabian Mandi Platters*, *Charcoal Flame Grills*).
+  3. **Interactive Filter Pills:** Tapping a category pill smoothly filters down to that section with haptic feedback, or toggles back to view all.
+- **Next Required Step:**
+  - Visual verification on Expo Go mobile app.
 
+### [2026-10-25 15:33 IST] — Restaurant Storefront: Recursive Category Hierarchy Resiliency
+- **Phase & Step:** Frontend UI Refinement — Flexible Category Tree Resiliency
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx`](../frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx) (Modified — Added recursive `collectAllCategoryIds` helper to collect descendant category IDs at any depth)
+- **Key Implementation Details:**
+  1. **Flexible Hybrid Resiliency:** Rather than assuming a shallow 1-level child hierarchy, `collectAllCategoryIds` recursively collects all descendant category IDs across arbitrary depths.
+  2. **Zero Orphaned Dishes:** Dishes attached to root categories, intermediate subcategories, or deep leaves are collected into their root menu section.
+- **Next Required Step:**
+  - User verification on physical mobile device via Expo Go.
 
+### [2026-10-25 17:39 IST] — Restaurant Product Card: Modern 2-Column Layout & Overlapping ADD Button
+- **Phase & Step:** Frontend UI Refinement — Food / Restaurant Storefront Card Elevation
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/merchant/components/cards/RestaurantProductCard.tsx`](../frontend/apps/customer/src/features/merchant/components/cards/RestaurantProductCard.tsx) (Modified — Upgraded to modern 2-column layout with right-anchored 96dp media container, anchored overlapping ADD button, and photoUrl support)
+- **Key Implementation Details:**
+  1. **Generous 2-Column Visual Hierarchy:** Switched from cramped 3-column row to a left details column (Halal dietary badge, bold dish title, price, 2-line description) and a right media column (96×96dp image/placeholder).
+  2. **Anchored Floating ADD Pill:** Anchored overlapping the bottom edge of the image container with emerald text, tactile haptic feedback (`Haptics.impactAsync`), and active scale-down animation (`active:scale-95`).
+  3. **Photo URL & Customization Fallback:** Checks `product.photoUrl` for real photography and gracefully falls back to `ProductPlaceholderImage`. If customizable, shows subtle "Customisable" text below the button.
+  4. **Strict Component Limits Preserved:** The entire component is only 111 lines, well below the ~200 lines limit.
+- **Verification:**
+  - `RestaurantProductCard.tsx` compiles cleanly with zero TypeScript errors.
+- **Next Required Step:**
+  - User visual verification on live Android device via Expo Go.
 
+### [2026-10-25 18:34 IST] — Store Header: Layered Rounded Sheet Overlap & Double-Bullet Fix
+- **Phase & Step:** Frontend UI Refinement — Food / Restaurant Storefront Header Elevation
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/merchant/components/header/ShopIdentityCard.tsx`](../frontend/apps/customer/src/features/merchant/components/header/ShopIdentityCard.tsx) (Modified — Added `-mt-6 rounded-t-3xl` layered sheet curve over cover banner, resolved double-bullet bug in metadata, added `vertical` prop)
+- **Key Implementation Details:**
+  1. **Layered Sheet Overlap (`-mt-6 rounded-t-3xl`):** The merchant identity card now gracefully curves up over the bottom of the cover photo with subtle shadow (`shadow-sm`) and generous padding (`pt-4`), creating tactile mobile depth rather than an abrupt horizontal line.
+  2. **Metadata Double-Bullet Fixed:** Corrected the bullet prefix conditional logic so `city` and `closingTime` only prefix a bullet when preceding items exist, resolving `★ 4.9 • • Chennai` into `★ 4.9 • Chennai • Open until 11:00 PM`.
+  3. **Type Alignment:** Added `vertical?: 'meats' | 'restaurants' | 'groceries'` to `ShopIdentityCardProps`, eliminating the TypeScript error in `ShopHeader.tsx`.
+- **Verification:**
+  - `ShopIdentityCard.tsx` and `ShopHeader.tsx` compile with zero TypeScript errors.
+- **Next Required Step:**
+  - Visual verification on physical mobile device via Expo Go.
+
+### [2026-10-25 18:43 IST] — Typography Architecture: Plus Jakarta Sans Loaded Application-Wide
+- **Phase & Step:** Frontend UI Refinement — Typography Elevation (Step 1)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/package.json`](../frontend/apps/customer/package.json) (Installed `@expo-google-fonts/plus-jakarta-sans`)
+  - [`frontend/apps/customer/src/app/_layout.tsx`](../frontend/apps/customer/src/app/_layout.tsx) (Modified — Imported & registered Plus Jakarta Sans Regular 400, Medium 500, SemiBold 600, Bold 700, and ExtraBold 800 via `useFonts`)
+- **Key Implementation Details:**
+  1. **Font Package Installation:** Installed `@expo-google-fonts/plus-jakarta-sans` in customer app dependencies.
+  2. **Application-Wide Preloading:** Registered font weights in root `RootLayout` with splash screen integration, ensuring zero font pop or layout shifts.
+  3. **Multi-Platform Aliasing:** Mapped both Expo token identifiers (`PlusJakartaSans_700Bold`) and standard hyphenated CSS family aliases (`PlusJakartaSans-Bold`).
+- **Verification:**
+  - TypeScript compilation passes with zero errors on `_layout.tsx`.
+- **Next Required Step:**
+  - Connect font family aliases in `tailwind.config.js` and apply to card headings.
+
+### [2026-10-25 18:45 IST] — Typography Architecture: Plus Jakarta Sans NativeWind Classes Configured
+- **Phase & Step:** Frontend UI Refinement — Typography Elevation (Step 2)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/tailwind.config.js`](../frontend/apps/customer/tailwind.config.js) (Modified — Registered `font-sans`, `font-medium`, `font-semibold`, `font-bold`, `font-extrabold`, and `font-jakarta-*` family aliases mapped to Plus Jakarta Sans Expo assets)
+- **Key Implementation Details:**
+  1. **NativeWind Mapping:** Mapped `theme.extend.fontFamily` so that standard classes (`font-bold`, `font-semibold`, `font-medium`, `font-sans`) and explicit classes (`font-jakarta-bold`, etc.) automatically apply the loaded custom font family rather than fallback system fonts.
+  2. **Android Multi-Alias Fallback:** Supports both Expo asset identifiers (`PlusJakartaSans_700Bold`) and CSS hyphenated aliases (`PlusJakartaSans-Bold`).
+- **Verification:**
+  - TypeScript compilation passes with zero errors on `tailwind.config.js`.
+- **Next Required Step:**
+  - Clean up customer tailwind.config.js to inherit cleanly from @lahm/tokens.
+
+### [2026-10-25 18:50 IST] — Typography Architecture: Option A Semantic Tokens Defined in @lahm/tokens
+- **Phase & Step:** Design System Tokens — Semantic Font Roles (Step 1)
+- **Files Touched / Created:**
+  - [`frontend/packages/tokens/src/tokens.json`](../frontend/packages/tokens/src/tokens.json) (Modified — Established Option A role-based tokens: `primary`, `primary-medium`, `primary-semibold`, `primary-bold`, `primary-extrabold`, `sans`, `display`, `brand`, and `mono`)
+- **Key Implementation Details:**
+  1. **Single Source of Truth:** Font families are now defined exclusively in `@lahm/tokens`. Changing this single file in the future updates typography across customer, merchant, and delivery apps simultaneously.
+  2. **Semantic Role Architecture:** Defined `primary` (Plus Jakarta Sans for all UI), `display` (high-impact headlines), `brand` (Parisienne logo script), and `mono` (OTP codes and countdown timers).
+  3. **Preset Passthrough:** Automatically exported through `packages/tokens/src/preset.js` into Tailwind presets.
+- **Verification:**
+  - `npx tsc --noEmit` in `packages/tokens` succeeded with code 0 (zero errors).
+- **Next Required Step:**
+  - Clean up `frontend/apps/customer/tailwind.config.js` to remove redundant overrides and inherit directly from `@lahm/tokens`.
+
+### [2026-10-25 18:52 IST] — Typography Architecture: Customer Tailwind Config Purified to Inherit @lahm/tokens
+- **Phase & Step:** Design System Tokens — Semantic Font Roles (Step 2)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/tailwind.config.js`](../frontend/apps/customer/tailwind.config.js) (Modified — Removed hardcoded font overrides, purified `theme.extend` so it directly inherits semantic font roles from `@lahm/tokens` via `preset.js`)
+- **Key Implementation Details:**
+  1. **Strict Token Adherence:** Removed all temporary component-level font overrides. The customer app now consumes `tokens.fontFamily` purely from `packages/tokens/src/preset.js`.
+  2. **Single-File Edit Guarantee:** Updating a font family in `tokens.json` now propagates through `preset.js` to all tailwind classes automatically.
+- **Verification:**
+  - TypeScript compilation passes with zero errors on `tailwind.config.js`.
+- **Next Required Step:**
+  - Verify Plus Jakarta Sans rendering on mobile device and clean up any component-level font classes.
+
+### [2026-10-25 19:17 IST] — Typography Architecture: Universal Font Applied via NativeWind @layer base
+- **Phase & Step:** Design System Tokens — Global Universal Font Configuration
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/global.css`](../frontend/apps/customer/src/global.css) (Modified — Added `@layer base { * { font-family: 'PlusJakartaSans_400Regular'; } }` to universally set Plus Jakarta Sans across all text components)
+- **Key Implementation Details:**
+  1. **Zero Component Clutter:** Rather than manually pasting `font-primary` across hundreds of `<Text>` components, NativeWind's `@layer base` with universal selector `*` assigns `PlusJakartaSans_400Regular` as the global base font across the entire app.
+  2. **Type Safety & Zero Regression:** No JSX component files touched; zero TypeScript errors.
+- **Verification:**
+  - `npx tsc --noEmit` in customer app clean.
+- **Next Required Step:**
+  - User visual verification on live mobile screen via Expo Go.
 

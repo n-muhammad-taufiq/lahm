@@ -10,6 +10,13 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font';
+import {
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_800ExtraBold,
+} from '@expo-google-fonts/plus-jakarta-sans';
 import { LogBox } from 'react-native';
 import { useAuthStore, queryClient, QueryClientProvider } from '@lahm/api';
 
@@ -22,6 +29,16 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
     Parisienne: require('../../assets/fonts/Parisienne-Regular.ttf'),
+    'PlusJakartaSans-Regular': PlusJakartaSans_400Regular,
+    'PlusJakartaSans-Medium': PlusJakartaSans_500Medium,
+    'PlusJakartaSans-SemiBold': PlusJakartaSans_600SemiBold,
+    'PlusJakartaSans-Bold': PlusJakartaSans_700Bold,
+    'PlusJakartaSans-ExtraBold': PlusJakartaSans_800ExtraBold,
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
   });
   const [isReady, setIsReady] = useState(false);
   const initializeAuth = useAuthStore((state) => state.initializeAuth);

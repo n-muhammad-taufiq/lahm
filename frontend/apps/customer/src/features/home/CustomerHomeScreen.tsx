@@ -40,16 +40,19 @@ export function CustomerHomeScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDepartment, setActiveDepartment] = useState<DepartmentId>('restaurants');
 
-  // Hardcoded default coordinates for Ambattur OT, Chennai
-  const AMBATTUR_OT_COORDS = { latitude: 13.1143, longitude: 80.1548 };
-
+  // Real device GPS coordinates (number | null)
   const { merchants, loading } = useNearbyMerchants({
-    latitude: AMBATTUR_OT_COORDS.latitude,
-    longitude: AMBATTUR_OT_COORDS.longitude,
+    latitude: location.latitude,
+    longitude: location.longitude,
     search: searchQuery,
   });
 
-  const displayAddress = 'Ambattur OT, Chennai';
+  // Dynamic reverse-geocoded address display
+  const displayAddress = location.locality
+    ? `${location.locality}${location.city ? `, ${location.city}` : ''}`
+    : isLocating
+      ? 'Locating your address...'
+      : 'Select Location';
 
   const handlePressMerchant = (merchantId: number) => {
     router.push({ pathname: '/shop/[id]', params: { id: merchantId } });

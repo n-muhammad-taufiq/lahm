@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Customer } from '../../customers/entities/customer.entity';
 import { Merchant } from '../../merchants/entities/merchant.entity';
+import { Outlet } from '../../outlets/entities/outlet.entity';
 import { DeliveryPartner } from '../../delivery-partners/entities/delivery-partner.entity';
 import { OrderItem } from './order-item.entity';
 import { OrderStatus } from '../enums/order-status.enum';
@@ -35,6 +36,14 @@ export class Order {
   @ManyToOne(() => Merchant, { eager: false })
   @JoinColumn({ name: 'merchantId' })
   merchant: Merchant;
+
+  @Index()
+  @Column({ nullable: true })
+  outletId?: number;
+
+  @ManyToOne(() => Outlet, { nullable: true, eager: false })
+  @JoinColumn({ name: 'outletId' })
+  outlet?: Outlet;
 
   @Index()
   @Column({ nullable: true })

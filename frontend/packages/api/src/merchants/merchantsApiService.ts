@@ -10,6 +10,7 @@ export interface MerchantCategoryDto {
 export interface NearbyMerchant {
   id: number;
   shopName: string;
+  description?: string;
   shopAddress?: string;
   city?: string;
   state?: string;
@@ -42,6 +43,7 @@ export interface NearbyMerchantsQuery {
 export interface MerchantStorefrontResponse {
   id: number;
   shopName: string;
+  description?: string;
   shopAddress?: string;
   city?: string;
   state?: string;

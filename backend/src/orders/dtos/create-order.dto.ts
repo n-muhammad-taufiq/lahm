@@ -29,6 +29,11 @@ export class CreateOrderDto {
   @IsNotEmpty()
   merchantId: number;
 
+  @Type(() => Number)
+  @IsInt()
+  @IsOptional()
+  outletId?: number;
+
   @IsArray()
   @ArrayMinSize(1)
   @ValidateNested({ each: true })

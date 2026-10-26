@@ -13,6 +13,7 @@ import {
 import { User } from "../../users/entities/user.entity";
 import { Product } from "../../products/entities/product.entity";
 import { MerchantCategory } from "../../merchant-categories/entities/merchant-category.entity";
+import { Outlet } from "../../outlets/entities/outlet.entity";
 
 @Entity()
 export class Merchant {
@@ -26,6 +27,9 @@ export class Merchant {
     @OneToMany(() => Product, (product) => product.merchant)
     products: Product[];
 
+    @OneToMany(() => Outlet, (outlet) => outlet.merchant)
+    outlets: Outlet[];
+
     @ManyToMany(() => MerchantCategory, (cat) => cat.merchants, { eager: true })
     @JoinTable({
         name: 'merchant_category_mappings',
@@ -37,6 +41,9 @@ export class Merchant {
     // Step 2: Shop Details
     @Column({ nullable: true })
     shopName?: string;
+
+    @Column({ type: 'text', nullable: true })
+    description?: string;
 
     @Column({ type: 'text', nullable: true })
     shopAddress?: string;
