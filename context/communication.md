@@ -1780,3 +1780,20 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Execute **Step O.2**: Implement `getOutletStorefront(outletId: number)` in [`backend/src/outlets/outlets.service.ts`](file:///workspaces/lahm/backend/src/outlets/outlets.service.ts) and expose `GET /outlets/:id/storefront` in [`backend/src/outlets/outlets.controller.ts`](file:///workspaces/lahm/backend/src/outlets/outlets.controller.ts).
 
+### [2026-10-27 21:42 IST] — Multi-Outlet Step O.2: Backend Storefront & Menu Resolution Endpoint
+- **Phase & Step:** Multi-Outlet Support — Step O.2 (Backend Outlets Storefront)
+- **Files Touched / Created:**
+  - [`backend/src/outlets/outlets.module.ts`](file:///workspaces/lahm/backend/src/outlets/outlets.module.ts) (Modified — Added `Product` entity into `TypeOrmModule.forFeature`)
+  - [`backend/src/outlets/outlets.service.ts`](file:///workspaces/lahm/backend/src/outlets/outlets.service.ts) (Modified — Implemented `getOutletStorefront`: fetches branch and parent merchant; resolves sister branches with customer Haversine distances; fetches branch-scoped `outlet_products` with price overrides and live stock; returns `{ outlet, merchant, sisterOutlets, products }`)
+  - [`backend/src/outlets/outlets.controller.ts`](file:///workspaces/lahm/backend/src/outlets/outlets.controller.ts) (Modified — Exposed `GET /outlets/:id/storefront` accepting optional query params `latitude` and `longitude`)
+- **Key Implementation Details:**
+  1. **Strict Outlet Scoping:** Only products mapped to this outlet in `outlet_products` (`isAvailable: true` and `stockQuantity > 0`) are returned.
+  2. **Branch Pricing:** Uses `priceOverride` when present, falling back to master product `price`.
+  3. **Sister Outlets:** Loads other active branches for the same brand and calculates distance from customer coordinates to facilitate instant branch switching in the mobile UI.
+- **Verification:**
+  - `npm run test`: **195/195 tests PASS** (9/9 test suites).
+  - `npm run build`: **Compiled with zero errors**.
+- **Next Required Step:**
+  - Execute **Step O.3**: Create [`frontend/packages/api/src/outlets/outletsApiService.ts`](file:///workspaces/lahm/frontend/packages/api/src/outlets/outletsApiService.ts) and types in `@lahm/api`.
+
+

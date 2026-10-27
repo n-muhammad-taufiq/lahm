@@ -78,8 +78,8 @@ Before implementing new visual components, refer to the high-resolution mockups 
 
 #### Execution Roadmap:
 1. [x] **Step O.1:** Updated `OrdersModule` & `OrdersService` to calculate distance from outlet GPS, verify stock availability, apply price overrides against the fulfilling `outletId`, and load `outlet` relation.
-2. [ ] **Step O.2 (Next):** Implement `GET /outlets/:id/storefront` returning resolved menu pricing and sister branches.
-3. [ ] **Step O.3:** Add `outletsApiService` to `@lahm/api`.
+2. [x] **Step O.2:** Implemented `GET /outlets/:id/storefront` returning resolved outlet-scoped products with price overrides, inventory, and sister branches with distance.
+3. [ ] **Step O.3 (Next):** Add `outletsApiService` to `@lahm/api`.
 4. [ ] **Step O.4:** Build `ShopOutletSelectionSheet.tsx` (gesture-driven native bottom sheet) and make `[📍 Location ⌄]` in `ShopIdentityCard.tsx` interactive.
 5. [ ] **Step O.5:** Update `cartStore.ts` with single-outlet scoping and branch-switch confirmation prompt.
 
