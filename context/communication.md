@@ -1796,4 +1796,20 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Execute **Step O.3**: Create [`frontend/packages/api/src/outlets/outletsApiService.ts`](file:///workspaces/lahm/frontend/packages/api/src/outlets/outletsApiService.ts) and types in `@lahm/api`.
 
+### [2026-10-27 21:48 IST] — Multi-Outlet Step O.3: Outlets API Service & Types in @lahm/api
+- **Phase & Step:** Multi-Outlet Support — Step O.3 (Shared API Package)
+- **Files Touched / Created:**
+  - [`frontend/packages/api/src/outlets/outletsApiService.types.ts`](file:///workspaces/lahm/frontend/packages/api/src/outlets/outletsApiService.types.ts) (Created — Defined `OutletDto`, `SisterOutletDto`, `OutletMerchantInfoDto`, `OutletProductResponse`, and `OutletStorefrontResponse`)
+  - [`frontend/packages/api/src/outlets/outletsApiService.ts`](file:///workspaces/lahm/frontend/packages/api/src/outlets/outletsApiService.ts) (Created — Implemented `getOutletStorefront`, `getOutletsByMerchant`, and `getOutletById`)
+  - [`frontend/packages/api/src/index.ts`](file:///workspaces/lahm/frontend/packages/api/src/index.ts) (Modified — Re-exported outlets module and types)
+- **Key Implementation Details:**
+  1. **Strict Type Contracts:** Mirrored backend storefront response shape with branch price override awareness (`priceOverride`, `basePrice`).
+  2. **Query Filtering:** Supported coordinate params in `getOutletStorefront(outletId, query)` for automatic distance calculations across branches.
+- **Verification:**
+  - `npx tsc --noEmit` in `packages/api`: **Clean (0 errors)**.
+  - `npx tsc --noEmit` in `apps/customer`: **Clean (0 errors)**.
+- **Next Required Step:**
+  - Execute **Step O.4**: Update [`frontend/apps/customer/src/features/cart/cartStore.ts`](file:///workspaces/lahm/frontend/apps/customer/src/features/cart/cartStore.ts) to support single-outlet basket scoping, branch switch detection, and saving `outletId`/`outletName`.
+
+
 

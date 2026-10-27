@@ -79,9 +79,9 @@ Before implementing new visual components, refer to the high-resolution mockups 
 #### Execution Roadmap:
 1. [x] **Step O.1:** Updated `OrdersModule` & `OrdersService` to calculate distance from outlet GPS, verify stock availability, apply price overrides against the fulfilling `outletId`, and load `outlet` relation.
 2. [x] **Step O.2:** Implemented `GET /outlets/:id/storefront` returning resolved outlet-scoped products with price overrides, inventory, and sister branches with distance.
-3. [ ] **Step O.3 (Next):** Add `outletsApiService` to `@lahm/api`.
-4. [ ] **Step O.4:** Build `ShopOutletSelectionSheet.tsx` (gesture-driven native bottom sheet) and make `[📍 Location ⌄]` in `ShopIdentityCard.tsx` interactive.
-5. [ ] **Step O.5:** Update `cartStore.ts` with single-outlet scoping and branch-switch confirmation prompt.
+3. [x] **Step O.3:** Added `outletsApiService` and TypeScript interfaces to `@lahm/api`.
+4. [ ] **Step O.4 (Next):** Update `cartStore.ts` with single-outlet scoping, branch switch detection, and saving `outletId`/`outletName`.
+5. [ ] **Step O.5:** Build `ShopOutletSelectionSheet.tsx` (gesture-driven native bottom sheet) and make `[📍 Location ⌄]` in `ShopIdentityCard.tsx` interactive.
 
 ### Milestone C.5: Merchant Storefront Screen & Recursive Product Category Catalog
 
