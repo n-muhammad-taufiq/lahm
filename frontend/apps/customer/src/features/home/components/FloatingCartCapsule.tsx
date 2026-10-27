@@ -72,7 +72,9 @@ export function FloatingCartCapsule({
               {itemCount} {itemCount === 1 ? 'ITEM' : 'ITEMS'} • {formattedSubtotal}
             </Text>
             <Text className="text-rose-100 text-xs font-medium mt-0.5" numberOfLines={1}>
-              {merchant.name} {deliveryBadge ? `• ${deliveryBadge}` : ''}
+              {merchant.name}
+              {merchant.outletName ? ` • ${merchant.outletName}` : ''}
+              {deliveryBadge ? ` • ${deliveryBadge}` : ''}
             </Text>
           </View>
         </View>

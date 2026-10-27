@@ -23,6 +23,8 @@ export interface CartMerchant {
   id: number;
   name: string;
   vertical: MerchantVertical;
+  outletId?: number;
+  outletName?: string;
   distanceKm?: number;
 }
 
@@ -38,6 +40,7 @@ export interface CartState {
   clearCart: () => void;
   getItemCount: () => number;
   getSubtotal: () => number;
+  isDifferentBranch: (merchantId: number, outletId?: number) => boolean;
 }
 
 export const useCartStore = create<CartState>((set, get) => ({
@@ -46,9 +49,15 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   addItem: (merchant, item) => {
     set((state) => {
-      // Single-merchant scoping: replaces cart if switching merchants
+      // Single-merchant and single-outlet scoping:
+      // Replaces cart if switching merchants or switching outlets
       const isSameMerchant = state.merchant?.id === merchant.id;
-      const currentItems = isSameMerchant ? state.items : [];
+      const isSameOutlet =
+        (!state.merchant?.outletId && !merchant.outletId) ||
+        state.merchant?.outletId === merchant.outletId;
+
+      const isSameStore = isSameMerchant && isSameOutlet;
+      const currentItems = isSameStore ? state.items : [];
       const existingIndex = currentItems.findIndex((i) => i.id === item.id);
 
       let newItems: CartItem[];
@@ -103,4 +112,18 @@ export const useCartStore = create<CartState>((set, get) => ({
     Math.round(
       get().items.reduce((sum, item) => sum + item.price * item.quantity, 0) * 100,
     ) / 100,
+
+  isDifferentBranch: (merchantId: number, outletId?: number) => {
+    const currentMerchant = get().merchant;
+    if (!currentMerchant || get().items.length === 0) {
+      return false;
+    }
+    if (currentMerchant.id !== merchantId) {
+      return true;
+    }
+    if (outletId && currentMerchant.outletId && currentMerchant.outletId !== outletId) {
+      return true;
+    }
+    return false;
+  },
 }));
