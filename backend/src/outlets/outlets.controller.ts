@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { OutletsService, CreateOutletDto, UpdateOutletDto } from './outlets.service';
 
@@ -26,6 +27,21 @@ export class OutletsController {
     @Param('merchantId', ParseIntPipe) merchantId: number,
   ) {
     return this.outletsService.getOutletsByMerchantId(merchantId);
+  }
+
+  @Get(':id/storefront')
+  async getOutletStorefront(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('latitude') latitude?: string,
+    @Query('longitude') longitude?: string,
+  ) {
+    const lat = latitude ? parseFloat(latitude) : undefined;
+    const lng = longitude ? parseFloat(longitude) : undefined;
+    const coords =
+      lat !== undefined && !isNaN(lat) && lng !== undefined && !isNaN(lng)
+        ? { latitude: lat, longitude: lng }
+        : undefined;
+    return this.outletsService.getOutletStorefront(id, coords);
   }
 
   @Get(':id')
