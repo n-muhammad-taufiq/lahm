@@ -23,6 +23,8 @@ import { OrderItem } from './entities/order-item.entity';
 import { Customer } from '../customers/entities/customer.entity';
 import { Merchant } from '../merchants/entities/merchant.entity';
 import { Product } from '../products/entities/product.entity';
+import { Outlet } from '../outlets/entities/outlet.entity';
+import { OutletProduct } from '../outlets/entities/outlet-product.entity';
 import { OrderStatus } from './enums/order-status.enum';
 import { Role } from '../users/enums/role.enum';
 import { CreateOrderDto } from './dtos/create-order.dto';
@@ -38,6 +40,8 @@ describe('OrdersService', () => {
   let customerRepository: jest.Mocked<Repository<Customer>>;
   let merchantRepository: jest.Mocked<Repository<Merchant>>;
   let productRepository: jest.Mocked<Repository<Product>>;
+  let outletRepository: jest.Mocked<Repository<Outlet>>;
+  let outletProductRepository: jest.Mocked<Repository<OutletProduct>>;
   let dataSource: jest.Mocked<DataSource>;
   let mockEntityManager: { create: jest.Mock; save: jest.Mock };
 
@@ -52,6 +56,22 @@ describe('OrdersService', () => {
     latitude: 24.8607,
     longitude: 67.0011,
     user: { id: 20, email: 'merchant@lahm.com', role: Role.MERCHANT } as any,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  } as any;
+
+  const mockOutlet: Outlet = {
+    id: 5,
+    merchantId: 10,
+    name: 'Anna Nagar Branch',
+    address: '45, 2nd Avenue, Anna Nagar',
+    city: 'Chennai',
+    state: 'Tamil Nadu',
+    pinCode: '600040',
+    latitude: 24.8900,
+    longitude: 67.0100,
+    isActive: true,
+    rating: 4.9,
     createdAt: new Date(),
     updatedAt: new Date(),
   } as any;
@@ -153,6 +173,20 @@ describe('OrdersService', () => {
           },
         },
         {
+          provide: getRepositoryToken(Outlet),
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+          },
+        },
+        {
+          provide: getRepositoryToken(OutletProduct),
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+          },
+        },
+        {
           provide: DataSource,
           useValue: {
             transaction: jest.fn((cb) => cb(mockEntityManager)),
@@ -167,6 +201,8 @@ describe('OrdersService', () => {
     customerRepository = module.get(getRepositoryToken(Customer));
     merchantRepository = module.get(getRepositoryToken(Merchant));
     productRepository = module.get(getRepositoryToken(Product));
+    outletRepository = module.get(getRepositoryToken(Outlet));
+    outletProductRepository = module.get(getRepositoryToken(OutletProduct));
     dataSource = module.get<DataSource>(DataSource) as jest.Mocked<DataSource>;
   });
 
@@ -464,6 +500,141 @@ describe('OrdersService', () => {
         'Database deadlock / write constraint violation',
       );
     });
+
+    it('should successfully place an order linked to an outlet and anchor distance to outlet coordinates', async () => {
+      customerRepository.findOne.mockResolvedValue(mockCustomer);
+      merchantRepository.findOne.mockResolvedValue(mockMerchant);
+      outletRepository.findOne.mockResolvedValue(mockOutlet);
+      productRepository.find.mockResolvedValue([mockProduct1, mockProduct2]);
+      outletProductRepository.find.mockResolvedValue([]);
+
+      const outletDto: CreateOrderDto = {
+        ...validDto,
+        outletId: 5,
+        deliveryLatitude: 24.8920,
+        deliveryLongitude: 67.0748,
+      };
+
+      const result = await service.create(1, outletDto);
+
+      expect(outletRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 5 },
+      });
+      expect(result.outletId).toBe(5);
+      expect(result.status).toBe(OrderStatus.PLACED);
+    });
+
+    it('should throw NotFoundException if outletId does not exist', async () => {
+      customerRepository.findOne.mockResolvedValue(mockCustomer);
+      merchantRepository.findOne.mockResolvedValue(mockMerchant);
+      outletRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.create(1, { ...validDto, outletId: 999 }),
+      ).rejects.toThrow(new NotFoundException('Outlet #999 not found'));
+    });
+
+    it('should throw BadRequestException if outlet belongs to another merchant', async () => {
+      customerRepository.findOne.mockResolvedValue(mockCustomer);
+      merchantRepository.findOne.mockResolvedValue(mockMerchant);
+      outletRepository.findOne.mockResolvedValue({
+        ...mockOutlet,
+        merchantId: 999, // mismatch
+      });
+
+      await expect(
+        service.create(1, { ...validDto, outletId: 5 }),
+      ).rejects.toThrow(
+        new BadRequestException('Outlet #5 does not belong to merchant #10'),
+      );
+    });
+
+    it('should throw BadRequestException if outlet is inactive', async () => {
+      customerRepository.findOne.mockResolvedValue(mockCustomer);
+      merchantRepository.findOne.mockResolvedValue(mockMerchant);
+      outletRepository.findOne.mockResolvedValue({
+        ...mockOutlet,
+        isActive: false,
+      });
+
+      await expect(
+        service.create(1, { ...validDto, outletId: 5 }),
+      ).rejects.toThrow(
+        new BadRequestException(
+          'Outlet #5 (Anna Nagar Branch) is currently closed or inactive',
+        ),
+      );
+    });
+
+    it('should apply outlet priceOverride if specified in outlet_products', async () => {
+      customerRepository.findOne.mockResolvedValue(mockCustomer);
+      merchantRepository.findOne.mockResolvedValue(mockMerchant);
+      outletRepository.findOne.mockResolvedValue(mockOutlet);
+      productRepository.find.mockResolvedValue([mockProduct1, mockProduct2]);
+      outletProductRepository.find.mockResolvedValue([
+        {
+          id: 1,
+          outletId: 5,
+          productId: 101,
+          priceOverride: 30.0, // Override base price of 25.5 to 30.0
+          isAvailable: true,
+          stockQuantity: 10,
+        } as any,
+      ]);
+
+      const result = await service.create(1, { ...validDto, outletId: 5 });
+
+      // Item 1: 2 * 30.0 = 60.0, Item 2: 1 * 15.0 = 15.0 => Subtotal = 75.0
+      expect(result.subtotal).toBe(75.0);
+    });
+
+    it('should throw BadRequestException if product is marked out of stock at outlet', async () => {
+      customerRepository.findOne.mockResolvedValue(mockCustomer);
+      merchantRepository.findOne.mockResolvedValue(mockMerchant);
+      outletRepository.findOne.mockResolvedValue(mockOutlet);
+      productRepository.find.mockResolvedValue([mockProduct1, mockProduct2]);
+      outletProductRepository.find.mockResolvedValue([
+        {
+          id: 1,
+          outletId: 5,
+          productId: 101,
+          isAvailable: false,
+          stockQuantity: 0,
+        } as any,
+      ]);
+
+      await expect(
+        service.create(1, { ...validDto, outletId: 5 }),
+      ).rejects.toThrow(
+        new BadRequestException(
+          'Product #101 (Halal Lamb Chops) is currently out of stock at Anna Nagar Branch',
+        ),
+      );
+    });
+
+    it('should throw BadRequestException if quantity exceeds outlet stockQuantity', async () => {
+      customerRepository.findOne.mockResolvedValue(mockCustomer);
+      merchantRepository.findOne.mockResolvedValue(mockMerchant);
+      outletRepository.findOne.mockResolvedValue(mockOutlet);
+      productRepository.find.mockResolvedValue([mockProduct1, mockProduct2]);
+      outletProductRepository.find.mockResolvedValue([
+        {
+          id: 1,
+          outletId: 5,
+          productId: 101,
+          isAvailable: true,
+          stockQuantity: 1, // Order requests quantity 2
+        } as any,
+      ]);
+
+      await expect(
+        service.create(1, { ...validDto, outletId: 5 }),
+      ).rejects.toThrow(
+        new BadRequestException(
+          'Insufficient stock for Product #101 (Halal Lamb Chops) at Anna Nagar Branch',
+        ),
+      );
+    });
   });
 
   // =========================================================================
@@ -485,6 +656,7 @@ describe('OrdersService', () => {
             user: true,
           },
           merchant: true,
+          outlet: true,
           deliveryPartner: {
             user: true,
           },
@@ -515,6 +687,7 @@ describe('OrdersService', () => {
             product: true,
           },
           merchant: true,
+          outlet: true,
           deliveryPartner: {
             user: true,
           },

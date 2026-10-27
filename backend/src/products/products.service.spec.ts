@@ -15,6 +15,8 @@ import { NotFoundException } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { ProductsService } from "./products.service";
 import { Product } from "./entities/product.entity";
+import { ProductCategory } from "./entities/product-category.entity";
+import { ConfigService } from "@nestjs/config";
 import { MerchantsService } from "../merchants/merchants.service";
 import { CreateProductDto } from "./dtos/create-product.dto";
 import { UpdateProductDto } from "./dtos/update-product.dto";
@@ -22,6 +24,7 @@ import { UpdateProductDto } from "./dtos/update-product.dto";
 describe('ProductsService', () => {
     let service: ProductsService;
     let productRepository: jest.Mocked<Repository<Product>>;
+    let productCategoryRepository: jest.Mocked<Repository<ProductCategory>>;
     let merchantsService: jest.Mocked<MerchantsService>;
 
     const mockProduct: Product = {
@@ -53,9 +56,25 @@ describe('ProductsService', () => {
                     },
                 },
                 {
+                    provide: getRepositoryToken(ProductCategory),
+                    useValue: {
+                        create: jest.fn(),
+                        save: jest.fn(),
+                        findOne: jest.fn(),
+                        find: jest.fn(),
+                        remove: jest.fn(),
+                    },
+                },
+                {
                     provide: MerchantsService,
                     useValue: {
                         findById: jest.fn(),
+                    },
+                },
+                {
+                    provide: ConfigService,
+                    useValue: {
+                        get: jest.fn(() => 4),
                     },
                 },
             ],

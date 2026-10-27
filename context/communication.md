@@ -1760,3 +1760,23 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - User visual verification on live mobile screen via Expo Go.
 
+### [2026-10-27 11:23 IST] — Multi-Outlet Step O.1: Orders Module & Service Hardened with Outlet Scoping
+- **Phase & Step:** Multi-Outlet Support — Step O.1 (Backend Orders Service & Module)
+- **Files Touched / Created:**
+  - [`backend/src/orders/orders.module.ts`](file:///workspaces/lahm/backend/src/orders/orders.module.ts) (Modified — Imported `Outlet` and `OutletProduct` entities into `TypeOrmModule.forFeature`)
+  - [`backend/src/orders/orders.service.ts`](file:///workspaces/lahm/backend/src/orders/orders.service.ts) (Modified — Injected `Outlet` and `OutletProduct` repositories; validated `outletId` tenant/active status; verified outlet product stock availability and applied `priceOverride`; anchored Haversine distance and dynamic delivery fees to outlet GPS coordinates; persisted `outletId` on `Order`; and loaded `outlet: true` relation in `findById` and `findByCustomerId`)
+  - [`backend/src/orders/orders.service.spec.ts`](file:///workspaces/lahm/backend/src/orders/orders.service.spec.ts) (Modified — Added mock repositories for `Outlet` and `OutletProduct`; added 7 multi-outlet test cases covering happy path, 404 outlet, merchant mismatch, closed outlet, price overrides, out-of-stock, and insufficient stock)
+  - [`backend/src/products/products.service.spec.ts`](file:///workspaces/lahm/backend/src/products/products.service.spec.ts) (Modified — Provided missing `ProductCategory` repository and `ConfigService` mocks to keep all 9 test suites passing)
+- **Key Implementation Details:**
+  1. **Strict Outlet Validation:** When `outletId` is present in `CreateOrderDto`, `OrdersService.create` verifies that the outlet exists, belongs to the merchant, and is currently open (`isActive = true`).
+  2. **Outlet Price & Stock Overrides:** Batch queries `outlet_products` for the fulfilling outlet and applies `priceOverride` to the authoritative subtotal while validating local stock availability.
+  3. **GPS Origin Re-anchoring:** Dynamically anchors distance calculation and delivery fee calculation to `outlet.latitude/longitude` rather than the merchant master coordinates.
+  4. **Tracking & Receipt Relations:** Injected `outlet: true` into `findById` and `findByCustomerId` query relations so customer tracking and receipts display the fulfilling branch name and address.
+- **Verification:**
+  - `npm run test -- orders.service.spec.ts`: **57/57 tests PASS** (including 7 new outlet tests).
+  - `npm run test`: **9/9 test suites PASS** (195/195 tests).
+  - `npm run test:e2e`: **2/2 test suites PASS** (11/11 tests).
+  - `npm run build`: **Compiled with zero errors**.
+- **Next Required Step:**
+  - Execute **Step O.2**: Implement `getOutletStorefront(outletId: number)` in [`backend/src/outlets/outlets.service.ts`](file:///workspaces/lahm/backend/src/outlets/outlets.service.ts) and expose `GET /outlets/:id/storefront` in [`backend/src/outlets/outlets.controller.ts`](file:///workspaces/lahm/backend/src/outlets/outlets.controller.ts).
+
