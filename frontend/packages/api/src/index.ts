@@ -24,6 +24,10 @@ export * from './products/productsApiService';
 // Merchants Module
 export * from './merchants/merchantsApiService';
 
+// Outlets Module
+export * from './outlets/outletsApiService';
+export * from './outlets/outletsApiService.types';
+
 // Firebase Client Phone Auth
 export * from './firebase/firebase.config';
 export * from './firebase/firebasePhoneAuth.service';
