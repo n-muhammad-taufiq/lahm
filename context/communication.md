@@ -1811,5 +1811,19 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Execute **Step O.4**: Update [`frontend/apps/customer/src/features/cart/cartStore.ts`](file:///workspaces/lahm/frontend/apps/customer/src/features/cart/cartStore.ts) to support single-outlet basket scoping, branch switch detection, and saving `outletId`/`outletName`.
 
+### [2026-10-27 21:52 IST] — Multi-Outlet Step O.4: Cart Store Outlet Scoping & Capsule Display
+- **Phase & Step:** Multi-Outlet Support — Step O.4 (Customer Cart Store & Capsule)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/cart/cartStore.ts`](file:///workspaces/lahm/frontend/apps/customer/src/features/cart/cartStore.ts) (Modified — Added `outletId` and `outletName` to `CartMerchant`; updated `addItem` to scope basket by both `merchantId` and `outletId`; implemented `isDifferentBranch` helper to detect branch switches)
+  - [`frontend/apps/customer/src/features/home/components/FloatingCartCapsule.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/home/components/FloatingCartCapsule.tsx) (Modified — Updated subtitle to display branch name e.g., `Al-Basha Mandi • Anna Nagar Branch`)
+- **Key Implementation Details:**
+  1. **Strict Branch Scoping:** Prevents items from different physical branches of the same brand being accidentally co-mingled in a single basket.
+  2. **Branch Switch Detection:** Exposes `isDifferentBranch(merchantId, outletId)` allowing the upcoming bottom sheet to prompt the customer before resetting the basket.
+- **Verification:**
+  - `npx tsc --noEmit` in `apps/customer`: **Clean (0 errors)**.
+- **Next Required Step:**
+  - Execute **Step O.5**: Build `ShopOutletSelectionSheet.tsx` (bottom sheet branch picker) and make `ShopIdentityCard.tsx` interactive.
+
+
 
 
