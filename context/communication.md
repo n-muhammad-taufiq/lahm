@@ -1852,6 +1852,22 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Update [`backend/src/orders/orders.service.ts`](file:///workspaces/lahm/backend/src/orders/orders.service.ts) to include `outlet: true` relation in `findByMerchantId` and `findByDeliveryPartnerId` so merchant kitchen screens and courier history show fulfilling branches.
 
+### [2026-10-29 11:47 IST] — Anti-Fallback Rule Enforcement: Pure Outlet Coordinates for Pickup Points
+- **Phase & Step:** Multi-Outlet Support — Rule 1 & Rule 3 Anti-Fallback Enforcement
+- **Files Touched:**
+  - [`backend/src/delivery-allocation/delivery-allocation.service.ts`](file:///workspaces/lahm/backend/src/delivery-allocation/delivery-allocation.service.ts) (Modified — Removed `?? order.merchant?.latitude/longitude` fallbacks across `dispatchOrder`, `cascadeNextDispatch`, and `getRadarOffers`. Orders strictly use `order.outlet.latitude/longitude` for pickup point coordinates. If missing, immediately throws `BadRequestException` without masking data errors)
+  - [`backend/src/delivery-allocation/delivery-allocation.service.spec.ts`](file:///workspaces/lahm/backend/src/delivery-allocation/delivery-allocation.service.spec.ts) (Modified — Updated `createMockOrder` to include default `outlet`; updated missing coordinates tests to expect `Outlet location coordinates missing for order #...`)
+  - [`backend/src/orders/orders.service.ts`](file:///workspaces/lahm/backend/src/orders/orders.service.ts) (Modified — Removed `?? merchant.latitude/longitude` fallback when `resolvedOutlet` is provided)
+- **Key Implementation Details:**
+  1. **Strict Pickup Point Purity:** Pickup coordinates for outlet orders come directly and solely from `order.outlet.latitude` and `order.outlet.longitude`.
+  2. **Zero Merchant Fallback:** Eliminated nullish coalescing to merchant coordinates, ensuring missing or corrupted outlet coordinates fail fast and are never silently routed to the merchant corporate headquarters.
+- **Verification:**
+  - `npm run test -- delivery-allocation.service.spec.ts`: **59/59 tests PASS**.
+  - `npm run test`: **196/196 tests PASS across all 9 suites**.
+  - `npm run build`: **Compiled cleanly with 0 errors**.
+- **Next Required Step:**
+  - Update [`backend/src/orders/orders.service.ts`](file:///workspaces/lahm/backend/src/orders/orders.service.ts) to add `outlet: true` in `findByMerchantId` and `findByDeliveryPartnerId`.
+
 
 
 
