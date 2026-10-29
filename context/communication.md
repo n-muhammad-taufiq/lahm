@@ -1868,6 +1868,21 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Update [`backend/src/orders/orders.service.ts`](file:///workspaces/lahm/backend/src/orders/orders.service.ts) to add `outlet: true` in `findByMerchantId` and `findByDeliveryPartnerId`.
 
+### [2026-10-29 21:55 IST] — Multi-Outlet Step O.8a: Orders Service Loaded with Outlet Relations & Filtering
+- **Phase & Step:** Multi-Outlet Support — Step O.8a (Orders Service Queries & Spec)
+- **Files Touched:**
+  - [`backend/src/orders/orders.service.ts`](file:///workspaces/lahm/backend/src/orders/orders.service.ts) (Modified — Added `outlet: true` relation to `findByMerchantId` and `findByDeliveryPartnerId`; added optional `outletId?: number` parameter to `findByMerchantId` allowing branch-scoped order queries)
+  - [`backend/src/orders/orders.service.spec.ts`](file:///workspaces/lahm/backend/src/orders/orders.service.spec.ts) (Modified — Updated `findByMerchantId` and `findByDeliveryPartnerId` test expectations with `outlet: true`; added unit test verifying `findByMerchantId(10, 2)` filters by `where: { merchantId: 10, outletId: 2 }`)
+- **Key Implementation Details:**
+  1. **Merchant Kitchen Isolation:** Kitchen display systems can now query orders strictly for their specific branch (`where: { merchantId, outletId }`).
+  2. **Courier Branch Transparency:** Delivery partners fetching their active or completed orders now receive the fulfilling branch relation (`outlet`) with branch name and physical address.
+- **Verification:**
+  - `npm run test -- orders.service.spec.ts`: **58/58 tests PASS**.
+  - `npm run test`: **197/197 tests PASS across all 9 test suites**.
+  - `npm run build`: **Compiled cleanly with 0 errors**.
+- **Next Required Step:**
+  - Execute **Step O.8b**: Update [`backend/src/orders/orders.controller.ts`](file:///workspaces/lahm/backend/src/orders/orders.controller.ts) to accept optional `@Query('outletId')` parameter on `GET /orders/merchant/:merchantId` and forward to `ordersService.findByMerchantId`.
+
 
 
 
