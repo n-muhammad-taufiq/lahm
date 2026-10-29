@@ -1822,7 +1822,20 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Verification:**
   - `npx tsc --noEmit` in `apps/customer`: **Clean (0 errors)**.
 - **Next Required Step:**
-  - Execute **Step O.5**: Build `ShopOutletSelectionSheet.tsx` (bottom sheet branch picker) and make `ShopIdentityCard.tsx` interactive.
+  - Codify Holistic Multi-File Feature Completeness & Proactive Awareness in skills, followed by implementing multi-outlet dispatch in `delivery-allocation.service.ts`.
+
+### [2026-10-29 11:25 IST] — Core Architecture: Holistic Multi-File Feature Completeness & Awareness Codified
+- **Phase & Step:** Architecture Standards — Skills & Rules Hardening
+- **Files Touched / Created:**
+  - [`.agents/skills/lahm-development/SKILL.md`](file:///workspaces/lahm/.agents/skills/lahm-development/SKILL.md) (Modified — Added Section 8 "Holistic Multi-File Feature Completeness & Proactive Awareness" with ChatGPT anti-tunnel-vision quote and mandatory 7-stage operational lifecycle audit)
+  - [`.agents/rules/production-rules.md`](file:///workspaces/lahm/.agents/rules/production-rules.md) (Modified — Added Rule 27 enforcing complete cross-file operational pipeline planning and file-by-file execution)
+- **Key Implementation Details:**
+  1. **Anti-Tunnel-Vision Mandate:** Formally codified the requirement that agents must never prematurely declare a feature complete while ignoring downstream operational services (such as dispatch, merchant filtering, tracking).
+  2. **7-Stage Operational Pipeline:** Mandated auditing across: (1) Data/Seeding, (2) Read Storefront APIs, (3) Client State & Basket Scoping, (4) Checkout Pricing & GPS Re-anchoring, (5) Merchant/Kitchen queues, (6) Delivery Dispatch Allocation, and (7) Tracking, Receipts & Post-Order Lifecycle.
+- **Verification:**
+  - Committed clean to git (`4939a55`).
+- **Next Required Step:**
+  - Execute **Delivery Allocation Multi-Outlet Support** in [`backend/src/delivery-allocation/delivery-allocation.service.ts`](file:///workspaces/lahm/backend/src/delivery-allocation/delivery-allocation.service.ts): re-anchor courier radar discovery, cascading attempts, incoming offer cards, and broadcast radius calculations to fulfilling outlet GPS coordinates.
 
 
 
