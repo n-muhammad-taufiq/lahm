@@ -207,8 +207,8 @@ export class OrdersService {
     subtotal = Math.round(subtotal * 100) / 100;
 
     // 6. Calculate Haversine distance and dynamic delivery fee anchored to outlet coords
-    const originLat = resolvedOutlet?.latitude ?? merchant.latitude;
-    const originLng = resolvedOutlet?.longitude ?? merchant.longitude;
+    const originLat = resolvedOutlet ? resolvedOutlet.latitude : merchant.latitude;
+    const originLng = resolvedOutlet ? resolvedOutlet.longitude : merchant.longitude;
 
     let distanceKm: number | null = null;
     if (

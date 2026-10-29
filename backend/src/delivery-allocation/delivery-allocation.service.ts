@@ -141,9 +141,9 @@ export class DeliveryAllocationService {
       return null;
     }
 
-    // 2. Guard: Pickup coordinates must exist (outlet branch coordinates take precedence over merchant master coords)
-    const pickupLat = order.outlet?.latitude ?? order.merchant?.latitude;
-    const pickupLng = order.outlet?.longitude ?? order.merchant?.longitude;
+    // 2. Guard: Pickup outlet coordinates must exist
+    const pickupLat = order.outlet?.latitude;
+    const pickupLng = order.outlet?.longitude;
 
     if (
       pickupLat === null ||
@@ -151,7 +151,7 @@ export class DeliveryAllocationService {
       pickupLng === null ||
       pickupLng === undefined
     ) {
-      throw new BadRequestException(`Merchant location coordinates missing for order #${orderId}`);
+      throw new BadRequestException(`Outlet location coordinates missing for order #${orderId}`);
     }
 
     // 3. Guard: Do not duplicate if an active PENDING request already exists
@@ -230,9 +230,9 @@ export class DeliveryAllocationService {
       return null;
     }
 
-    // Pickup coordinates must exist (outlet branch coordinates take precedence over merchant master coords)
-    const pickupLat = order.outlet?.latitude ?? order.merchant?.latitude;
-    const pickupLng = order.outlet?.longitude ?? order.merchant?.longitude;
+    // Pickup outlet coordinates must exist
+    const pickupLat = order.outlet?.latitude;
+    const pickupLng = order.outlet?.longitude;
 
     if (
       pickupLat === null ||
@@ -241,7 +241,7 @@ export class DeliveryAllocationService {
       pickupLng === undefined
     ) {
       throw new BadRequestException(
-        `Merchant location coordinates missing for order #${orderId}`,
+        `Outlet location coordinates missing for order #${orderId}`,
       );
     }
 
@@ -612,10 +612,8 @@ export class DeliveryAllocationService {
         continue;
       }
 
-      const pickupLat =
-        request.order?.outlet?.latitude ?? request.order?.merchant?.latitude;
-      const pickupLng =
-        request.order?.outlet?.longitude ?? request.order?.merchant?.longitude;
+      const pickupLat = request.order?.outlet?.latitude;
+      const pickupLng = request.order?.outlet?.longitude;
 
       if (
         pickupLat === null ||

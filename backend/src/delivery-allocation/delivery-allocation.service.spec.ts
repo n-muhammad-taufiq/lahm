@@ -57,15 +57,25 @@ describe('DeliveryAllocationService', () => {
     getRepository: jest.Mock;
   };
 
-  // Base Merchant Coordinates (Karachi reference point)
+  // Base Reference Coordinates (Karachi reference point)
   const MERCHANT_LAT = 24.8607;
   const MERCHANT_LNG = 67.0011;
+  const OUTLET_LAT = 24.8607;
+  const OUTLET_LNG = 67.0011;
 
   const mockMerchant = {
     id: 10,
     shopName: 'Al-Barakah Halal Butchery',
-    latitude: MERCHANT_LAT,
-    longitude: MERCHANT_LNG,
+    latitude: OUTLET_LAT,
+    longitude: OUTLET_LNG,
+  };
+
+  const mockOutlet = {
+    id: 1,
+    name: 'Main Branch',
+    merchantId: 10,
+    latitude: OUTLET_LAT,
+    longitude: OUTLET_LNG,
   };
 
   const createMockOrder = (overrides?: Partial<Order>): Order =>
@@ -73,6 +83,8 @@ describe('DeliveryAllocationService', () => {
       id: 100,
       customerId: 1,
       merchantId: 10,
+      outletId: 1,
+      outlet: { ...mockOutlet } as any,
       deliveryPartnerId: undefined,
       status: OrderStatus.PLACED,
       subtotal: 75.0,
@@ -414,25 +426,25 @@ describe('DeliveryAllocationService', () => {
       expect(deliveryRequestRepository.create).not.toHaveBeenCalled();
     });
 
-    it('should throw BadRequestException if merchant location coordinates are missing', async () => {
+    it('should throw BadRequestException if outlet location coordinates are missing', async () => {
       const orderNoLat = createMockOrder({
         id: 100,
-        merchant: { id: 10, latitude: null, longitude: 67.0 } as any,
+        outlet: { id: 1, latitude: null, longitude: 67.0 } as any,
       });
       orderRepository.findOne.mockResolvedValue(orderNoLat);
 
       await expect(service.dispatchOrder(100)).rejects.toThrow(
-        new BadRequestException('Merchant location coordinates missing for order #100'),
+        new BadRequestException('Outlet location coordinates missing for order #100'),
       );
 
       const orderNoLng = createMockOrder({
         id: 101,
-        merchant: { id: 10, latitude: 24.8, longitude: undefined } as any,
+        outlet: { id: 1, latitude: 24.8, longitude: undefined } as any,
       });
       orderRepository.findOne.mockResolvedValue(orderNoLng);
 
       await expect(service.dispatchOrder(101)).rejects.toThrow(
-        new BadRequestException('Merchant location coordinates missing for order #101'),
+        new BadRequestException('Outlet location coordinates missing for order #101'),
       );
     });
 
@@ -596,15 +608,15 @@ describe('DeliveryAllocationService', () => {
       expect(deliveryRequestRepository.find).not.toHaveBeenCalled();
     });
 
-    it('should throw BadRequestException if merchant coordinates are missing', async () => {
+    it('should throw BadRequestException if outlet coordinates are missing', async () => {
       const orderNoCoords = createMockOrder({
         id: 100,
-        merchant: { id: 10, latitude: null, longitude: null } as any,
+        outlet: { id: 1, latitude: null, longitude: null } as any,
       });
       orderRepository.findOne.mockResolvedValue(orderNoCoords);
 
       await expect(service.cascadeNextDispatch(100)).rejects.toThrow(
-        new BadRequestException('Merchant location coordinates missing for order #100'),
+        new BadRequestException('Outlet location coordinates missing for order #100'),
       );
     });
 
@@ -1237,36 +1249,36 @@ describe('DeliveryAllocationService', () => {
       });
       deliveryPartnerRepository.findOne.mockResolvedValue(partner);
 
-      // Merchant 1: ~1.4 km away
+      // Outlet 1: ~1.4 km away
       const reqClose = createMockRequest({
         id: 601,
         orderId: 101,
         stage: DispatchStage.BROADCAST,
         order: createMockOrder({
           id: 101,
-          merchant: { latitude: 24.87, longitude: 67.01 } as any,
+          outlet: { latitude: 24.87, longitude: 67.01 } as any,
         }),
       });
 
-      // Merchant 2: ~7.6 km away (within 10km)
+      // Outlet 2: ~7.6 km away (within 10km)
       const reqMid = createMockRequest({
         id: 602,
         orderId: 102,
         stage: DispatchStage.BROADCAST,
         order: createMockOrder({
           id: 102,
-          merchant: { latitude: 24.91, longitude: 67.05 } as any,
+          outlet: { latitude: 24.91, longitude: 67.05 } as any,
         }),
       });
 
-      // Merchant 3: ~15 km away (outside 10km)
+      // Outlet 3: ~15 km away (outside 10km)
       const reqFar = createMockRequest({
         id: 603,
         orderId: 103,
         stage: DispatchStage.BROADCAST,
         order: createMockOrder({
           id: 103,
-          merchant: { latitude: 24.95, longitude: 67.12 } as any,
+          outlet: { latitude: 24.95, longitude: 67.12 } as any,
         }),
       });
 
@@ -1283,26 +1295,26 @@ describe('DeliveryAllocationService', () => {
       expect(offers[0].distanceKm).toBeLessThan(offers[1].distanceKm);
     });
 
-    it('should skip broadcast requests where merchant or merchant coordinates are missing', async () => {
+    it('should skip broadcast requests where outlet or outlet coordinates are missing', async () => {
       const partner = createMockPartner({ id: 1 });
       deliveryPartnerRepository.findOne.mockResolvedValue(partner);
 
-      const reqNoMerchant = createMockRequest({
+      const reqNoOutlet = createMockRequest({
         id: 601,
         orderId: 101,
-        order: createMockOrder({ id: 101, merchant: undefined }),
+        order: createMockOrder({ id: 101, outlet: undefined }),
       });
       const reqNoCoords = createMockRequest({
         id: 602,
         orderId: 102,
         order: createMockOrder({
           id: 102,
-          merchant: { latitude: null, longitude: 67.0 } as any,
+          outlet: { id: 1, latitude: null, longitude: 67.0 } as any,
         }),
       });
 
       deliveryRequestRepository.find
-        .mockResolvedValueOnce([reqNoMerchant, reqNoCoords])
+        .mockResolvedValueOnce([reqNoOutlet, reqNoCoords])
         .mockResolvedValueOnce([]);
 
       const offers = await service.getRadarOffers(1);
