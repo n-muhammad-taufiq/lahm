@@ -1921,3 +1921,16 @@ When logging a turn or session handoff, append an entry using this structure:
   - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.
 - **Next Required Step:**
   - Execute **Step O.11**: Update [`frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx) to wire up `ShopOutletSelectionSheet`, maintain branch selection state, and pass `outletId` and `outletName` to `useCartStore.addItem`.
+
+### [2026-10-29 22:28 IST] — Multi-Outlet Step O.11: Restaurant Storefront Branch Switching & Cart Scoping
+- **Phase & Step:** Multi-Outlet Support — Step O.11 (Storefront Integration & Cart Scoping)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/merchant/hooks/useMerchantOutlets.ts`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/hooks/useMerchantOutlets.ts) (Created — TanStack `useQuery` hook fetching merchant operating branches via `outletsApiService.getOutletsByMerchant`)
+  - [`frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx) (Modified — Integrated `useMerchantOutlets`; managed active branch state; wired up `ShopHeader` branch selector text with down arrow; mounted `ShopOutletSelectionSheet`; updated `handleAddToCart` to pass `outletId` and `outletName` to `useCartStore.addItem`)
+- **Key Implementation Details:**
+  1. **Branch Switching & Cart Integrity:** If a user switches branches while having items from an existing branch in their cart, the cart is cleanly cleared upon confirmation before switching branches.
+  2. **End-to-End Cart Scoping:** Items added to cart now explicitly store the fulfilling physical branch (`outletId`, `outletName`), directly flowing through `FloatingCartCapsule` and downstream checkout.
+- **Verification:**
+  - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.
+- **Next Required Step:**
+  - Execute **Step O.12**: Update Customer Checkout flow ([`frontend/apps/customer/src/features/cart/`](file:///workspaces/lahm/frontend/apps/customer/src/features/cart/)) to pass `outletId` in `createOrder` API payload.

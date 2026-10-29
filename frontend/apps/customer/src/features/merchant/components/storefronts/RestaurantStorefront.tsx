@@ -6,13 +6,21 @@
  * and category-grouped menu sections using real category tree data.
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { CategoryTreeNode, MerchantStorefrontResponse, ProductResponse } from '@lahm/api';
+import {
+  CategoryTreeNode,
+  MerchantStorefrontResponse,
+  OutletDto,
+  ProductResponse,
+  SisterOutletDto,
+} from '@lahm/api';
 import { ShopHeader } from '../header/ShopHeader';
+import { ShopOutletSelectionSheet } from '../outlets/ShopOutletSelectionSheet';
 import { RestaurantCategoryNav } from './RestaurantCategoryNav';
 import { RestaurantCategorySection } from './RestaurantCategorySection';
 import { useMerchantCategories } from '../../hooks/useMerchantCategories';
+import { useMerchantOutlets } from '../../hooks/useMerchantOutlets';
 import { useCartStore } from '../../../cart/cartStore';
 
 /**
@@ -44,14 +52,46 @@ export function RestaurantStorefront({
   className = '',
 }: RestaurantStorefrontProps) {
   const addItem = useCartStore((state) => state.addItem);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const cartMerchant = useCartStore((state) => state.merchant);
+  const cartItems = useCartStore((state) => state.items);
+
   const products = storefront.products ?? [];
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [isBranchSheetOpen, setIsBranchSheetOpen] = useState(false);
 
-  // 1. Fetch real category tree for this restaurant
+  // 1. Fetch real category tree and branches for this restaurant
   const { categories } = useMerchantCategories({
     merchantId: storefront.id,
     tree: true,
   });
+
+  const { outlets } = useMerchantOutlets({
+    merchantId: storefront.id,
+  });
+
+  // Track active outlet (scoped to existing cart outlet for this merchant or first branch)
+  const [activeOutlet, setActiveOutlet] = useState<OutletDto | SisterOutletDto | null>(null);
+
+  useEffect(() => {
+    if (outlets.length > 0 && !activeOutlet) {
+      if (cartMerchant?.id === storefront.id && cartMerchant.outletId) {
+        const matching = outlets.find((o) => o.id === cartMerchant.outletId);
+        setActiveOutlet(matching || outlets[0]);
+      } else {
+        setActiveOutlet(outlets[0]);
+      }
+    }
+  }, [outlets, cartMerchant, storefront.id, activeOutlet]);
+
+  const handleBranchSelect = (outlet: SisterOutletDto) => {
+    if (activeOutlet && activeOutlet.id !== outlet.id) {
+      if (cartMerchant?.id === storefront.id && cartItems.length > 0) {
+        clearCart();
+      }
+      setActiveOutlet(outlet);
+    }
+  };
 
   const handleAddToCart = (product: ProductResponse) => {
     addItem(
@@ -59,6 +99,8 @@ export function RestaurantStorefront({
         id: storefront.id,
         name: storefront.shopName,
         vertical: 'restaurants',
+        outletId: activeOutlet?.id,
+        outletName: activeOutlet?.name,
       },
       {
         id: product.id,
@@ -142,57 +184,73 @@ export function RestaurantStorefront({
   };
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ flexGrow: 1 }}
-      className={`flex-1 bg-white ${className}`}>
-      {/* 1. Restaurant Header */}
-      <ShopHeader
-        bannerUrl={storefront.bannerUrl}
-        isFavorite={isFavorite}
-        onPressBack={onPressBack}
-        onToggleFavorite={onToggleFavorite}
-        shopName={storefront.shopName}
-        description={storefront.description}
-        rating={storefront.rating}
-        isVerified={storefront.isVerified}
-        city={storefront.city}
-        openingTime={storefront.openingTime}
-        closingTime={storefront.closingTime}
-        hasHalalCertificate={Boolean(storefront.halalCertificateUrl)}
-        hasFssaiCertificate={Boolean(storefront.fssaiCertificateUrl)}
-        vertical="restaurants"
+    <View className="flex-1 bg-white">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1 }}
+        className={`flex-1 bg-white ${className}`}>
+        {/* 1. Restaurant Header */}
+        <ShopHeader
+          bannerUrl={storefront.bannerUrl}
+          isFavorite={isFavorite}
+          onPressBack={onPressBack}
+          onToggleFavorite={onToggleFavorite}
+          shopName={storefront.shopName}
+          description={storefront.description}
+          rating={storefront.rating}
+          isVerified={storefront.isVerified}
+          city={storefront.city}
+          openingTime={storefront.openingTime}
+          closingTime={storefront.closingTime}
+          hasHalalCertificate={Boolean(storefront.halalCertificateUrl)}
+          hasFssaiCertificate={Boolean(storefront.fssaiCertificateUrl)}
+          vertical="restaurants"
+          activeOutletName={activeOutlet?.name}
+          onPressBranchSelector={
+            outlets.length > 1 ? () => setIsBranchSheetOpen(true) : undefined
+          }
+        />
+
+        {/* 2. Horizontal Category Navigation Bar */}
+        <RestaurantCategoryNav
+          categories={navItems}
+          selectedCategoryId={selectedCategoryId}
+          onSelectCategory={handleSelectCategory}
+        />
+
+        {/* 3. Category-Grouped Menu Sections */}
+        <View className="flex-1 bg-zinc-50/60 px-4 pt-4 pb-12">
+          {visibleGroups.map((group) => (
+            <RestaurantCategorySection
+              key={group.id}
+              title={group.name}
+              description={group.description}
+              products={group.products}
+              onAddProduct={handleAddToCart}
+            />
+          ))}
+
+          {/* 4. Empty State */}
+          {products.length === 0 && (
+            <View className="py-12 items-center justify-center">
+              <Text className="text-sm text-zinc-400">
+                No dishes currently available
+              </Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+
+      {/* 5. Branch Selection Bottom Sheet */}
+      <ShopOutletSelectionSheet
+        isOpen={isBranchSheetOpen}
+        onClose={() => setIsBranchSheetOpen(false)}
+        activeOutletId={activeOutlet?.id}
+        outlets={outlets}
+        onSelectOutlet={handleBranchSelect}
+        hasCartItems={cartMerchant?.id === storefront.id && cartItems.length > 0}
       />
-
-      {/* 2. Horizontal Category Navigation Bar */}
-      <RestaurantCategoryNav
-        categories={navItems}
-        selectedCategoryId={selectedCategoryId}
-        onSelectCategory={handleSelectCategory}
-      />
-
-      {/* 3. Category-Grouped Menu Sections */}
-      <View className="flex-1 bg-zinc-50/60 px-4 pt-4 pb-12">
-        {visibleGroups.map((group) => (
-          <RestaurantCategorySection
-            key={group.id}
-            title={group.name}
-            description={group.description}
-            products={group.products}
-            onAddProduct={handleAddToCart}
-          />
-        ))}
-
-        {/* 4. Empty State */}
-        {products.length === 0 && (
-          <View className="py-12 items-center justify-center">
-            <Text className="text-sm text-zinc-400">
-              No dishes currently available
-            </Text>
-          </View>
-        )}
-      </View>
-    </ScrollView>
+    </View>
   );
 }
 

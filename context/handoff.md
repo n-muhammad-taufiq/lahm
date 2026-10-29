@@ -88,7 +88,8 @@ Before implementing new visual components, refer to the high-resolution mockups 
 9. [x] **Step O.8b:** Exposed `@Query('outletId')` in [`backend/src/orders/orders.controller.ts`](file:///workspaces/lahm/backend/src/orders/orders.controller.ts) for merchant branch order filtering.
 10. [x] **Step O.9:** Built [`ShopOutletSelectionSheet.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/outlets/ShopOutletSelectionSheet.tsx) (native bottom sheet for branch switching with distance in km, operating hours, active checkmark, and cart reset confirmation dialogue).
 11. [x] **Step O.10:** Added clean branch name with short down arrow trigger to [`ShopIdentityCard.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/header/ShopIdentityCard.tsx) and forwarded from [`ShopHeader.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/header/ShopHeader.tsx).
-12. [ ] **Step O.11 (Next):** Integrate branch switching sheet and outlet-scoped cart actions into `RestaurantStorefront.tsx`.
+12. [x] **Step O.11:** Integrated branch switching sheet, `useMerchantOutlets` hook, and outlet-scoped cart actions into [`RestaurantStorefront.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx).
+13. [ ] **Step O.12 (Next):** Update Customer Checkout flow to pass `outletId` in `createOrder` API call.
 
 ### Milestone C.5: Merchant Storefront Screen & Recursive Product Category Catalog
 
