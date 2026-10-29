@@ -48,8 +48,8 @@ export class DeliveryAllocationService {
    * active order concurrency and GPS freshness, ranked closest-first.
    */
   async findEligibleCandidates(
-    merchantLat: number,
-    merchantLng: number,
+    pickupLat: number,
+    pickupLng: number,
     radiusKm: number,
     excludedPartnerIds: number[] = [],
   ): Promise<CandidateCourier[]> {
@@ -101,8 +101,8 @@ export class DeliveryAllocationService {
     const withinRadius: CandidateCourier[] = [];
     for (const partner of qualified) {
       const distanceKm = calculateHaversineDistance(
-        merchantLat,
-        merchantLng,
+        pickupLat,
+        pickupLng,
         partner.latitude!,
         partner.longitude!,
       );
@@ -115,7 +115,7 @@ export class DeliveryAllocationService {
     withinRadius.sort((a, b) => a.distanceKm - b.distanceKm);
 
     this.logger.log(
-      `Found ${withinRadius.length} eligible courier(s) within ${radiusKm}km of merchant (${merchantLat}, ${merchantLng})`,
+      `Found ${withinRadius.length} eligible courier(s) within ${radiusKm}km of pickup location (${pickupLat}, ${pickupLng})`,
     );
 
     return withinRadius;
@@ -128,7 +128,7 @@ export class DeliveryAllocationService {
   async dispatchOrder(orderId: number): Promise<DeliveryRequest | null> {
     const order = await this.orderRepository.findOne({
       where: { id: orderId },
-      relations: { merchant: true },
+      relations: { merchant: true, outlet: true },
     });
 
     if (!order) {
@@ -141,12 +141,15 @@ export class DeliveryAllocationService {
       return null;
     }
 
-    // 2. Guard: Merchant coordinates must exist
+    // 2. Guard: Pickup coordinates must exist (outlet branch coordinates take precedence over merchant master coords)
+    const pickupLat = order.outlet?.latitude ?? order.merchant?.latitude;
+    const pickupLng = order.outlet?.longitude ?? order.merchant?.longitude;
+
     if (
-      order.merchant?.latitude === null ||
-      order.merchant?.latitude === undefined ||
-      order.merchant?.longitude === null ||
-      order.merchant?.longitude === undefined
+      pickupLat === null ||
+      pickupLat === undefined ||
+      pickupLng === null ||
+      pickupLng === undefined
     ) {
       throw new BadRequestException(`Merchant location coordinates missing for order #${orderId}`);
     }
@@ -159,10 +162,10 @@ export class DeliveryAllocationService {
       return existingPending;
     }
 
-    // 4. Discover eligible candidates (start at 5km, expand to 10km if needed)
+    // 4. Discover eligible candidates (start at 5km, expand to 10km if needed) anchored to physical pickup origin
     let candidates = await this.findEligibleCandidates(
-      order.merchant.latitude,
-      order.merchant.longitude,
+      pickupLat,
+      pickupLng,
       INITIAL_DISPATCH_RADIUS_KM,
     );
 
@@ -171,8 +174,8 @@ export class DeliveryAllocationService {
         `No couriers within ${INITIAL_DISPATCH_RADIUS_KM}km. Expanding search to ${EXPANDED_DISPATCH_RADIUS_KM}km for order #${orderId}`,
       );
       candidates = await this.findEligibleCandidates(
-        order.merchant.latitude,
-        order.merchant.longitude,
+        pickupLat,
+        pickupLng,
         EXPANDED_DISPATCH_RADIUS_KM,
       );
     }
@@ -214,7 +217,7 @@ export class DeliveryAllocationService {
   async cascadeNextDispatch(orderId: number): Promise<DeliveryRequest | null> {
     const order = await this.orderRepository.findOne({
       where: { id: orderId },
-      relations: { merchant: true },
+      relations: { merchant: true, outlet: true },
     });
 
     if (!order) {
@@ -227,11 +230,15 @@ export class DeliveryAllocationService {
       return null;
     }
 
+    // Pickup coordinates must exist (outlet branch coordinates take precedence over merchant master coords)
+    const pickupLat = order.outlet?.latitude ?? order.merchant?.latitude;
+    const pickupLng = order.outlet?.longitude ?? order.merchant?.longitude;
+
     if (
-      order.merchant?.latitude === null ||
-      order.merchant?.latitude === undefined ||
-      order.merchant?.longitude === null ||
-      order.merchant?.longitude === undefined
+      pickupLat === null ||
+      pickupLat === undefined ||
+      pickupLng === null ||
+      pickupLng === undefined
     ) {
       throw new BadRequestException(
         `Merchant location coordinates missing for order #${orderId}`,
@@ -253,16 +260,16 @@ export class DeliveryAllocationService {
     // 3. Stage 1: Serial 1-by-1 offers (attempts 1 to 8)
     if (attemptNumber <= MAX_SERIAL_DISPATCH_ATTEMPTS) {
       let candidates = await this.findEligibleCandidates(
-        order.merchant.latitude,
-        order.merchant.longitude,
+        pickupLat,
+        pickupLng,
         INITIAL_DISPATCH_RADIUS_KM,
         attemptedPartnerIds,
       );
 
       if (candidates.length === 0) {
         candidates = await this.findEligibleCandidates(
-          order.merchant.latitude,
-          order.merchant.longitude,
+          pickupLat,
+          pickupLng,
           EXPANDED_DISPATCH_RADIUS_KM,
           attemptedPartnerIds,
         );
@@ -506,6 +513,7 @@ export class DeliveryAllocationService {
       relations: {
         order: {
           merchant: true,
+          outlet: true,
           items: true,
         },
       },
@@ -575,6 +583,7 @@ export class DeliveryAllocationService {
       relations: {
         order: {
           merchant: true,
+          outlet: true,
           items: true,
         },
       },
@@ -603,20 +612,23 @@ export class DeliveryAllocationService {
         continue;
       }
 
-      const merchant = request.order?.merchant;
+      const pickupLat =
+        request.order?.outlet?.latitude ?? request.order?.merchant?.latitude;
+      const pickupLng =
+        request.order?.outlet?.longitude ?? request.order?.merchant?.longitude;
+
       if (
-        !merchant ||
-        merchant.latitude === null ||
-        merchant.latitude === undefined ||
-        merchant.longitude === null ||
-        merchant.longitude === undefined
+        pickupLat === null ||
+        pickupLat === undefined ||
+        pickupLng === null ||
+        pickupLng === undefined
       ) {
         continue;
       }
 
       const distanceKm = calculateHaversineDistance(
-        merchant.latitude,
-        merchant.longitude,
+        pickupLat,
+        pickupLng,
         partner.latitude,
         partner.longitude,
       );

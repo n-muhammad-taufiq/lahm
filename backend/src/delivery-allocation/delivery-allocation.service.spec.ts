@@ -523,6 +523,55 @@ describe('DeliveryAllocationService', () => {
       expect(result).toBeNull();
       expect(deliveryRequestRepository.create).not.toHaveBeenCalled();
     });
+
+    it('should anchor dispatch to outlet GPS coordinates when outlet is present', async () => {
+      // Merchant HQ is at MERCHANT_LAT (24.8607), MERCHANT_LNG (67.0011)
+      // Outlet branch is 8km away at OUTLET_LAT, OUTLET_LNG
+      const OUTLET_LAT = 24.92;
+      const OUTLET_LNG = 67.10;
+      const order = createMockOrder({
+        id: 200,
+        outletId: 5,
+        outlet: {
+          id: 5,
+          name: 'Anna Nagar Branch',
+          latitude: OUTLET_LAT,
+          longitude: OUTLET_LNG,
+        } as any,
+      });
+
+      // Courier 1 is near merchant HQ (far from branch)
+      const courierNearMerchant = createMockPartner({
+        id: 1,
+        latitude: MERCHANT_LAT + 0.005,
+        longitude: MERCHANT_LNG + 0.005,
+      });
+      // Courier 2 is right next to the outlet branch (< 0.5km away)
+      const courierNearOutlet = createMockPartner({
+        id: 2,
+        latitude: OUTLET_LAT + 0.002,
+        longitude: OUTLET_LNG + 0.002,
+      });
+
+      orderRepository.findOne.mockResolvedValue(order);
+      deliveryRequestRepository.findOne.mockResolvedValue(null);
+      deliveryPartnerRepository.find.mockResolvedValue([
+        courierNearMerchant,
+        courierNearOutlet,
+      ]);
+
+      const result = await service.dispatchOrder(200);
+
+      expect(result).toBeDefined();
+      // Should choose courier 2 (near outlet), NOT courier 1 (near merchant HQ)
+      expect(deliveryRequestRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderId: 200,
+          deliveryPartnerId: 2,
+          stage: DispatchStage.SERIAL,
+        }),
+      );
+    });
   });
 
   // =========================================================================
@@ -1035,6 +1084,7 @@ describe('DeliveryAllocationService', () => {
         relations: {
           order: {
             merchant: true,
+            outlet: true,
             items: true,
           },
         },
