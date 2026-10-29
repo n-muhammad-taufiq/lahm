@@ -720,6 +720,31 @@ describe('OrdersService', () => {
           customer: {
             user: true,
           },
+          outlet: true,
+          deliveryPartner: {
+            user: true,
+          },
+        },
+        order: { createdAt: 'DESC' },
+      });
+      expect(result).toEqual([mockOrder]);
+    });
+
+    it('should filter orders by outletId when specified', async () => {
+      orderRepository.find.mockResolvedValue([mockOrder]);
+
+      const result = await service.findByMerchantId(10, 2);
+
+      expect(orderRepository.find).toHaveBeenCalledWith({
+        where: { merchantId: 10, outletId: 2 },
+        relations: {
+          items: {
+            product: true,
+          },
+          customer: {
+            user: true,
+          },
+          outlet: true,
           deliveryPartner: {
             user: true,
           },
@@ -753,6 +778,7 @@ describe('OrdersService', () => {
             user: true,
           },
           merchant: true,
+          outlet: true,
         },
         order: { createdAt: 'DESC' },
       });

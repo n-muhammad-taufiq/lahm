@@ -305,9 +305,17 @@ export class OrdersService {
     });
   }
 
-  async findByMerchantId(merchantId: number): Promise<Order[]> {
+  async findByMerchantId(
+    merchantId: number,
+    outletId?: number,
+  ): Promise<Order[]> {
+    const where: any = { merchantId };
+    if (outletId) {
+      where.outletId = outletId;
+    }
+
     return this.orderRepository.find({
-      where: { merchantId },
+      where,
       relations: {
         items: {
           product: true,
@@ -315,6 +323,7 @@ export class OrdersService {
         customer: {
           user: true,
         },
+        outlet: true,
         deliveryPartner: {
           user: true,
         },
@@ -336,6 +345,7 @@ export class OrdersService {
           user: true,
         },
         merchant: true,
+        outlet: true,
       },
       order: { createdAt: 'DESC' },
     });
