@@ -1883,6 +1883,19 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Execute **Step O.8b**: Update [`backend/src/orders/orders.controller.ts`](file:///workspaces/lahm/backend/src/orders/orders.controller.ts) to accept optional `@Query('outletId')` parameter on `GET /orders/merchant/:merchantId` and forward to `ordersService.findByMerchantId`.
 
+### [2026-10-29 22:00 IST] — Multi-Outlet Step O.8b: Merchant Orders Controller Branch Filtering
+- **Phase & Step:** Multi-Outlet Support — Step O.8b (Orders Controller Endpoint)
+- **Files Touched:**
+  - [`backend/src/orders/orders.controller.ts`](file:///workspaces/lahm/backend/src/orders/orders.controller.ts) (Modified — Imported `Query`; updated `getMerchantOrders` endpoint to accept optional `@Query('outletId') outletIdQuery?: string`, parse to integer, and pass to `ordersService.findByMerchantId(merchantId, outletId)`)
+- **Key Implementation Details:**
+  1. **HTTP Branch Query Integration:** Merchant apps and kitchen screens can now query `GET /orders/merchant/:merchantId?outletId=2` to receive strictly orders for that specific branch.
+  2. **Backward Compatibility:** Omitting `?outletId` preserves existing behavior, returning all orders across all branches for the merchant.
+- **Verification:**
+  - `npm run test`: **197/197 tests PASS across all 9 test suites**.
+  - `npm run build`: **Compiled cleanly with 0 errors**.
+- **Next Required Step:**
+  - Execute **Step O.9**: Create [`frontend/apps/customer/src/features/merchant/components/outlets/ShopOutletSelectionSheet.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/outlets/ShopOutletSelectionSheet.tsx) (native gesture-driven bottom sheet to display branches, distance in km, operating hours, and cart reset confirmation prompt).
+
 
 
 
