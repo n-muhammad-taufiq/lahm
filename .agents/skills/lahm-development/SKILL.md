@@ -99,10 +99,34 @@ When building a new full-stack feature (e.g. "Shop Profile", "Cart & Checkout"),
 
 ---
 
-## 7. Quality Checklist
+## 8. Holistic Multi-File Feature Completeness & Proactive Awareness
+
+> *"This happens because AI coding agents like Google Antigravity can understand a feature at a high level but still fail to apply every required change across all affected files. The main problem is often not the quality of the code it writes, but the way the implementation task is planned, executed, and verified."* — ChatGPT
+
+### The Anti-Tunnel-Vision Mandate
+AI agents naturally suffer from tunnel vision: focusing exclusively on the immediate screen or entity in front of them and declaring victory, while leaving downstream systems silently broken or unaddressed.
+
+Whenever introducing, extending, or modifying an architectural capability or entity relation (e.g., `outletId`, refunds, order status, discount codes, multi-currency), you MUST NOT wait for the user to discover missing downstream steps. You MUST proactively audit and map out the entire lifecycle across all affected files before declaring any phase complete.
+
+### The 7-Stage End-to-End Operational Pipeline
+Every feature that alters data or order flow must be audited against these 7 stages:
+1. **Data Modeling, Constraints & Seeding:** Entities, migrations, unique constraints, relations, and realistic PostgreSQL seeder data.
+2. **Read APIs & Storefront Resolution:** Discovery feeds, catalog queries, price/inventory overrides, and sister-entity resolution.
+3. **Client State & Scoping:** Zustand stores, cache invalidation, single-tenant/branch basket scoping, and switch-confirmation modals.
+4. **Checkout, Pricing & Persistence:** Authoritative server-side subtotal, GPS distance re-anchoring, dynamic delivery fees, and order persistence with all relational IDs.
+5. **Merchant Operations & Kitchen Queues:** Merchant app dashboards, branch-scoped order retrieval (so branch A never sees branch B orders), and kitchen acceptance.
+6. **Delivery Allocation & Courier Dispatch:** Automated dispatch engines (e.g. `delivery-allocation.service.ts`), courier radar searches anchored to fulfilling branch GPS (NOT corporate HQ), escalation loops, and pickup addresses on courier offer cards.
+7. **Tracking, Receipts & Post-Order Lifecycle:** Customer live tracking maps, courier navigation, push notifications, digital receipts, and ledger attribution.
+
+**Rule:** NEVER declare a feature "done" or "about to be completed" without explicitly listing which of these 7 downstream stages are affected and verifying them file-by-file.
+
+---
+
+## 9. Quality Checklist
 
 Before marking any task complete, verify:
 - [ ] Step Communication Protocol followed (explained before & after)
+- [ ] Holistic 7-Stage Operational Pipeline audited across all affected files
 - [ ] Reusable UI components developed in `@lahm/ui` when required
 - [ ] No hardcoded hex colors (all use `@lahm/tokens`)
 - [ ] No raw API calls in components (all go through `@lahm/api` + hooks)
@@ -112,5 +136,6 @@ Before marking any task complete, verify:
 - [ ] No raw emojis used as icons (vector icons only)
 - [ ] Interactive elements have tactile/spring feedback
 - [ ] Every component is under ~200 lines
-- [ ] Every change is under ~100 lines
+- [ ] Every change is under ~100 lines (strict 1–2 files per turn)
 - [ ] The app compiles cleanly without errors
+

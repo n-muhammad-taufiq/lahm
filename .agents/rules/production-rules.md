@@ -374,3 +374,18 @@ Do not bypass established API boundaries to access another layer directly.
 Shared code should remain genuinely reusable and independent of individual applications.
 
 ## 26. Always prefer expo/react native standard and nestjs standard . Always prefer declarative nature of react.
+
+## 27. Holistic Multi-File Feature Completeness & Proactive Awareness
+
+> *"This happens because AI coding agents like Google Antigravity can understand a feature at a high level but still fail to apply every required change across all affected files. The main problem is often not the quality of the code it writes, but the way the implementation task is planned, executed, and verified."* — ChatGPT
+
+- **Anti-Tunnel-Vision Mandate:** Never focus solely on the immediate UI screen or entity and prematurely declare that a feature is "done" or "about to be completed."
+- **Full Operational Audit:** Whenever a foundational domain concept or relation (such as `outletId`, refunds, order status, discount codes, multi-currency) is introduced, proactively audit and verify all 7 downstream stages across the entire codebase:
+  1. Data Modeling, Seeding & Migrations
+  2. Read APIs & Catalog Storefront Resolution
+  3. Client State, Basket Scoping & Branch Switch Confirmations
+  4. Checkout Pricing, GPS Distance Calculation & Order Persistence
+  5. Merchant Operations & Kitchen Display Queues (branch filtering)
+  6. Delivery Allocation Engine (courier radar search around outlet coordinates)
+  7. Tracking Maps, Courier Navigation, Receipts & Post-Order Lifecycle
+- **File-by-File Incremental Execution:** Strictly adhere to 1–2 files per turn with rigorous verification, but never lose sight of the complete operational architecture.
