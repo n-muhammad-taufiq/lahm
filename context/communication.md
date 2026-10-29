@@ -1837,6 +1837,21 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Execute **Delivery Allocation Multi-Outlet Support** in [`backend/src/delivery-allocation/delivery-allocation.service.ts`](file:///workspaces/lahm/backend/src/delivery-allocation/delivery-allocation.service.ts): re-anchor courier radar discovery, cascading attempts, incoming offer cards, and broadcast radius calculations to fulfilling outlet GPS coordinates.
 
+### [2026-10-29 11:36 IST] — Multi-Outlet Step O.6 & O.7: Delivery Allocation Multi-Outlet Engine Hardened
+- **Phase & Step:** Multi-Outlet Support — Steps O.6 & O.7 (Delivery Allocation Engine & Specs)
+- **Files Touched / Created:**
+  - [`backend/src/delivery-allocation/delivery-allocation.service.ts`](file:///workspaces/lahm/backend/src/delivery-allocation/delivery-allocation.service.ts) (Modified — Re-anchored candidate search, serial cascades, and broadcast radar distance to fulfilling outlet GPS coordinates; loaded `outlet: true` in `dispatchOrder`, `cascadeNextDispatch`, `getIncomingOffer`, and `getRadarOffers`)
+  - [`backend/src/delivery-allocation/delivery-allocation.service.spec.ts`](file:///workspaces/lahm/backend/src/delivery-allocation/delivery-allocation.service.spec.ts) (Modified — Updated `getIncomingOffer` test relation expectation; added test verifying that `dispatchOrder` anchors to outlet GPS coordinates and dispatches to couriers nearest to the physical branch rather than merchant HQ)
+- **Key Implementation Details:**
+  1. **Accurate Branch Dispatch:** Order dispatch now checks `order.outlet?.latitude/longitude` first, falling back to `order.merchant?.latitude/longitude`. Couriers near the fulfilling branch are prioritized.
+  2. **Courier Branch Awareness:** Incoming offer and broadcast queries load the fulfilling `outlet` relation so couriers see the exact branch name and address on their dispatch offer cards.
+- **Verification:**
+  - `npm run test -- delivery-allocation.service.spec.ts`: **59/59 tests PASS**.
+  - `npm run test`: **196/196 tests PASS across 9 test suites**.
+  - `npm run build`: **Compiled cleanly with 0 errors**.
+- **Next Required Step:**
+  - Update [`backend/src/orders/orders.service.ts`](file:///workspaces/lahm/backend/src/orders/orders.service.ts) to include `outlet: true` relation in `findByMerchantId` and `findByDeliveryPartnerId` so merchant kitchen screens and courier history show fulfilling branches.
+
 
 
 

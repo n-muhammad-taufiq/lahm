@@ -82,10 +82,11 @@ Before implementing new visual components, refer to the high-resolution mockups 
 3. [x] **Step O.3:** Added `outletsApiService` and TypeScript interfaces to `@lahm/api`.
 4. [x] **Step O.4:** Updated `cartStore.ts` with single-outlet scoping, branch switch detection, and saving `outletId`/`outletName`, plus branch display in `FloatingCartCapsule`.
 5. [x] **Step O.5:** Codified Holistic Multi-File Feature Completeness & Proactive Awareness in [`.agents/skills/lahm-development/SKILL.md`](file:///workspaces/lahm/.agents/skills/lahm-development/SKILL.md) and [`.agents/rules/production-rules.md`](file:///workspaces/lahm/.agents/rules/production-rules.md).
-6. [ ] **Step O.6 (Next):** Implement Multi-Outlet Dispatch in [`backend/src/delivery-allocation/delivery-allocation.service.ts`](file:///workspaces/lahm/backend/src/delivery-allocation/delivery-allocation.service.ts): re-anchor courier radar discovery, cascading attempts, incoming offer cards, and broadcast radius calculations to fulfilling outlet GPS coordinates.
-7. [ ] **Step O.7:** Update delivery allocation unit test suite in [`backend/src/delivery-allocation/delivery-allocation.service.spec.ts`](file:///workspaces/lahm/backend/src/delivery-allocation/delivery-allocation.service.spec.ts) covering branch coordinates dispatch.
-8. [ ] **Step O.8:** Build `ShopOutletSelectionSheet.tsx` (native bottom sheet) and make `ShopIdentityCard.tsx` interactive.
-9. [ ] **Step O.9:** Integrate branch switching into `MerchantStorefrontScreen.tsx`.
+6. [x] **Step O.6:** Implemented Multi-Outlet Dispatch in [`backend/src/delivery-allocation/delivery-allocation.service.ts`](file:///workspaces/lahm/backend/src/delivery-allocation/delivery-allocation.service.ts): re-anchored courier radar discovery, cascading attempts, incoming offer cards, and broadcast radius calculations to fulfilling outlet GPS coordinates.
+7. [x] **Step O.7:** Updated delivery allocation unit test suite in [`backend/src/delivery-allocation/delivery-allocation.service.spec.ts`](file:///workspaces/lahm/backend/src/delivery-allocation/delivery-allocation.service.spec.ts) covering branch coordinates dispatch (59/59 tests pass).
+8. [ ] **Step O.8 (Next):** Update [`backend/src/orders/orders.service.ts`](file:///workspaces/lahm/backend/src/orders/orders.service.ts) to include `outlet: true` relation in `findByMerchantId` and `findByDeliveryPartnerId`.
+9. [ ] **Step O.9:** Build `ShopOutletSelectionSheet.tsx` (native bottom sheet) and make `ShopIdentityCard.tsx` interactive.
+10. [ ] **Step O.10:** Integrate branch switching into `MerchantStorefrontScreen.tsx`.
 
 ### Milestone C.5: Merchant Storefront Screen & Recursive Product Category Catalog
 
