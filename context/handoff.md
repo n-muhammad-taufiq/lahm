@@ -86,8 +86,9 @@ Before implementing new visual components, refer to the high-resolution mockups 
 7. [x] **Step O.7:** Updated delivery allocation unit test suite in [`backend/src/delivery-allocation/delivery-allocation.service.spec.ts`](file:///workspaces/lahm/backend/src/delivery-allocation/delivery-allocation.service.spec.ts) covering branch coordinates dispatch (59/59 tests pass).
 8. [x] **Step O.8a:** Updated [`backend/src/orders/orders.service.ts`](file:///workspaces/lahm/backend/src/orders/orders.service.ts) and spec to load `outlet: true` relation in `findByMerchantId` and `findByDeliveryPartnerId`, with branch filtering support.
 9. [x] **Step O.8b:** Exposed `@Query('outletId')` in [`backend/src/orders/orders.controller.ts`](file:///workspaces/lahm/backend/src/orders/orders.controller.ts) for merchant branch order filtering.
-10. [ ] **Step O.9 (Next):** Build `ShopOutletSelectionSheet.tsx` (native bottom sheet) and make `ShopIdentityCard.tsx` interactive.
-11. [ ] **Step O.10:** Integrate branch switching into `MerchantStorefrontScreen.tsx` and cart actions.
+10. [x] **Step O.9:** Built [`ShopOutletSelectionSheet.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/outlets/ShopOutletSelectionSheet.tsx) (native bottom sheet for branch switching with distance in km, operating hours, active checkmark, and cart reset confirmation dialogue).
+11. [ ] **Step O.10 (Next):** Make [`ShopIdentityCard.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/header/ShopIdentityCard.tsx) interactive with branch selector pill `[📍 {activeOutletName} ▾]`.
+12. [ ] **Step O.11:** Integrate branch switching sheet and outlet-scoped cart actions into `RestaurantStorefront.tsx`.
 
 ### Milestone C.5: Merchant Storefront Screen & Recursive Product Category Catalog
 

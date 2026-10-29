@@ -1896,6 +1896,15 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Next Required Step:**
   - Execute **Step O.9**: Create [`frontend/apps/customer/src/features/merchant/components/outlets/ShopOutletSelectionSheet.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/outlets/ShopOutletSelectionSheet.tsx) (native gesture-driven bottom sheet to display branches, distance in km, operating hours, and cart reset confirmation prompt).
 
-
-
-
+### [2026-10-29 22:10 IST] — Multi-Outlet Step O.9: Customer ShopOutletSelectionSheet Modal
+- **Phase & Step:** Multi-Outlet Support — Step O.9 (Customer Branch Selection Modal)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/merchant/components/outlets/ShopOutletSelectionSheet.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/outlets/ShopOutletSelectionSheet.tsx) (Created — Native bottom sheet modal for branch switching with distance badges, operating hours, checkmarks, haptics, and cart reset confirmation prompt)
+- **Key Implementation Details:**
+  1. **Branch Switching UI:** Renders sister branches with live distance from GPS (`📍 X.X km`), address, and closing time.
+  2. **Cart Clearing Guard:** If the customer already has items in their cart from another branch, switching branches prompts them with a confirmation dialogue (`Switch to [Branch]? Your cart contains items from your current branch... Keep Current / Clear & Switch`) to prevent inconsistent baskets.
+  3. **Design System & Haptics:** Follows Rule 8 strictly (`rounded-sm`, `rounded-md`, `rounded-full`), uses vector icons (`Ionicons`), and tactile haptic feedback (`expo-haptics`).
+- **Verification:**
+  - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.
+- **Next Required Step:**
+  - Execute **Step O.10**: Update [`frontend/apps/customer/src/features/merchant/components/header/ShopIdentityCard.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/header/ShopIdentityCard.tsx) to accept `activeOutletName` and `onPressBranchSelector` callback, rendering an interactive branch selector pill.
