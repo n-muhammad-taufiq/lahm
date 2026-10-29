@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -71,6 +72,7 @@ export class OrdersController {
   @Roles(Role.MERCHANT)
   async getMerchantOrders(
     @Param('merchantId', ParseIntPipe) merchantId: number,
+    @Query('outletId') outletIdQuery: string | undefined,
     @Req() req: any,
   ) {
     const merchant = await this.merchantRepository.findOne({
@@ -86,7 +88,8 @@ export class OrdersController {
         'You can only access orders for your own merchant store',
       );
     }
-    return this.ordersService.findByMerchantId(merchantId);
+    const outletId = outletIdQuery ? parseInt(outletIdQuery, 10) : undefined;
+    return this.ordersService.findByMerchantId(merchantId, outletId);
   }
 
   @Get('delivery-partner/my-orders')
