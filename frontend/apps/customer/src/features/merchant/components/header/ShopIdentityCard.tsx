@@ -11,8 +11,9 @@
  */
 
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import type { MerchantCategoryDto } from '@lahm/api';
 
 export interface ShopIdentityCardProps {
@@ -27,6 +28,8 @@ export interface ShopIdentityCardProps {
   hasFssaiCertificate?: boolean;
   categories?: MerchantCategoryDto[];
   vertical?: 'meats' | 'restaurants' | 'groceries';
+  activeOutletName?: string;
+  onPressBranchSelector?: () => void;
   className?: string;
 }
 
@@ -42,6 +45,8 @@ export function ShopIdentityCard({
   hasFssaiCertificate = false,
   categories,
   vertical: _vertical,
+  activeOutletName,
+  onPressBranchSelector,
   className = '',
 }: ShopIdentityCardProps) {
   if (!shopName) {
@@ -75,6 +80,24 @@ export function ShopIdentityCard({
           className="text-xs font-primary-medium text-zinc-500 text-center max-w-[300px] mt-1 leading-normal">
           {categoryNames}
         </Text>
+      ) : null}
+
+      {/* 2.5 Branch Selector: Plain text with small down arrow (no badge/pill) */}
+      {activeOutletName ? (
+        <Pressable
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            onPressBranchSelector?.();
+          }}
+          hitSlop={8}
+          className="flex-row items-center justify-center mt-1.5 active:opacity-60">
+          <Text className="text-xs font-primary-semibold text-zinc-700">
+            {activeOutletName}
+          </Text>
+          {onPressBranchSelector ? (
+            <Ionicons name="chevron-down" size={13} color="#71717A" style={{ marginLeft: 3 }} />
+          ) : null}
+        </Pressable>
       ) : null}
 
       {/* 3. Centered Minimalist Metadata Text Row: Rating • City • Hours */}

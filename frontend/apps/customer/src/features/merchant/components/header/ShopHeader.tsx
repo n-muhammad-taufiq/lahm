@@ -28,6 +28,8 @@ export interface ShopHeaderProps {
   hasHalalCertificate?: boolean;
   hasFssaiCertificate?: boolean;
   vertical?: 'meats' | 'restaurants' | 'groceries';
+  activeOutletName?: string;
+  onPressBranchSelector?: () => void;
   className?: string;
 }
 
@@ -47,6 +49,8 @@ export function ShopHeader({
   hasHalalCertificate,
   hasFssaiCertificate,
   vertical,
+  activeOutletName,
+  onPressBranchSelector,
   className = '',
 }: ShopHeaderProps) {
   return (
@@ -72,6 +76,8 @@ export function ShopHeader({
         hasHalalCertificate={hasHalalCertificate}
         hasFssaiCertificate={hasFssaiCertificate}
         vertical={vertical}
+        activeOutletName={activeOutletName}
+        onPressBranchSelector={onPressBranchSelector}
       />
 
       {/* 3. ShopDeliveryIncentiveBar (Will be mounted here next) */}

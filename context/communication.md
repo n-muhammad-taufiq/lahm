@@ -1908,3 +1908,16 @@ When logging a turn or session handoff, append an entry using this structure:
   - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.
 - **Next Required Step:**
   - Execute **Step O.10**: Update [`frontend/apps/customer/src/features/merchant/components/header/ShopIdentityCard.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/header/ShopIdentityCard.tsx) to accept `activeOutletName` and `onPressBranchSelector` callback, rendering an interactive branch selector pill.
+
+### [2026-10-29 22:18 IST] — Multi-Outlet Step O.10: Unbadged Branch Name & Arrow Trigger in Shop Header
+- **Phase & Step:** Multi-Outlet Support — Step O.10 (Interactive Branch Text Trigger)
+- **Files Touched:**
+  - [`frontend/apps/customer/src/features/merchant/components/header/ShopIdentityCard.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/header/ShopIdentityCard.tsx) (Modified — Added `activeOutletName?: string` and `onPressBranchSelector?: () => void` props; rendered unbadged plain branch name with down arrow `chevron-down` icon, `hitSlop={8}`, and `Haptics.impactAsync(Light)` trigger)
+  - [`frontend/apps/customer/src/features/merchant/components/header/ShopHeader.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/header/ShopHeader.tsx) (Modified — Added `activeOutletName` and `onPressBranchSelector` to `ShopHeaderProps` and forwarded them to `ShopIdentityCard`)
+- **Key Implementation Details:**
+  1. **Clean Unbadged Affordance:** Per user directive, avoided pill/badge containers in favor of clean typographic text (`font-primary-semibold text-zinc-700`) paired with a short down arrow (`Ionicons chevron-down`).
+  2. **Tactile Interaction:** Tapping triggers light haptics (`Haptics.impactAsync`) and fires `onPressBranchSelector`.
+- **Verification:**
+  - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.
+- **Next Required Step:**
+  - Execute **Step O.11**: Update [`frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx) to wire up `ShopOutletSelectionSheet`, maintain branch selection state, and pass `outletId` and `outletName` to `useCartStore.addItem`.
