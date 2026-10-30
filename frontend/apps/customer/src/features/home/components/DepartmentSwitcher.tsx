@@ -46,7 +46,7 @@ export function DepartmentSwitcher({
   };
 
   const renderIcon = (id: DepartmentId, isActive: boolean) => {
-    const color = isActive ? '#0F172A' : '#71717A';
+    const color = isActive ? '#FFFFFF' : '#526B6B';
     const size = 15;
 
     switch (id) {
@@ -64,7 +64,7 @@ export function DepartmentSwitcher({
 
   return (
     <View className={`px-5 pt-1 pb-3 bg-white ${className}`}>
-      <View className="flex-row items-center h-11 p-1 rounded-2xl bg-zinc-100">
+      <View className="flex-row items-center h-11 p-1 rounded-xl bg-[#F7FAFA] border border-[#E2E8E8]">
         {DEPARTMENTS.map((dept) => {
           const isActive = dept.id === activeDepartment;
 
@@ -72,8 +72,8 @@ export function DepartmentSwitcher({
             <Pressable
               key={dept.id}
               onPress={() => handlePress(dept.id)}
-              className={`flex-1 h-full flex-row items-center justify-center rounded-xl transition-all ${
-                isActive ? 'bg-white shadow-xs' : 'bg-transparent'
+              className={`flex-1 h-full flex-row items-center justify-center rounded-lg transition-all ${
+                isActive ? 'bg-[#0C3B3B] shadow-xs' : 'bg-transparent'
               }`}
               accessibilityRole="tab"
               accessibilityState={{ selected: isActive }}
@@ -81,7 +81,7 @@ export function DepartmentSwitcher({
               {renderIcon(dept.id, isActive)}
               <Text
                 className={`ml-1.5 text-xs ${
-                  isActive ? 'font-bold text-zinc-900' : 'font-medium text-zinc-500'
+                  isActive ? 'font-bold text-white' : 'font-medium text-[#526B6B]'
                 }`}>
                 {dept.label}
               </Text>

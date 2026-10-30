@@ -57,7 +57,7 @@ export function MerchantCarouselSection({
     <View className={`pt-4 pb-2 ${className}`}>
       {/* 1. Section Header Row */}
       <View className="px-5 pb-2.5 flex-row items-center justify-between">
-        <Text className="text-base font-extrabold text-slate-900">
+        <Text className="text-base font-extrabold text-[#0F1F1F]">
           {title}
         </Text>
         {onPressSeeAll && (
@@ -67,7 +67,7 @@ export function MerchantCarouselSection({
             className="active:opacity-70"
             accessibilityRole="button"
             accessibilityLabel={`${seeAllText} for ${title}`}>
-            <Text className="text-xs font-bold text-zinc-500">
+            <Text className="text-xs font-bold text-[#0C3B3B]">
               {seeAllText}
             </Text>
           </Pressable>

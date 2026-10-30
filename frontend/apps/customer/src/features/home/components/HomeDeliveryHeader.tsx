@@ -53,17 +53,17 @@ export function HomeDeliveryHeader({
         className="flex-1 mr-3 active:opacity-75"
         accessibilityRole="button"
         accessibilityLabel={`Deliver to: ${displayAddress}`}>
-        <Text className="text-[11px] font-bold text-zinc-400 tracking-wider uppercase">
+        <Text className="text-[10px] font-bold text-[#526B6B] tracking-widest uppercase">
           DELIVER TO:
         </Text>
         <View className="flex-row items-center gap-1.5 mt-0.5">
-          <Text className="text-base font-bold text-zinc-900" numberOfLines={1}>
+          <Text className="text-base font-bold text-[#0F1F1F]" numberOfLines={1}>
             {displayAddress}
           </Text>
-          <Ionicons name="location-sharp" size={16} color="#0F172A" />
-          <Ionicons name="chevron-down" size={14} color="#0F172A" />
+          <Ionicons name="location-sharp" size={16} color="#0C3B3B" />
+          <Ionicons name="chevron-down" size={14} color="#0C3B3B" />
           {isLocating ? (
-            <ActivityIndicator size="small" color="#E77A62" className="ml-1" />
+            <ActivityIndicator size="small" color="#0C3B3B" className="ml-1" />
           ) : null}
         </View>
       </Pressable>
@@ -71,12 +71,12 @@ export function HomeDeliveryHeader({
       {/* Notification Bell Button */}
       <Pressable
         onPress={handleNotificationsPress}
-        className="w-10 h-10 rounded-full items-center justify-center active:bg-zinc-100 relative"
+        className="w-10 h-10 rounded-full items-center justify-center bg-[#F7FAFA] border border-[#E2E8E8] active:bg-[#E8F2F2] relative"
         accessibilityRole="button"
         accessibilityLabel="Notifications">
-        <Feather name="bell" size={22} color="#0F172A" />
+        <Feather name="bell" size={20} color="#0C3B3B" />
         {hasUnreadNotifications ? (
-          <View className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#E77A62]" />
+          <View className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#0C3B3B]" />
         ) : null}
       </Pressable>
     </View>

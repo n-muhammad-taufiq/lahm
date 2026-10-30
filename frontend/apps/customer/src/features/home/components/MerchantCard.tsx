@@ -67,8 +67,8 @@ export function MerchantCard({
       
       {/* 1. Visual Photo Container (16:9 ratio) */}
       <View
-        style={{ borderRadius: borderRadius.md }}
-        className="relative h-36 w-full overflow-hidden bg-zinc-100">
+        style={{ borderRadius: borderRadius.lg }}
+        className="relative h-36 w-full overflow-hidden bg-[#F7FAFA] border border-[#E2E8E8]">
         {coverPhotoUrl ? (
           <Image
             source={{ uri: coverPhotoUrl }}
@@ -76,16 +76,16 @@ export function MerchantCard({
             resizeMode="cover"
           />
         ) : (
-          <View className="w-full h-full bg-zinc-200 items-center justify-center">
-            <Feather name="image" size={24} color="#A1A1AA" />
+          <View className="w-full h-full bg-[#F7FAFA] items-center justify-center">
+            <Feather name="image" size={24} color="#8C9F9F" />
           </View>
         )}
 
         {/* Top-Left: Halal Quality Trust Pill */}
         {isHalalCertified && (
-          <View className="absolute top-2.5 left-2.5 flex-row items-center px-2 py-0.5 rounded-full bg-white/95 shadow-xs">
-            <Ionicons name="shield-checkmark" size={11} color="#15803D" />
-            <Text className="text-[10px] font-bold text-zinc-900 ml-1">Halal</Text>
+          <View className="absolute top-2.5 left-2.5 flex-row items-center px-2 py-0.5 rounded-md bg-white/95 border border-[#E2E8E8] shadow-xs">
+            <Ionicons name="shield-checkmark" size={11} color="#0C3B3B" />
+            <Text className="text-[10px] font-bold text-[#0F1F1F] ml-1">Halal</Text>
           </View>
         )}
 
@@ -93,7 +93,7 @@ export function MerchantCard({
         <Pressable
           onPress={handleFavoritePress}
           hitSlop={8}
-          className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/30 items-center justify-center active:scale-95"
+          className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/35 items-center justify-center active:scale-95"
           accessibilityRole="button"
           accessibilityLabel={isFavorite ? 'Remove from favorites' : 'Add to favorites'}>
           <Ionicons
@@ -105,9 +105,9 @@ export function MerchantCard({
 
         {/* Bottom-Left: Quick Delivery & Fee Chip */}
         {Boolean(deliveryTimeRange) && (
-          <View className="absolute bottom-2.5 left-2.5 flex-row items-center px-2 py-0.5 rounded-md bg-white/95 shadow-xs">
-            <Feather name="zap" size={10} color="#E77A62" />
-            <Text className="text-[10px] font-bold text-zinc-900 ml-1">
+          <View className="absolute bottom-2.5 left-2.5 flex-row items-center px-2 py-0.5 rounded-md bg-white/95 border border-[#E2E8E8] shadow-xs">
+            <Feather name="zap" size={10} color="#0C3B3B" />
+            <Text className="text-[10px] font-bold text-[#0F1F1F] ml-1">
               {deliveryTimeRange} {isFreeDelivery ? '• Free Delivery' : ''}
             </Text>
           </View>
@@ -118,13 +118,13 @@ export function MerchantCard({
       <View className="pt-2 px-0.5">
         {/* Name and Rating Row */}
         <View className="flex-row items-center justify-between">
-          <Text className="text-sm font-bold text-slate-900 flex-1 mr-2" numberOfLines={1}>
+          <Text className="text-sm font-bold text-[#0F1F1F] flex-1 mr-2" numberOfLines={1}>
             {name}
           </Text>
           {rating > 0 && (
-            <View className="flex-row items-center bg-emerald-50 px-1.5 py-0.5 rounded-md">
-              <Ionicons name="star" size={10} color="#059669" />
-              <Text className="text-[11px] font-extrabold text-emerald-700 ml-1">
+            <View className="flex-row items-center bg-[#F7FAFA] border border-[#E2E8E8] px-1.5 py-0.5 rounded-md">
+              <Ionicons name="star" size={10} color="#D4AF37" />
+              <Text className="text-[11px] font-extrabold text-[#0F1F1F] ml-1">
                 {rating.toFixed(1)}
               </Text>
             </View>
@@ -133,7 +133,7 @@ export function MerchantCard({
 
         {/* Specialties / Cuisine Tags */}
         {Boolean(formattedSpecialties) && (
-          <Text className="text-xs text-zinc-500 mt-0.5" numberOfLines={1}>
+          <Text className="text-xs text-[#526B6B] mt-0.5" numberOfLines={1}>
             {formattedSpecialties}
           </Text>
         )}
@@ -141,8 +141,8 @@ export function MerchantCard({
         {/* Delivery Time & Distance */}
         {(Boolean(deliveryTimeRange) || distanceKm !== undefined) && (
           <View className="flex-row items-center mt-1">
-            <Feather name="clock" size={10} color="#71717A" />
-            <Text className="text-[11px] text-zinc-500 ml-1">
+            <Feather name="clock" size={10} color="#526B6B" />
+            <Text className="text-[11px] text-[#526B6B] ml-1">
               {deliveryTimeRange}
               {distanceKm !== undefined ? ` • ${distanceKm.toFixed(1)} km` : ''}
             </Text>

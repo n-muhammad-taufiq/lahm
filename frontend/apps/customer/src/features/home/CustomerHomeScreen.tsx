@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import type { NearbyMerchant } from '@lahm/api';
@@ -39,13 +39,20 @@ export function CustomerHomeScreen() {
   const { location, isLocating, detectCurrentLocation } = useCustomerLocation(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDepartment, setActiveDepartment] = useState<DepartmentId>('restaurants');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Real device GPS coordinates (number | null)
-  const { merchants, loading } = useNearbyMerchants({
+  const { merchants, loading, refetch } = useNearbyMerchants({
     latitude: location.latitude,
     longitude: location.longitude,
     search: searchQuery,
   });
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await Promise.all([refetch(), detectCurrentLocation()]);
+    setIsRefreshing(false);
+  };
 
   // Dynamic reverse-geocoded address display
   const displayAddress = location.locality
@@ -82,6 +89,30 @@ export function CustomerHomeScreen() {
     [merchants]
   );
 
+  const feedSections = useMemo(() => {
+    const all = [
+      {
+        id: 'restaurants' as DepartmentId,
+        title: 'Nearby Restaurants',
+        merchants: restaurantMerchants,
+      },
+      {
+        id: 'meats' as DepartmentId,
+        title: 'Popular Meat Shops',
+        merchants: meatMerchants,
+      },
+      {
+        id: 'groceries' as DepartmentId,
+        title: 'Nearby Halal Groceries',
+        merchants: groceryMerchants,
+      },
+    ];
+    return [
+      ...all.filter((s) => s.id === activeDepartment),
+      ...all.filter((s) => s.id !== activeDepartment),
+    ];
+  }, [activeDepartment, restaurantMerchants, meatMerchants, groceryMerchants]);
+
   return (
     <View
       className="flex-1 bg-white"
@@ -111,13 +142,21 @@ export function CustomerHomeScreen() {
         onChangeDepartment={setActiveDepartment}
       />
 
-      {/* Scrollable Feed Container */}
+      {/* Scrollable Feed Container with Dark Teal Pull-to-Refresh */}
       <ScrollView
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            tintColor="#0C3B3B"
+            colors={['#0C3B3B']}
+          />
+        }
         contentContainerStyle={{ paddingBottom: insets.bottom + 90 }}>
-        {/* 4. Brand Hero Banner (Evergreen Warm Terracotta) */}
+        {/* 4. Brand Hero Banner (Evergreen Dark Teal & Gold) */}
         <HeroCampaignBanner
-          variant="peach"
+          variant="teal"
           tag="LAHM لحم • 100% HALAL VERIFIED"
           title="Pure, Farm-Fresh & 100% Halal Certified"
           subtitle="Fresh meats, curated dining & daily groceries delivered to your door."
@@ -127,33 +166,20 @@ export function CustomerHomeScreen() {
           }}
         />
 
-        {/* 5. Multi-Section Marketplace Discovery Feed (Version 9) */}
-        <MerchantCarouselSection
-          title="Nearby Restaurants"
-          merchants={restaurantMerchants}
-          isLoading={loading}
-          onPressSeeAll={() => {}}
-          onPressMerchant={(merchant) => handlePressMerchant(merchant.id)}
-        />
-
-        <MerchantCarouselSection
-          title="Popular Meat Shops"
-          merchants={meatMerchants}
-          isLoading={loading}
-          onPressSeeAll={() => {}}
-          onPressMerchant={(merchant) => handlePressMerchant(merchant.id)}
-        />
-
-        <MerchantCarouselSection
-          title="Nearby Halal Groceries"
-          merchants={groceryMerchants}
-          isLoading={loading}
-          onPressSeeAll={() => {}}
-          onPressMerchant={(merchant) => handlePressMerchant(merchant.id)}
-        />
+        {/* 5. Multi-Section Marketplace Discovery Feed */}
+        {feedSections.map((section) => (
+          <MerchantCarouselSection
+            key={section.id}
+            title={section.title}
+            merchants={section.merchants}
+            isLoading={loading}
+            onPressSeeAll={() => {}}
+            onPressMerchant={(merchant) => handlePressMerchant(merchant.id)}
+          />
+        ))}
       </ScrollView>
 
-      {/* 6. Floating Cart Capsule (Option 2 - Brand Terracotta Bar) */}
+      {/* 6. Floating Cart Capsule (Option 2 - Brand Dark Teal Bar) */}
       <FloatingCartCapsule
         onPress={() => {
           // Open Cart Sheet / Flow

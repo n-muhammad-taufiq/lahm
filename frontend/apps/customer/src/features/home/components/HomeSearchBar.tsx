@@ -42,9 +42,9 @@ export function HomeSearchBar({
 
   return (
     <View className="px-5 pt-1 pb-3 bg-white">
-      <View className="flex-row items-center h-12 px-3.5 rounded-2xl bg-white border border-zinc-200">
+      <View className="flex-row items-center h-12 px-3.5 rounded-xl bg-[#F7FAFA] border border-[#E2E8E8]">
         {/* Search Magnifying Glass Icon */}
-        <Feather name="search" size={18} color="#71717A" />
+        <Feather name="search" size={18} color="#526B6B" />
 
         {/* Search Input Field */}
         <TextInput
@@ -52,11 +52,11 @@ export function HomeSearchBar({
           onChangeText={onChangeText}
           onSubmitEditing={onSubmitEditing}
           placeholder={placeholder}
-          placeholderTextColor="#A1A1AA"
+          placeholderTextColor="#8C9F9F"
           returnKeyType="search"
           autoCorrect={false}
           autoCapitalize="none"
-          className="flex-1 ml-2.5 text-sm text-zinc-900 font-medium h-full py-0"
+          className="flex-1 ml-2.5 text-sm text-[#0F1F1F] font-medium h-full py-0"
         />
 
         {/* Clear Button (only when text is present) */}
@@ -66,17 +66,17 @@ export function HomeSearchBar({
             className="p-1 mr-1 active:opacity-60"
             accessibilityRole="button"
             accessibilityLabel="Clear search text">
-            <Ionicons name="close-circle" size={18} color="#A1A1AA" />
+            <Ionicons name="close-circle" size={18} color="#8C9F9F" />
           </Pressable>
         ) : null}
 
         {/* Quick Filter / Sliders Button */}
         <Pressable
           onPress={handleFilterPress}
-          className="w-9 h-9 items-center justify-center rounded-xl active:bg-zinc-100"
+          className="w-8 h-8 items-center justify-center rounded-lg bg-white border border-[#E2E8E8] active:bg-[#E8F2F2]"
           accessibilityRole="button"
           accessibilityLabel="Open search filters">
-          <Feather name="sliders" size={18} color="#0F172A" />
+          <Feather name="sliders" size={16} color="#0C3B3B" />
         </Pressable>
       </View>
     </View>

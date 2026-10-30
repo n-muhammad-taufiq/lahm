@@ -15,7 +15,7 @@ import { borderRadius } from '@lahm/tokens';
 
 const heroBannerBg = require('../../../../assets/images/hero-banner-bg.jpg');
 
-export type BannerVariant = 'peach' | 'green';
+export type BannerVariant = 'teal' | 'peach' | 'green';
 
 export interface BannerThemeStyle {
   gradientColors: [string, string, ...string[]];
@@ -27,13 +27,21 @@ export interface BannerThemeStyle {
 }
 
 export const BANNER_THEMES: Record<BannerVariant, BannerThemeStyle> = {
+  teal: {
+    gradientColors: ['rgba(12, 59, 59, 0.97)', 'rgba(8, 40, 40, 0.92)', 'rgba(6, 30, 30, 0.70)'],
+    gradientLocations: [0, 0.58, 1],
+    tagColorClass: 'text-[#D4AF37]',
+    subtitleColorClass: 'text-[#E8F2F2]',
+    ctaTextColorClass: 'text-[#0C3B3B]',
+    ctaArrowColor: '#0C3B3B',
+  },
   peach: {
-    gradientColors: ['rgba(231, 122, 98, 0.95)', 'rgba(234, 140, 118, 0.85)', 'rgba(217, 102, 78, 0.35)'],
-    gradientLocations: [0, 0.55, 1],
-    tagColorClass: 'text-amber-100',
-    subtitleColorClass: 'text-orange-100',
-    ctaTextColorClass: 'text-rose-900',
-    ctaArrowColor: '#881337',
+    gradientColors: ['rgba(12, 59, 59, 0.97)', 'rgba(8, 40, 40, 0.92)', 'rgba(6, 30, 30, 0.70)'],
+    gradientLocations: [0, 0.58, 1],
+    tagColorClass: 'text-[#D4AF37]',
+    subtitleColorClass: 'text-[#E8F2F2]',
+    ctaTextColorClass: 'text-[#0C3B3B]',
+    ctaArrowColor: '#0C3B3B',
   },
   green: {
     gradientColors: ['rgba(21, 128, 61, 0.95)', 'rgba(22, 101, 52, 0.85)', 'rgba(15, 62, 34, 0.35)'],
@@ -46,7 +54,7 @@ export const BANNER_THEMES: Record<BannerVariant, BannerThemeStyle> = {
 };
 
 export const DEFAULT_HERO_BANNER = {
-  variant: 'peach' as BannerVariant,
+  variant: 'teal' as BannerVariant,
   tag: 'LAHM لحم • 100% HALAL VERIFIED',
   title: 'Pure, Farm-Fresh & 100% Halal Certified',
   subtitle: 'Fresh meats, curated dining & daily groceries delivered to your door.',
@@ -89,7 +97,7 @@ export function HeroCampaignBanner({
   return (
     <View className={`px-5 pt-1 pb-3 ${className}`}>
       <View
-        style={{ borderRadius: borderRadius['2xl'] }}
+        style={{ borderRadius: borderRadius.xl }}
         className="overflow-hidden shadow-xs relative">
         <ImageBackground
           source={heroBannerBg}
@@ -102,22 +110,22 @@ export function HeroCampaignBanner({
             end={{ x: 1, y: 0.5 }}
             className="p-5">
             {/* Text Content */}
-            <View className="max-w-[75%] z-10">
-              <Text className={`text-[10px] font-extrabold tracking-widest uppercase mb-1 ${theme.tagColorClass}`}>
+            <View className="max-w-[78%] z-10">
+              <Text className={`text-[10px] font-extrabold tracking-widest uppercase mb-1.5 ${theme.tagColorClass}`}>
                 {tag}
               </Text>
 
-              <Text className="text-xl font-bold leading-6 mb-1 text-white">
+              <Text className="text-xl font-bold leading-6 mb-1.5 text-white">
                 {title}
               </Text>
 
-              <Text className={`text-xs mb-4 leading-4 ${theme.subtitleColorClass}`}>
+              <Text className={`text-xs mb-4 leading-4 font-normal ${theme.subtitleColorClass}`}>
                 {subtitle}
               </Text>
 
               <Pressable
                 onPress={handlePress}
-                className="self-start flex-row items-center px-4 py-2 rounded-full bg-white active:opacity-85 shadow-xs"
+                className="self-start flex-row items-center px-4 py-2 rounded-lg bg-white active:opacity-90 shadow-xs"
                 accessibilityRole="button"
                 accessibilityLabel={ctaText}>
                 <Text className={`text-xs font-bold mr-1.5 ${theme.ctaTextColorClass}`}>

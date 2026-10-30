@@ -52,31 +52,31 @@ export function SkeletonCard({
       
       {/* 1. Photo Container Placeholder (16:9 ratio) */}
       <View
-        style={{ borderRadius: borderRadius['2xl'] }}
-        className="relative h-36 w-full bg-zinc-200 overflow-hidden">
+        style={{ borderRadius: borderRadius.lg }}
+        className="relative h-36 w-full bg-[#F7FAFA] border border-[#E2E8E8] overflow-hidden">
         {/* Top-Left Trust Pill Placeholder */}
-        <View className="absolute top-2.5 left-2.5 w-14 h-5 rounded-full bg-white/70" />
+        <View className="absolute top-2.5 left-2.5 w-14 h-5 rounded-md bg-[#E2E8E8]" />
 
         {/* Top-Right Favorite Circle Placeholder */}
-        <View className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/70" />
+        <View className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-[#E2E8E8]" />
 
         {/* Bottom-Left Delivery Chip Placeholder */}
-        <View className="absolute bottom-2.5 left-2.5 w-28 h-5 rounded-md bg-white/70" />
+        <View className="absolute bottom-2.5 left-2.5 w-28 h-5 rounded-md bg-[#E2E8E8]" />
       </View>
 
       {/* 2. Metadata Rows Placeholder */}
       <View className="pt-2.5 px-0.5">
         {/* Name and Rating Placeholder Row */}
         <View className="flex-row items-center justify-between">
-          <View className="h-4 w-36 rounded-md bg-zinc-200" />
-          <View className="h-4 w-10 rounded-md bg-zinc-200" />
+          <View className="h-4 w-36 rounded-md bg-[#E2E8E8]" />
+          <View className="h-4 w-10 rounded-md bg-[#E2E8E8]" />
         </View>
 
         {/* Cuisine / Specialties Tag Placeholder */}
-        <View className="h-3 w-28 rounded-md bg-zinc-100 mt-2" />
+        <View className="h-3 w-28 rounded-md bg-[#F0F4F4] mt-2" />
 
         {/* Distance & Time Placeholder */}
-        <View className="h-3 w-20 rounded-md bg-zinc-100 mt-2" />
+        <View className="h-3 w-20 rounded-md bg-[#F0F4F4] mt-2" />
       </View>
     </Animated.View>
   );
