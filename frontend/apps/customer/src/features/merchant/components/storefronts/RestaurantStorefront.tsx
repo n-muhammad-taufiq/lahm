@@ -21,6 +21,8 @@ import { RestaurantCategoryNav } from './RestaurantCategoryNav';
 import { RestaurantCategorySection } from './RestaurantCategorySection';
 import { useMerchantCategories } from '../../hooks/useMerchantCategories';
 import { useMerchantOutlets } from '../../hooks/useMerchantOutlets';
+import { useOutletStorefront } from '../../hooks/useOutletStorefront';
+import { useCustomerLocation } from '../../../location';
 import { useCartStore } from '../../../cart/cartStore';
 
 /**
@@ -56,7 +58,6 @@ export function RestaurantStorefront({
   const cartMerchant = useCartStore((state) => state.merchant);
   const cartItems = useCartStore((state) => state.items);
 
-  const products = storefront.products ?? [];
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [isBranchSheetOpen, setIsBranchSheetOpen] = useState(false);
 
@@ -72,6 +73,42 @@ export function RestaurantStorefront({
 
   // Track active outlet (scoped to existing cart outlet for this merchant or first branch)
   const [activeOutlet, setActiveOutlet] = useState<OutletDto | SisterOutletDto | null>(null);
+
+  // 2. Fetch customer GPS coordinates for live distance calculation
+  const { location } = useCustomerLocation(false);
+
+  // 3. Fetch branch-scoped storefront (price overrides, branch stock, sister branches with distance)
+  const { outletStorefront } = useOutletStorefront({
+    outletId: activeOutlet?.id,
+    latitude: location.latitude,
+    longitude: location.longitude,
+  });
+
+  // Use branch-scoped products with price overrides, falling back to storefront products
+  const products = outletStorefront?.products ?? storefront.products ?? [];
+
+  // Merge active outlet and sister outlets with live GPS distance calculated by backend
+  const displayOutlets: SisterOutletDto[] = useMemo(() => {
+    if (!outletStorefront) {
+      return outlets;
+    }
+    const currentAsSister: SisterOutletDto = {
+      id: outletStorefront.outlet.id,
+      name: outletStorefront.outlet.name,
+      address: outletStorefront.outlet.address,
+      city: outletStorefront.outlet.city,
+      state: outletStorefront.outlet.state,
+      pinCode: outletStorefront.outlet.pinCode,
+      latitude: outletStorefront.outlet.latitude,
+      longitude: outletStorefront.outlet.longitude,
+      phoneNumber: outletStorefront.outlet.phoneNumber,
+      openingTime: outletStorefront.outlet.openingTime,
+      closingTime: outletStorefront.outlet.closingTime,
+      rating: outletStorefront.outlet.rating,
+      distanceKm: outletStorefront.outlet.distanceKm,
+    };
+    return [currentAsSister, ...outletStorefront.sisterOutlets];
+  }, [outletStorefront, outlets]);
 
   useEffect(() => {
     if (outlets.length > 0 && !activeOutlet) {
@@ -246,7 +283,7 @@ export function RestaurantStorefront({
         isOpen={isBranchSheetOpen}
         onClose={() => setIsBranchSheetOpen(false)}
         activeOutletId={activeOutlet?.id}
-        outlets={outlets}
+        outlets={displayOutlets}
         onSelectOutlet={handleBranchSelect}
         hasCartItems={cartMerchant?.id === storefront.id && cartItems.length > 0}
       />

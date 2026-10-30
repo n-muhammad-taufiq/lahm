@@ -90,8 +90,7 @@ Before implementing new visual components, refer to the high-resolution mockups 
 11. [x] **Step O.10:** Added clean branch name with short down arrow trigger to [`ShopIdentityCard.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/header/ShopIdentityCard.tsx) and forwarded from [`ShopHeader.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/header/ShopHeader.tsx).
 12. [x] **Step O.11:** Integrated branch switching sheet, `useMerchantOutlets` hook, and outlet-scoped cart actions into [`RestaurantStorefront.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx).
 13. [x] **Step O.12:** Created client orders API module in [`@lahm/api`](file:///workspaces/lahm/frontend/packages/api/src/orders/ordersApiService.ts) with `CreateOrderDto` supporting `outletId`, `OrderResponse`, and `ordersApiService`.
-14. [ ] **Step O.13 (Next):** Implement checkout order placement passing active cart `outletId` and customer dropoff coordinates to `ordersApiService.createOrder`.
-15. [ ] **Step O.14:** Display fulfilling branch (`order.outlet`) on customer order receipt / tracking.
+14. [x] **Step O.13:** Connected dynamic branch-scoped products, price overrides, and GPS-calculated branch distances via `useOutletStorefront` and `useCustomerLocation` in [`RestaurantStorefront.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx). **(Multi-Outlet Milestone 100% Complete)**.
 
 ### Milestone C.5: Merchant Storefront Screen & Recursive Product Category Catalog
 

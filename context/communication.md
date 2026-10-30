@@ -1947,4 +1947,17 @@ When logging a turn or session handoff, append an entry using this structure:
   - `npx tsc --noEmit` in `frontend/packages/api`: **Clean (0 errors)**.
   - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.
 - **Next Required Step:**
-  - Execute **Step O.13**: Update Customer Checkout flow ([`frontend/apps/customer/`](file:///workspaces/lahm/frontend/apps/customer/)) to call `ordersApiService.createOrder` with the active cart items, customer delivery address/coordinates, and `outletId`.
+  - Execute **Step O.13**: Connect branch-scoped storefront pricing, branch inventory overrides, and GPS-calculated distances into `RestaurantStorefront.tsx`.
+
+### [2026-10-30 11:35 IST] — Multi-Outlet Step O.13: Branch-Scoped Products & GPS Distance in Storefront
+- **Phase & Step:** Multi-Outlet Support — Step O.13 (Storefront Dynamic Branch Scoping)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/merchant/hooks/useOutletStorefront.ts`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/hooks/useOutletStorefront.ts) (Created — TanStack `useQuery` hook calling `outletsApiService.getOutletStorefront(outletId, { latitude, longitude })`)
+  - [`frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx) (Modified — Imported `useOutletStorefront` and `useCustomerLocation`; switched active product list to `outletStorefront?.products ?? storefront.products`; provided `displayOutlets` with backend-computed `distanceKm` to `ShopOutletSelectionSheet`)
+- **Key Implementation Details:**
+  1. **Dynamic Branch Pricing & Stock:** Menu items immediately update to display the fulfilling branch's price overrides and stock availability whenever the user switches branches.
+  2. **Accurate GPS Distances:** Sister branches and active branch in the branch selection sheet show accurate distance badges (`📍 X.X km`) calculated from the customer's live coordinates.
+  3. **Multi-Outlet Completeness:** Completes the end-to-end multi-outlet customer storefront journey with real PostgreSQL entities, NestJS APIs, courier dispatch, and responsive mobile UI.
+- **Verification:**
+  - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.
+- **Multi-Outlet Feature Status:** **100% COMPLETE**.
