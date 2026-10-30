@@ -1933,4 +1933,18 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Verification:**
   - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.
 - **Next Required Step:**
-  - Execute **Step O.12**: Update Customer Checkout flow ([`frontend/apps/customer/src/features/cart/`](file:///workspaces/lahm/frontend/apps/customer/src/features/cart/)) to pass `outletId` in `createOrder` API payload.
+  - Execute **Step O.12**: Implement client orders API module in [`frontend/packages/api/`](file:///workspaces/lahm/frontend/packages/api/) with `CreateOrderDto`, `OrderResponse`, and `ordersApiService`.
+
+### [2026-10-30 11:22 IST] — Multi-Outlet Step O.12: Client Orders API Module (@lahm/api)
+- **Phase & Step:** Multi-Outlet Support — Step O.12 (Shared API Package Orders Service)
+- **Files Touched / Created:**
+  - [`frontend/packages/api/src/orders/ordersApiService.ts`](file:///workspaces/lahm/frontend/packages/api/src/orders/ordersApiService.ts) (Created — Defined `OrderStatus`, `CreateOrderItemDto`, `CreateOrderDto` with optional `outletId`, `OrderItemResponse`, `OrderResponse` with `outlet` relation, and `ordersApiService` with `createOrder`, `getMyOrders`, `getOrderById`)
+  - [`frontend/packages/api/src/index.ts`](file:///workspaces/lahm/frontend/packages/api/src/index.ts) (Modified — Exported orders module)
+- **Key Implementation Details:**
+  1. **Strict Type Contracts:** Mirrored backend `CreateOrderDto` with branch awareness (`outletId?: number`), ensuring the client can send the customer's selected physical branch during order placement.
+  2. **Hydrated Branch Response:** `OrderResponse` includes `outlet?: OutletDto` containing the fulfilling branch name, address, and coordinates for receipt and tracking display.
+- **Verification:**
+  - `npx tsc --noEmit` in `frontend/packages/api`: **Clean (0 errors)**.
+  - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.
+- **Next Required Step:**
+  - Execute **Step O.13**: Update Customer Checkout flow ([`frontend/apps/customer/`](file:///workspaces/lahm/frontend/apps/customer/)) to call `ordersApiService.createOrder` with the active cart items, customer delivery address/coordinates, and `outletId`.
