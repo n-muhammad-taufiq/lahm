@@ -389,3 +389,20 @@ Shared code should remain genuinely reusable and independent of individual appli
   6. Delivery Allocation Engine (courier radar search around outlet coordinates)
   7. Tracking Maps, Courier Navigation, Receipts & Post-Order Lifecycle
 - **File-by-File Incremental Execution:** Strictly adhere to 1–2 files per turn with rigorous verification, but never lose sight of the complete operational architecture.
+
+## 28. Mobile UI Engineering, Anti-Slop & Dark Teal Design System
+
+- **Objective:** Build polished, distinctive, production-ready mobile interfaces for the existing Lahm Expo applications. Prioritize visual quality, usability, consistency, maintainability, and fast iteration.
+- **Visual Palette Direction:** Strict **Dark Teal and White** (`#0C3B3B` primary accent, `#FFFFFF` canvas, `#F7FAFA` mist surface, `#E2E8E8` borders, `#0F1F1F` high-contrast charcoal text). Use Dark Teal with restraint for primary CTAs and active states, avoiding artificial gradient fills.
+- **Inspect Before Implementing:** Audit navigation, styling setup, and related components before writing any code. Check installed Expo SDK and native capabilities.
+- **Eliminate the 20 Native-Slop Tells (from `expo-design-system`):**
+  1. *No "Everything's a Card":* Group items with whitespace, background contrast, and hairline dividers (`StyleSheet.hairlineWidth`) instead of wrapping every row in a rounded shadowed box.
+  2. *No "Purple/Terracotta-Gradient Heroes":* Lead with clear, useful content under a navigation title. Never push primary content below the fold with decorative gradient blocks.
+  3. *No Emoji Iconography:* Never use raw emojis (`🥩`, `🔍`, `🛒`) as icons; strictly use native vector strokes (`Ionicons` / `Feather`).
+  4. *No "16-Everything" Spacing:* Enforce intentional spacing hierarchy: element gap $<$ group gap $<$ section gap.
+  5. *No "Shadowboxing":* Avoid heavy drop shadows (opacity $\ge 0.15$, radius $\ge 10$). Hierarchy comes from typography and surface contrast.
+  6. *No "The Web Modal":* Use native sheets (`presentation: 'formSheet'` or gesture-driven bottom sheets with detents and drag handles).
+  7. *No "The Squish Reflex":* Use `Pressable` with subtle opacity/color feedback; never apply blanket aggressive scale transformations to standard list rows.
+- **One Screen at a Time:** Focus on one screen or component at a time. Establish its gold standard layout and extract reusable primitives before propagating across the app.
+- **Zero Mock / Zero Fake Data:** Always connect real backend APIs and existing database entities. Never use fake production data or mock bypasses to make a screen look finished.
+- **Visual & Interaction Verification:** Verify on real physical mobile device or Expo tunnel (`npx expo start --tunnel`). Test scroll bounds, touch targets, keyboard behavior, safe areas, and dynamic content states (loading, populated, empty, error).
