@@ -1961,3 +1961,13 @@ When logging a turn or session handoff, append an entry using this structure:
 - **Verification:**
   - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.
 - **Multi-Outlet Feature Status:** **100% COMPLETE**.
+
+### [2026-10-30 11:43 IST] — Strict Zero-Fallback Rule: Removed Merchant Products Fallback in RestaurantStorefront
+- **Phase & Step:** Multi-Outlet Support — Rule 1 & Rule 27 Anti-Fallback Hardening
+- **Files Touched:**
+  - [`frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx`](file:///workspaces/lahm/frontend/apps/customer/src/features/merchant/components/storefronts/RestaurantStorefront.tsx) (Modified — Removed `?? storefront.products` fallback; strictly bound `products = outletStorefront?.products ?? []`; added explicit `ActivityIndicator` loading state and branch-specific empty state)
+- **Key Implementation Details:**
+  1. **Strict Outlet Purity:** Eliminated fallback to merchant base products, ensuring only the selected physical outlet's real inventory and price overrides are rendered.
+  2. **Honest Loading & Empty States:** Added explicit `isOutletLoading && !outletStorefront` spinner (`Loading branch menu...`) and clear empty notice (`No dishes currently available for this branch`) rather than masking missing branch inventory with corporate products.
+- **Verification:**
+  - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.

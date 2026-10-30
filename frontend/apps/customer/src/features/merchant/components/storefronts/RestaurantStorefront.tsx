@@ -7,7 +7,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import {
   CategoryTreeNode,
   MerchantStorefrontResponse,
@@ -78,14 +78,14 @@ export function RestaurantStorefront({
   const { location } = useCustomerLocation(false);
 
   // 3. Fetch branch-scoped storefront (price overrides, branch stock, sister branches with distance)
-  const { outletStorefront } = useOutletStorefront({
+  const { outletStorefront, loading: isOutletLoading } = useOutletStorefront({
     outletId: activeOutlet?.id,
     latitude: location.latitude,
     longitude: location.longitude,
   });
 
-  // Use branch-scoped products with price overrides, falling back to storefront products
-  const products = outletStorefront?.products ?? storefront.products ?? [];
+  // Strictly branch-scoped products (Zero fallback to merchant base products)
+  const products = outletStorefront?.products ?? [];
 
   // Merge active outlet and sister outlets with live GPS distance calculated by backend
   const displayOutlets: SisterOutletDto[] = useMemo(() => {
@@ -257,23 +257,34 @@ export function RestaurantStorefront({
 
         {/* 3. Category-Grouped Menu Sections */}
         <View className="flex-1 bg-zinc-50/60 px-4 pt-4 pb-12">
-          {visibleGroups.map((group) => (
-            <RestaurantCategorySection
-              key={group.id}
-              title={group.name}
-              description={group.description}
-              products={group.products}
-              onAddProduct={handleAddToCart}
-            />
-          ))}
-
-          {/* 4. Empty State */}
-          {products.length === 0 && (
+          {isOutletLoading && !outletStorefront ? (
             <View className="py-12 items-center justify-center">
-              <Text className="text-sm text-zinc-400">
-                No dishes currently available
+              <ActivityIndicator size="small" color="#E05D44" />
+              <Text className="text-xs text-zinc-400 mt-2">
+                Loading branch menu...
               </Text>
             </View>
+          ) : (
+            <>
+              {visibleGroups.map((group) => (
+                <RestaurantCategorySection
+                  key={group.id}
+                  title={group.name}
+                  description={group.description}
+                  products={group.products}
+                  onAddProduct={handleAddToCart}
+                />
+              ))}
+
+              {/* 4. Branch Empty State */}
+              {products.length === 0 && (
+                <View className="py-12 items-center justify-center">
+                  <Text className="text-sm text-zinc-400">
+                    No dishes currently available for this branch
+                  </Text>
+                </View>
+              )}
+            </>
           )}
         </View>
       </ScrollView>
