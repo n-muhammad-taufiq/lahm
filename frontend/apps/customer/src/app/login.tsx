@@ -84,8 +84,10 @@ export default function LoginScreen() {
           className="flex-1"
           automaticallyAdjustKeyboardInsets={true}
           keyboardDismissMode="on-drag"
-          contentContainerClassName="flex-grow justify-between px-7"
           contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'space-between',
+            paddingHorizontal: 28,
             paddingTop: Math.max(insets?.top || 0, 20) + 8,
             paddingBottom: Math.max(insets?.bottom || 0, 16) + 32,
           }}

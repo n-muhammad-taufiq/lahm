@@ -1971,3 +1971,19 @@ When logging a turn or session handoff, append an entry using this structure:
   2. **Honest Loading & Empty States:** Added explicit `isOutletLoading && !outletStorefront` spinner (`Loading branch menu...`) and clear empty notice (`No dishes currently available for this branch`) rather than masking missing branch inventory with corporate products.
 - **Verification:**
   - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.
+
+### [2026-10-31 19:55 IST] — Customer UI Screen Anchor: NewHomeScreen Implementation & Mounting
+- **Phase & Step:** Customer UI Redesign — Anchor Screen Step (NewHomeScreen)
+- **Files Touched / Created:**
+  - [`frontend/apps/customer/src/features/home/components/NewHomeHeader.tsx`](file:///c:/Users/afriq/Documents/company/project-lahm/frontend/apps/customer/src/features/home/components/NewHomeHeader.tsx) (Created — Delivery location selector, GPS indicator, and user profile avatar button)
+  - [`frontend/apps/customer/src/features/home/components/NewHomeBottomNav.tsx`](file:///c:/Users/afriq/Documents/company/project-lahm/frontend/apps/customer/src/features/home/components/NewHomeBottomNav.tsx) (Created — 4-tab native bottom navigation bar with safe area insets and tactile feedback)
+  - [`frontend/apps/customer/src/features/home/NewHomeScreen.tsx`](file:///c:/Users/afriq/Documents/company/project-lahm/frontend/apps/customer/src/features/home/NewHomeScreen.tsx) (Created — Flagship screen orchestrator with Teal & White palette, search, category switcher, hero banner, discovery carousels, and bottom nav)
+  - [`frontend/apps/customer/src/features/home/index.ts`](file:///c:/Users/afriq/Documents/company/project-lahm/frontend/apps/customer/src/features/home/index.ts) (Modified — Re-exported NewHomeScreen)
+  - [`frontend/apps/customer/src/app/index.tsx`](file:///c:/Users/afriq/Documents/company/project-lahm/frontend/apps/customer/src/app/index.tsx) (Modified — Mounted NewHomeScreen on root route)
+  - [`frontend/apps/customer/src/app/home.tsx`](file:///c:/Users/afriq/Documents/company/project-lahm/frontend/apps/customer/src/app/home.tsx) (Modified — Mounted NewHomeScreen on home route)
+- **Key Implementation Details:**
+  1. **Strict Preservation of Existing Screen:** Left `CustomerHomeScreen.tsx` completely untouched per user directive.
+  2. **Original Bespoke Palette:** Implemented Lahm's authentic Deep Teal (`#0C3B3B`) and Pure White (`#FFFFFF`) palette on a warm off-white canvas (`#F8F7F5`), using subtle peach/terracotta highlights.
+  3. **Zero Mock Data:** Connected directly to real GPS reverse geocoding via `useCustomerLocation`, live backend marketplace merchants via `useNearbyMerchants`, and auth state via `useAuthStore`.
+- **Verification:**
+  - `npx tsc --noEmit` in `frontend/apps/customer`: **Clean (0 errors)**.

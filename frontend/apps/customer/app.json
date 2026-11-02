@@ -46,7 +46,11 @@
           "locationAlwaysAndWhenInUsePermission": "Allow Lahm to access your location to detect your delivery address and find butcheries near you."
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-font",
+      "expo-image",
+      "expo-status-bar",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
